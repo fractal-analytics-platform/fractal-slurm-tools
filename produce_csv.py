@@ -136,6 +136,45 @@ def run_cmd(cmd: str) -> str:
     return res.stdout
 
 
+def find_job_folder(
+    *,
+    jobs_base_folder: Path,
+    fractal_job_id: int,
+) -> Path:
+
+    fractal_job_folders = list(
+        item
+        for item in jobs_base_folder.glob(
+            f"proj_v2_*job_{fractal_job_id:07d}_*"
+        )
+        if item.is_dir()
+    )
+    if len(fractal_job_folders) > 1:
+        raise ValueError(f"Found more than one {fractal_job_folders=}.")
+    fractal_job_folder = fractal_job_folders[0]
+    print(f"Fractal-job folder: {fractal_job_folder.as_posix()}")
+    return fractal_job_folder
+
+
+def find_task_subfolders(fractal_job_folder: Path) -> list[Path]:
+    task_subfolders = sorted(
+        list(item for item in fractal_job_folder.glob("*") if item.is_dir())
+    )
+    return task_subfolders
+
+
+def find_slurm_job_ids(task_subfolder: Path) -> list[int]:
+    slurm_job_ids = set()
+    for f in task_subfolder.glob("*.out"):
+        # Split both using `_` and `-`, to cover conventions for fractal-server
+        # below/above 2.14.0.
+        jobid_str = f.with_suffix("").name.split("_")[-1].split("_")[-1]
+        jobid = int(jobid_str)
+        slurm_job_ids.add(jobid)
+    slurm_job_ids = sorted(list(slurm_job_ids))
+    print(f">> SLURM-job IDs: {slurm_job_ids}")
+
+
 USAGE = (
     "ERROR: this script requires the three following CLI arguments:\n"
     "   FRACTAL_JOB_ID,\n"
@@ -157,43 +196,33 @@ if __name__ == "__main__":
     if not output_folder.exists():
         output_folder.mkdir()
 
-    # Find Fractal job folder
-    fractal_job_folders = list(
-        item
-        for item in jobs_base_folder.glob(
-            f"proj_v2_*job_{fractal_job_id:07d}_*"
-        )
-        if item.is_dir()
+    # Find Fractal job folder and subfolders
+    fractal_job_folder = find_job_folder(
+        jobs_base_folder=jobs_base_folder,
+        fractal_job_id=fractal_job_id,
     )
-    if len(fractal_job_folders) > 1:
-        raise ValueError(f"Found more than one {fractal_job_folders=}.")
-    fractal_job_folder = fractal_job_folders[0]
-    print(f"Fractal-job folder: {fractal_job_folder.as_posix()}")
 
     # Find fractal task subfolders
-    task_subfolders = sorted(
-        list(item for item in fractal_job_folder.glob("*") if item.is_dir())
-    )
+    task_subfolders = find_task_subfolders(fractal_job_folder)
 
-    # Find SLURM job IDs
     info_rows = []
     for task_subfolder in task_subfolders:
         print(f">> Fractal-task subfolder: {task_subfolder.as_posix()}")
 
-        slurm_job_ids = set()
-        print(task_subfolder.as_posix())
-        for f in task_subfolder.glob("*.out"):
-            jobid = int(f.with_suffix("").name.split("_")[-1])
-            slurm_job_ids.add(jobid)
-        print(f">> SLURM-job IDs: {slurm_job_ids}")
+        # Find SLURM job IDs
+        slurm_job_ids = find_slurm_job_ids(task_subfolder)
 
-        for slurm_job_id in sorted(slurm_job_ids):
+        for slurm_job_id in slurm_job_ids:
             print(f">> >> Processing SLURM job with ID {slurm_job_id}")
 
-            cmd = f'sacct -j {slurm_job_id} --format "{SACCT_FMT}"'
-            stdout_non_formatted = run_cmd(cmd)
-            print(cmd)
-            cmd = f'{cmd} --noheader --parsable2 --delimiter "{DELIMITER}"'
+            cmd = (
+                "sacct "
+                f"-j {slurm_job_id} "
+                "--noheader "
+                "--parsable2 "
+                f'--format "{SACCT_FMT}" '
+                f'--delimiter "{DELIMITER}" '
+            )
             print(cmd)
 
             stdout = run_cmd(cmd)
