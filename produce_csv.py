@@ -11,11 +11,12 @@ import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 import humanfriendly
 import pandas as pd
 
-SACCT_FIELDS = [
+SACCT_FIELDS: list[str] = [
     "JobID",
     "JobName",
     "NodeList",
@@ -52,7 +53,7 @@ SACCT_FIELDS = [
     # "Partition",
     # "QOS",
 ]
-SACCT_FIELDS_PERCENT = []
+SACCT_FIELDS_PERCENT: list[str] = []
 for field in SACCT_FIELDS:
     mod_field = field
     if field == "JobName":
@@ -62,8 +63,8 @@ for field in SACCT_FIELDS:
     SACCT_FIELDS_PERCENT.append(mod_field)
 
 SACCT_FIELDS = [item.split("%")[0] for item in SACCT_FIELDS_PERCENT]
-SACCT_FMT = ",".join(SACCT_FIELDS_PERCENT)
-DELIMITER = "|"
+SACCT_FMT: str = ",".join(SACCT_FIELDS_PERCENT)
+DELIMITER: str = "|"
 
 
 def _identity(arg: str) -> str:
@@ -91,7 +92,9 @@ def _str_to_bytes_to_friendly(arg: str) -> str:
     return humanfriendly.format_size(_str_to_bytes(arg))
 
 
-SACCT_FIELD_PARSERS = {field: _identity for field in SACCT_FIELDS}
+SACCT_FIELD_PARSERS: dict[str, callable] = {
+    field: _identity for field in SACCT_FIELDS
+}
 
 for field in [
     "JobID",
@@ -123,17 +126,6 @@ for field in [
     "AveVMSize",
 ]:
     SACCT_FIELD_PARSERS[field] = _str_to_bytes_to_friendly
-
-
-def run_cmd(cmd: str) -> str:
-    res = subprocess.run(
-        shlex.split(cmd),
-        capture_output=True,
-        encoding="utf-8",
-    )
-    if res.returncode != 0:
-        raise ValueError(res.stderr)
-    return res.stdout
 
 
 def find_job_folder(
@@ -175,6 +167,82 @@ def find_slurm_job_ids(task_subfolder: Path) -> list[int]:
     print(f">> SLURM-job IDs: {slurm_job_ids}")
 
 
+def run_cmd(cmd: str) -> str:
+    print(f"Now run {cmd=}")
+    res = subprocess.run(
+        shlex.split(cmd),
+        capture_output=True,
+        encoding="utf-8",
+    )
+    if res.returncode != 0:
+        raise ValueError(res.stderr)
+    return res.stdout
+
+
+def parse_sacct_info(
+    slurm_job_id: int,
+    task_subfolder_name: str,
+) -> list[dict[str, Any]]:
+    print(f">> >> Processing SLURM job with ID {slurm_job_id}")
+    cmd = (
+        "sacct "
+        f"-j {slurm_job_id} "
+        "--noheader "
+        "--parsable2 "
+        f'--format "{SACCT_FMT}" '
+        f'--delimiter "{DELIMITER}" '
+    )
+    stdout = run_cmd(cmd)
+    lines = stdout.splitlines()
+
+    index_job_name = SACCT_FIELDS.index("JobName")
+    job_name = lines[0].split(DELIMITER)[index_job_name]
+    python_lines = [
+        line
+        for line in lines
+        if line.split(DELIMITER)[index_job_name] in ["python", "python3"]
+    ]
+    output_rows = []
+    for python_line in python_lines:
+        python_line_items = python_line.split(DELIMITER)
+        output_row = {
+            SACCT_FIELDS[ind]: SACCT_FIELD_PARSERS[SACCT_FIELDS[ind]](item)
+            for ind, item in enumerate(python_line_items)
+        }
+        output_row["JobName"] = job_name
+        output_row["task_subfolder"] = task_subfolder_name
+        output_rows.append(output_row)
+    return output_rows
+
+
+def process_fractal_job(
+    fractal_job_id: int,
+    jobs_base_folder: Path,
+) -> list[dict[str, Any]]:
+
+    # Find Fractal job folder and subfolders
+    fractal_job_folder = find_job_folder(
+        jobs_base_folder=jobs_base_folder,
+        fractal_job_id=fractal_job_id,
+    )
+
+    # Find fractal task subfolders
+    task_subfolders = find_task_subfolders(fractal_job_folder)
+
+    fractal_job_output_rows = []
+    for task_subfolder in task_subfolders:
+        print(f">> Fractal-task subfolder: {task_subfolder.as_posix()}")
+        slurm_job_ids = find_slurm_job_ids(task_subfolder)
+        for slurm_job_id in slurm_job_ids:
+            slurm_job_output_rows = parse_sacct_info(
+                slurm_job_id,
+                task_subfolder_name=task_subfolder.name,
+            )
+            fractal_job_output_rows.extend(slurm_job_output_rows)
+
+    return fractal_job_output_rows
+
+
 USAGE = (
     "ERROR: this script requires the three following CLI arguments:\n"
     "   FRACTAL_JOB_ID,\n"
@@ -188,7 +256,6 @@ if __name__ == "__main__":
     if len(cli_args) != 3:
         sys.exit(USAGE)
 
-    fractal_job_id = int(cli_args[0])
     jobs_base_folder = Path(cli_args[1])
     if not jobs_base_folder.exists():
         sys.exit(f"ERROR: missing folder {jobs_base_folder}")
@@ -196,65 +263,17 @@ if __name__ == "__main__":
     if not output_folder.exists():
         output_folder.mkdir()
 
-    # Find Fractal job folder and subfolders
-    fractal_job_folder = find_job_folder(
-        jobs_base_folder=jobs_base_folder,
+    # Process single Fractal job
+    fractal_job_id = int(cli_args[0])
+    fractal_job_output_rows = process_fractal_job(
         fractal_job_id=fractal_job_id,
+        jobs_base_folder=jobs_base_folder,
     )
-
-    # Find fractal task subfolders
-    task_subfolders = find_task_subfolders(fractal_job_folder)
-
-    info_rows = []
-    for task_subfolder in task_subfolders:
-        print(f">> Fractal-task subfolder: {task_subfolder.as_posix()}")
-
-        # Find SLURM job IDs
-        slurm_job_ids = find_slurm_job_ids(task_subfolder)
-
-        for slurm_job_id in slurm_job_ids:
-            print(f">> >> Processing SLURM job with ID {slurm_job_id}")
-
-            cmd = (
-                "sacct "
-                f"-j {slurm_job_id} "
-                "--noheader "
-                "--parsable2 "
-                f'--format "{SACCT_FMT}" '
-                f'--delimiter "{DELIMITER}" '
-            )
-            print(cmd)
-
-            stdout = run_cmd(cmd)
-            lines = stdout.splitlines()
-
-            index_job_name = SACCT_FIELDS.index("JobName")
-            job_name = lines[0].split(DELIMITER)[index_job_name]
-            python_lines = [
-                line
-                for line in lines
-                if line.split(DELIMITER)[index_job_name]
-                in ["python", "python3"]
-            ]
-            for python_line in python_lines:
-                python_line_items = python_line.split(DELIMITER)
-                sacct_info = {
-                    SACCT_FIELDS[ind]: SACCT_FIELD_PARSERS[SACCT_FIELDS[ind]](
-                        item
-                    )
-                    for ind, item in enumerate(python_line_items)
-                }
-                sacct_info["JobName"] = job_name
-                info_rows.append(
-                    dict(task_subfolder=task_subfolder.name, **sacct_info)
-                )
-
     json_output_file = output_folder / f"out_{fractal_job_id}.json"
-    csv_output_file = output_folder / f"out_{fractal_job_id}.csv"
     with json_output_file.open("w") as f:
-        json.dump(info_rows, f, indent=2)
+        json.dump(fractal_job_output_rows, f, indent=2)
     print(f"Written JSON output to {json_output_file.as_posix()}")
-
+    csv_output_file = output_folder / f"out_{fractal_job_id}.csv"
     df = pd.read_json(json_output_file)
     df.to_csv(csv_output_file)
     print(f"Written CSV output to {csv_output_file.as_posix()}")
