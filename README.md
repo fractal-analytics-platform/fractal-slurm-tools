@@ -1,44 +1,40 @@
 # fractal-slurm-tools
 
-For the moment, you can run the CLI for a given version as in
+[![PyPI version](https://img.shields.io/pypi/v/fractal-slurm-tools?color=gree)](https://pypi.org/project/fractal-slurm-tools/)
+[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+
+
+You can run a version of this tool from PyPI or GitHub, either via
+[pipx](https://pipx.pypa.io/stable/examples/#pipx-run-examples) or
+[uvx](https://docs.astral.sh/uv/guides/tools).
+
+Examples:
 ```console
-# Current main
-$ pipx run --python 3.11 --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git fractal-slurm-tools
-[...]
+# Latest PyPI release
+$ pipx run fractal-slurm-tools
+$ uvx fractal-slurm-tools
 
-# Specific commit
-$ pipx run --python 3.11 --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@3faeefd0eac0f53c6c73d2e3179b10ff2a111793 fractal-slurm-tools
-[...]
+# Specific PyPI release
+$ pipx run fractal-slurm-tools==0.0.3
+$ uvx fractal-slurm-tools==0.0.3
 
-# Specific branch
-$ pipx run --python 3.11 --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@main fractal-slurm-tools
-[...]
+# Latest GitHub commit
+$ pipx run --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git fractal-slurm-tools
+
+# Specific GitHub commit
+$ pipx run --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@3faeefd0eac0f53c6c73d2e3179b10ff2a111793 fractal-slurm-tools
+
+# Specific GitHub branch
+$ pipx run --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@main fractal-slurm-tools
 ```
-
-As soon as this will be on PyPI, the expected command will be e.g.
-```console
-# Latest
-$ pipx run --python 3.11 fractal-slurm-tools
-[...]
-
-# Specific version
-$ pipx run --python 3.11 fractal-slurm-tools==1.2.3
-[...]
-```
-
-TBD: add `uv` example?
-
 
 # Development
 
 ```console
 $ python -m venv venv
-
 $ source venv/bin/activate
-
 $ python -m pip install -e .[dev]
 [...]
-
 $ pre-commit install
 pre-commit installed at .git/hooks/pre-commit
 ```
