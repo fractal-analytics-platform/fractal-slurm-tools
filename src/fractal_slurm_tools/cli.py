@@ -35,11 +35,6 @@ main_parser.add_argument(
     help="If set, use DEBUG as a logging level.",
     action="store_true",
 )
-main_parser.add_argument(
-    "--version",
-    help="If set, print the version and exit.",
-    action="store_true",
-)
 
 
 def _parse_arguments(sys_argv: list[str] | None = None) -> ap.Namespace:
@@ -57,12 +52,6 @@ def _parse_arguments(sys_argv: list[str] | None = None) -> ap.Namespace:
 
 def main():
     args = _parse_arguments()
-
-    if args.version:
-        from . import __VERSION__
-
-        print(__VERSION__)
-        sys.exit(0)
 
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)
