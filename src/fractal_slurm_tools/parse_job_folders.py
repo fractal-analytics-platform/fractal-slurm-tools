@@ -39,7 +39,7 @@ def find_slurm_job_ids(task_subfolder: Path) -> list[int]:
     for f in task_subfolder.glob("*.out"):
         # Split both using `_` and `-`, to cover conventions for fractal-server
         # below/above 2.14.0.
-        jobid_str = f.with_suffix("").name.split("_")[-1].split("_")[-1]
+        jobid_str = f.with_suffix("").name.split("_")[-1].split("-")[-1]
         jobid = int(jobid_str)
         slurm_job_ids_set.add(jobid)
     slurm_job_ids_list = sorted(list(slurm_job_ids_set))
