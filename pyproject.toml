@@ -7,7 +7,7 @@ authors = [
 ]
 readme = "README.md"
 license = {text ="BSD-3-Clause"}
-requires-python = ">=3.11,<3.13"
+requires-python = ">=3.10,<3.13"
 dependencies = [
     "pandas >=2.0,<3.0",
     "humanfriendly ==10.0.0",
