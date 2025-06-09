@@ -37,12 +37,12 @@ $ python -m pip install -e .[dev]
 [...]
 $ pre-commit install
 pre-commit installed at .git/hooks/pre-commit
-```
 
-## How to make a release
-From the development environment:
-```
-bumpver update --patch --dry
+# Run mypi
+$ python -m mypy ./src
+
+# Make a release
+$ bumpver update --patch --dry
 ```
 
 
