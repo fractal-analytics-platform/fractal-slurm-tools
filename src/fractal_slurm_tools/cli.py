@@ -1,4 +1,5 @@
 import argparse as ap
+import logging
 import sys
 from pathlib import Path
 
@@ -29,6 +30,14 @@ main_parser.add_argument(
     required=True,
 )
 
+main_parser.add_argument(
+    "--verbose",
+    type=bool,
+    help="If set, use DEBUG as a logging level.",
+    required=False,
+    default=False,
+)
+
 
 def _parse_arguments(sys_argv: list[str] | None = None) -> ap.Namespace:
     """
@@ -45,6 +54,10 @@ def _parse_arguments(sys_argv: list[str] | None = None) -> ap.Namespace:
 
 def main():
     args = _parse_arguments()
+
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
+
     cli_entrypoint(
         fractal_job_id=args.fractal_job_id,
         output_folder=Path(args.output_folder),
