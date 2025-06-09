@@ -1,11 +1,10 @@
 import logging
 from typing import Any
 
-from fractal_slurm_tools.run_cmd import run_cmd
-from fractal_slurm_tools.sacct_fields import DELIMITER
-from fractal_slurm_tools.sacct_fields import SACCT_FIELDS
-from fractal_slurm_tools.sacct_fields import SACCT_FMT
-from fractal_slurm_tools.sacct_parsers import SACCT_FIELD_PARSERS
+from .run_sacct_command import run_sacct_command
+from .sacct_fields import DELIMITER
+from .sacct_fields import SACCT_FIELDS
+from .sacct_parsers import SACCT_FIELD_PARSERS
 
 logger = logging.getLogger(__name__)
 
@@ -15,15 +14,7 @@ def parse_sacct_info(
     task_subfolder_name: str,
 ) -> list[dict[str, Any]]:
     logging.debug(f"Process {slurm_job_id=}.")
-    cmd = (
-        "sacct "
-        f"-j {slurm_job_id} "
-        "--noheader "
-        "--parsable2 "
-        f'--format "{SACCT_FMT}" '
-        f'--delimiter "{DELIMITER}" '
-    )
-    stdout = run_cmd(cmd)
+    stdout = run_sacct_command(slurm_job_id=slurm_job_id)
     lines = stdout.splitlines()
 
     index_job_name = SACCT_FIELDS.index("JobName")
