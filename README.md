@@ -5,14 +5,14 @@
 | Name                                               |    Stmts |     Miss |  Cover |   Missing |
 |--------------------------------------------------- | -------: | -------: | -----: | --------: |
 | src/fractal\_slurm\_tools/\_\_init\_\_.py          |        1 |        1 |     0% |         1 |
-| src/fractal\_slurm\_tools/cli.py                   |       16 |       16 |     0% |      1-48 |
+| src/fractal\_slurm\_tools/cli.py                   |       20 |       20 |     0% |      1-61 |
 | src/fractal\_slurm\_tools/parse\_job\_folders.py   |       24 |       24 |     0% |      1-49 |
 | src/fractal\_slurm\_tools/parse\_sacct\_info.py    |       21 |       21 |     0% |      1-44 |
 | src/fractal\_slurm\_tools/process\_fractal\_job.py |       34 |       34 |     0% |      1-66 |
 | src/fractal\_slurm\_tools/run\_sacct\_command.py   |        8 |        8 |     0% |      1-24 |
 | src/fractal\_slurm\_tools/sacct\_fields.py         |       12 |       12 |     0% |      1-49 |
 | src/fractal\_slurm\_tools/sacct\_parsers.py        |       26 |       26 |     0% |      1-67 |
-|                                          **TOTAL** |  **142** |  **142** | **0%** |           |
+|                                          **TOTAL** |  **146** |  **146** | **0%** |           |
 
 
 ## Setup coverage badge
