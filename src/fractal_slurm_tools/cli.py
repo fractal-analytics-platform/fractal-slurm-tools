@@ -34,15 +34,13 @@ main_parser.add_argument(
     "--verbose",
     type=bool,
     help="If set, use DEBUG as a logging level.",
-    required=False,
-    default=False,
+    action="store_true",
 )
 main_parser.add_argument(
     "--version",
     type=bool,
     help="If set, print the version and exit.",
-    required=False,
-    default=False,
+    action="store_true",
 )
 
 
