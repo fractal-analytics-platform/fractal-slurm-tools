@@ -37,6 +37,13 @@ main_parser.add_argument(
     required=False,
     default=False,
 )
+main_parser.add_argument(
+    "--version",
+    type=bool,
+    help="If set, print the version and exit.",
+    required=False,
+    default=False,
+)
 
 
 def _parse_arguments(sys_argv: list[str] | None = None) -> ap.Namespace:
@@ -54,6 +61,12 @@ def _parse_arguments(sys_argv: list[str] | None = None) -> ap.Namespace:
 
 def main():
     args = _parse_arguments()
+
+    if args.version:
+        from . import __VERSION__
+
+        print(__VERSION__)
+        sys.exit(0)
 
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)
