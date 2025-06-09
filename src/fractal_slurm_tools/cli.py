@@ -55,6 +55,9 @@ def main():
 
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)
+    from . import __VERSION__
+
+    logging.debug(f"fractal-slurm-tools version: {__VERSION__}")
 
     cli_entrypoint(
         fractal_job_id=args.fractal_job_id,
