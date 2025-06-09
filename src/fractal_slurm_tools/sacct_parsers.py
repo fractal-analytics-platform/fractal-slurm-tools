@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Callable
 
 import humanfriendly
 
@@ -18,7 +19,7 @@ def _hhmmss_to_seconds(arg: str) -> int:
     return int(hh) * 3600 + int(mm) * 60 + int(ss)
 
 
-def _str_to_datetime(arg: str) -> datetime:
+def _str_to_datetime(arg: str) -> str:
     return datetime.fromisoformat(arg).isoformat()
 
 
@@ -30,7 +31,7 @@ def _str_to_bytes_to_friendly(arg: str) -> str:
     return humanfriendly.format_size(_str_to_bytes(arg))
 
 
-SACCT_FIELD_PARSERS: dict[str, callable] = {
+SACCT_FIELD_PARSERS: dict[str, Callable] = {
     field: _identity for field in SACCT_FIELDS
 }
 

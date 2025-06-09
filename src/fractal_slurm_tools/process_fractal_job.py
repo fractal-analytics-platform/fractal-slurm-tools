@@ -5,10 +5,11 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
-from fractal_slurm_tools.parse_job_folders import find_job_folder
-from fractal_slurm_tools.parse_job_folders import find_slurm_job_ids
-from fractal_slurm_tools.parse_job_folders import find_task_subfolders
-from fractal_slurm_tools.parse_sacct_info import parse_sacct_info
+
+from .parse_job_folders import find_job_folder
+from .parse_job_folders import find_slurm_job_ids
+from .parse_job_folders import find_task_subfolders
+from .parse_sacct_info import parse_sacct_info
 
 logger = logging.getLogger(__name__)
 
@@ -42,13 +43,12 @@ def process_fractal_job(
 def cli_entrypoint(
     *,
     jobs_base_folder: str,
-    output_folder: str,
     fractal_job_id: int,
+    output_folder: Path,
 ):
     # Preliminary steps
     if not Path(jobs_base_folder).exists():
         sys.exit(f"ERROR: missing {jobs_base_folder=}.")
-    output_folder = Path(output_folder)
     if not output_folder.exists():
         output_folder.mkdir()
 

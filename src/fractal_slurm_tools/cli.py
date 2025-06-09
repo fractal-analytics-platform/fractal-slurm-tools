@@ -1,5 +1,6 @@
 import argparse as ap
 import sys
+from pathlib import Path
 
 from .process_fractal_job import cli_entrypoint
 
@@ -46,6 +47,6 @@ def main():
     args = _parse_arguments()
     cli_entrypoint(
         fractal_job_id=args.fractal_job_id,
-        output_folder=args.output_folder,
+        output_folder=Path(args.output_folder),
         jobs_base_folder=args.jobs_folder,
     )
