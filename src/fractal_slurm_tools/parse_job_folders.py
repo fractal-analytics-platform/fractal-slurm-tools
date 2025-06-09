@@ -1,4 +1,8 @@
+import logging
+import sys
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 
 def find_job_folder(
@@ -14,9 +18,11 @@ def find_job_folder(
         if item.is_dir()
     )
     if len(fractal_job_folders) > 1:
-        raise ValueError(f"Found more than one {fractal_job_folders=}.")
+        sys.exit(f"ERROR: Found more than one {fractal_job_folders=}.")
     fractal_job_folder = fractal_job_folders[0]
-    print(f"Fractal-job folder: {fractal_job_folder.as_posix()}")
+    logging.debug(
+        f"Job folder for {fractal_job_id=}: {fractal_job_folder.as_posix()}."
+    )
     return fractal_job_folder
 
 
@@ -28,6 +34,7 @@ def find_task_subfolders(fractal_job_folder: Path) -> list[Path]:
 
 
 def find_slurm_job_ids(task_subfolder: Path) -> list[int]:
+    logging.debug(f"Find SLURM job IDs for {task_subfolder.as_posix()}")
     slurm_job_ids = set()
     for f in task_subfolder.glob("*.out"):
         # Split both using `_` and `-`, to cover conventions for fractal-server
@@ -36,4 +43,6 @@ def find_slurm_job_ids(task_subfolder: Path) -> list[int]:
         jobid = int(jobid_str)
         slurm_job_ids.add(jobid)
     slurm_job_ids = sorted(list(slurm_job_ids))
-    print(f">> SLURM-job IDs: {slurm_job_ids}")
+    logging.debug(
+        f"SLURM job IDs for {task_subfolder.as_posix()}: {slurm_job_ids}"
+    )

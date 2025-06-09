@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 
 from fractal_slurm_tools.run_cmd import run_cmd
@@ -6,12 +7,14 @@ from fractal_slurm_tools.sacct_fields import SACCT_FIELDS
 from fractal_slurm_tools.sacct_fields import SACCT_FMT
 from fractal_slurm_tools.sacct_parsers import SACCT_FIELD_PARSERS
 
+logger = logging.getLogger(__name__)
+
 
 def parse_sacct_info(
     slurm_job_id: int,
     task_subfolder_name: str,
 ) -> list[dict[str, Any]]:
-    print(f">> >> Processing SLURM job with ID {slurm_job_id}")
+    logging.debug(f"Process {slurm_job_id=}.")
     cmd = (
         "sacct "
         f"-j {slurm_job_id} "

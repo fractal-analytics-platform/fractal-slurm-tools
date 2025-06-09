@@ -1,4 +1,5 @@
 import json
+import logging
 import sys
 from pathlib import Path
 from typing import Any
@@ -8,6 +9,8 @@ from fractal_slurm_tools.parse_job_folders import find_job_folder
 from fractal_slurm_tools.parse_job_folders import find_slurm_job_ids
 from fractal_slurm_tools.parse_job_folders import find_task_subfolders
 from fractal_slurm_tools.parse_sacct_info import parse_sacct_info
+
+logger = logging.getLogger(__name__)
 
 
 def process_fractal_job(
@@ -24,7 +27,7 @@ def process_fractal_job(
     # Run `sacct` and parse output
     fractal_job_output_rows = []
     for task_subfolder in task_subfolders:
-        print(f">> Fractal-task subfolder: {task_subfolder.as_posix()}")
+        logging.debug(f"Process task subfolder {task_subfolder.as_posix()}")
         slurm_job_ids = find_slurm_job_ids(task_subfolder)
         for slurm_job_id in slurm_job_ids:
             slurm_job_output_rows = parse_sacct_info(

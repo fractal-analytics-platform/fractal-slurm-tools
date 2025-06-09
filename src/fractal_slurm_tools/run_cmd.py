@@ -3,7 +3,6 @@ import subprocess  # nosec
 
 
 def run_cmd(cmd: str) -> str:
-    print(f"Now run {cmd=}")
     res = subprocess.run(  # nosec
         shlex.split(cmd),
         capture_output=True,
