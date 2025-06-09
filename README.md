@@ -5,7 +5,7 @@
 | Name                                               |    Stmts |     Miss |  Cover |   Missing |
 |--------------------------------------------------- | -------: | -------: | -----: | --------: |
 | src/fractal\_slurm\_tools/\_\_init\_\_.py          |        1 |        1 |     0% |         1 |
-| src/fractal\_slurm\_tools/cli.py                   |       25 |       25 |     0% |      1-72 |
+| src/fractal\_slurm\_tools/cli.py                   |       25 |       25 |     0% |      1-70 |
 | src/fractal\_slurm\_tools/parse\_job\_folders.py   |       24 |       24 |     0% |      1-49 |
 | src/fractal\_slurm\_tools/parse\_sacct\_info.py    |       21 |       21 |     0% |      1-44 |
 | src/fractal\_slurm\_tools/process\_fractal\_job.py |       34 |       34 |     0% |      1-66 |
