@@ -6,13 +6,13 @@
 |--------------------------------------------------- | -------: | -------: | -----: | --------: |
 | src/fractal\_slurm\_tools/\_\_init\_\_.py          |        1 |        1 |     0% |         1 |
 | src/fractal\_slurm\_tools/cli.py                   |       15 |       15 |     0% |      1-47 |
-| src/fractal\_slurm\_tools/parse\_job\_folders.py   |       19 |       19 |     0% |      1-39 |
-| src/fractal\_slurm\_tools/parse\_sacct\_info.py    |       22 |       22 |     0% |      1-43 |
-| src/fractal\_slurm\_tools/process\_fractal\_job.py |       33 |       33 |     0% |      1-63 |
-| src/fractal\_slurm\_tools/run\_cmd.py              |        8 |        8 |     0% |      1-14 |
+| src/fractal\_slurm\_tools/parse\_job\_folders.py   |       23 |       23 |     0% |      1-46 |
+| src/fractal\_slurm\_tools/parse\_sacct\_info.py    |       24 |       24 |     0% |      1-46 |
+| src/fractal\_slurm\_tools/process\_fractal\_job.py |       35 |       35 |     0% |      1-66 |
+| src/fractal\_slurm\_tools/run\_cmd.py              |        7 |        7 |     0% |      1-13 |
 | src/fractal\_slurm\_tools/sacct\_fields.py         |       12 |       12 |     0% |      1-49 |
 | src/fractal\_slurm\_tools/sacct\_parsers.py        |       25 |       25 |     0% |      1-66 |
-|                                          **TOTAL** |  **135** |  **135** | **0%** |           |
+|                                          **TOTAL** |  **142** |  **142** | **0%** |           |
 
 
 ## Setup coverage badge
