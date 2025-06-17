@@ -97,13 +97,14 @@ def cli_entrypoint(
         json.dump(slurm_job_ids, f)
 
     # Parse sacct
+    logger.info(f"Start processing {len(slurm_job_ids)} SLURM jobs.")
     for slurm_job_id in slurm_job_ids:
         outputs = parse_sacct_info(
             slurm_job_id=slurm_job_id,
             task_subfolder_name=None,
         )
         num_tasks = len(outputs)
+        logger.debug(f"SLURM job {slurm_job_id} has {num_tasks=}.")
         keys = ("ElapsedRaw", "NCPUS")
         slim_outputs = [{key: out[key] for key in keys} for out in outputs]
-        logger.debug(f"SLURM job {slurm_job_id} has {num_tasks=}.")
         logger.debug(slim_outputs)

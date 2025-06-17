@@ -64,6 +64,8 @@ def main():
 
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)
+    else:
+        logging.basicConfig(level=logging.INFO)
     from . import __VERSION__
 
     logging.debug(f"fractal-slurm-tools-user-interval version: {__VERSION__}")
