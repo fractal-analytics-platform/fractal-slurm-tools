@@ -118,7 +118,7 @@ def cli_entrypoint(
         slim_outputs = [{key: out[key] for key in keys} for out in outputs]
         logger.debug(slim_outputs)
         job_tot_elapsed = sum(
-            out["ElapsedRaw"] * out["NCPUS"] for out in slim_outputs
+            int(out["ElapsedRaw"]) * int(out["NCPUS"]) for out in slim_outputs
         )
         logger.debug(f"{job_tot_elapsed=}")
         elapsed += job_tot_elapsed
