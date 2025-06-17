@@ -11,6 +11,8 @@ import requests
 
 from .parse_sacct_info import parse_sacct_info
 
+logger = logging.getLogger(__name__)
+
 
 def get_slurm_job_ids_user_month(
     *,
@@ -29,9 +31,9 @@ def get_slurm_job_ids_user_month(
         headers=headers,
     )
     if not resp.ok:
-        logging.error("Could not get the list of users.")
-        logging.error(f"Response status: {resp.status_code}.")
-        logging.error(f"Response body: {resp.json()}.")
+        logger.error("Could not get the list of users.")
+        logger.error(f"Response status: {resp.status_code}.")
+        logger.error(f"Response body: {resp.json()}.")
         sys.exit(1)
 
     # Find matching user
@@ -40,7 +42,7 @@ def get_slurm_job_ids_user_month(
             user["id"] for user in resp.json() if user["email"] == user_email
         )
     except StopIteration:
-        logging.error(f"Could not find user with {user_email=}.")
+        logger.error(f"Could not find user with {user_email=}.")
         sys.exit(1)
 
     # Get IDs for SLURM jobs
@@ -60,10 +62,10 @@ def get_slurm_job_ids_user_month(
         json=request_body,
     )
     if not resp.ok:
-        logging.error("Could not get the IDs of SLURM jobs.")
-        logging.error(f"Request body: {request_body}")
-        logging.error(f"Response status: {resp.status_code}.")
-        logging.error(f"Response body: {resp.json()}.")
+        logger.error("Could not get the IDs of SLURM jobs.")
+        logger.error(f"Request body: {request_body}")
+        logger.error(f"Response status: {resp.status_code}.")
+        logger.error(f"Response body: {resp.json()}.")
         sys.exit(1)
     slurm_job_ids = resp.json()
     return slurm_job_ids
@@ -96,8 +98,12 @@ def cli_entrypoint(
 
     # Parse sacct
     for slurm_job_id in slurm_job_ids:
-        out = parse_sacct_info(
+        outputs = parse_sacct_info(
             slurm_job_id=slurm_job_id,
             task_subfolder_name=None,
         )
-        print(out)
+        num_tasks = len(outputs)
+        keys = ("ElapsedRaw", "NCPUS")
+        slim_outputs = [{key: out[key] for key in keys} for out in outputs]
+        logger.debug(f"SLURM job {slurm_job_id} has {num_tasks=}.")
+        logger.debug(slim_outputs)
