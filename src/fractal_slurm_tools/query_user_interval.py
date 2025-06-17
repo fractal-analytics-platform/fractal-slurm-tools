@@ -91,7 +91,7 @@ def cli_entrypoint(
     )
     outdir = Path(base_output_folder, user_email)
     outdir.mkdir(exist_ok=True, parents=True)
-    with (outdir / "slurm_job_ids.json").open("w") as f:
+    with (outdir / f"{year:4d}_{month:02d}_slurm_jobs.json").open("w") as f:
         json.dump(slurm_job_ids, f)
 
     # Parse sacct
@@ -101,4 +101,3 @@ def cli_entrypoint(
             task_subfolder_name=None,
         )
         print(out)
-        exit()
