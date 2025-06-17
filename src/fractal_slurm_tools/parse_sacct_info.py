@@ -14,7 +14,7 @@ def parse_sacct_info(
     task_subfolder_name: str,
 ) -> list[dict[str, Any]]:
 
-    logging.debug(f"Process {slurm_job_id=}.")
+    logger.debug(f"Process {slurm_job_id=}.")
 
     # Run `sacct` command
     stdout = run_sacct_command(slurm_job_id=slurm_job_id)
