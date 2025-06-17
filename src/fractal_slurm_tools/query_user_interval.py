@@ -84,6 +84,9 @@ def cli_entrypoint(
         sys.exit("Missing env variable FRACTAL_TOKEN")
 
     # Get IDs of SLURM jobs
+    logger.info(
+        f"Find SLURM jobs " f"for {user_email=} (month {year:4d}/{month:02d})."
+    )
     slurm_job_ids = get_slurm_job_ids_user_month(
         fractal_backend_url=fractal_backend_url,
         user_email=user_email,
@@ -91,6 +94,11 @@ def cli_entrypoint(
         month=month,
         token=token,
     )
+    logger.info(
+        f"Found {len(slurm_job_ids)} SLURM jobs "
+        f"for {user_email=} (month {year:4d}/{month:02d})."
+    )
+
     outdir = Path(base_output_folder, user_email)
     outdir.mkdir(exist_ok=True, parents=True)
     with (outdir / f"{year:4d}_{month:02d}_slurm_jobs.json").open("w") as f:
@@ -98,6 +106,7 @@ def cli_entrypoint(
 
     # Parse sacct
     logger.info(f"Start processing {len(slurm_job_ids)} SLURM jobs.")
+    elapsed = 0.0
     for slurm_job_id in slurm_job_ids:
         outputs = parse_sacct_info(
             slurm_job_id=slurm_job_id,
@@ -108,3 +117,9 @@ def cli_entrypoint(
         keys = ("ElapsedRaw", "NCPUS")
         slim_outputs = [{key: out[key] for key in keys} for out in outputs]
         logger.debug(slim_outputs)
+        job_tot_elapsed = sum(
+            out["ElapsedRaw"] * out["NCPUS"] for out in slim_outputs
+        )
+        logger.debug(f"{job_tot_elapsed=}")
+        elapsed += job_tot_elapsed
+    logger.info(f"{elapsed=}")
