@@ -36,6 +36,7 @@ build-backend = "setuptools.build_meta"
 
 [project.scripts]
 fractal-slurm-tools = "fractal_slurm_tools.cli:main"
+fractal-slurm-tools-user-interval = "fractal_slurm_tools.cli_2:main"
 
 [tool.bumpver]
 current_version = "0.0.10"
