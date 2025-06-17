@@ -30,9 +30,9 @@ SACCT_FIELDS: list[str] = [
     "MinCPUTask",
     "ReqTRES",
     "AllocTRES",
+    "Partition",
     # "MaxPages",
     # "MaxPagesTask",
-    # "Partition",
     # "QOS",
 ]
 SACCT_FIELDS_PERCENT: list[str] = []
