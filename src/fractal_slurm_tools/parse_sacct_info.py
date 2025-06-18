@@ -12,7 +12,11 @@ logger = logging.getLogger(__name__)
 def parse_sacct_info(
     slurm_job_id: int,
     task_subfolder_name: str,
+    parser_overrides: dict | None = None,
 ) -> list[dict[str, Any]]:
+
+    actual_parsers = SACCT_FIELD_PARSERS
+    actual_parsers.update(parser_overrides)
 
     logger.debug(f"Process {slurm_job_id=}.")
 
@@ -31,7 +35,7 @@ def parse_sacct_info(
     for python_line in python_lines:
         python_line_items = python_line.split(DELIMITER)
         output_row = {
-            SACCT_FIELDS[ind]: SACCT_FIELD_PARSERS[SACCT_FIELDS[ind]](item)
+            SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)
             for ind, item in enumerate(python_line_items)
         }
         output_row.update(
