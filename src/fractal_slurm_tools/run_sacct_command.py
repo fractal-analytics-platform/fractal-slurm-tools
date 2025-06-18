@@ -5,13 +5,21 @@ from .sacct_fields import DELIMITER
 from .sacct_fields import SACCT_FMT
 
 
-def run_sacct_command(slurm_job_id_str: str) -> str:
+def run_sacct_command(job_string: str) -> str:
     """
-    FIXME: Docstring, about one-vs-many jobs
+    Run the `sacct` command
+
+    Args:
+        job_string:
+            Either a single SLURM-job ID or a comma-separated list, which is
+            then provided to `sacct` option `-j`.
+
+    Returns:
+        Standard output of `sacct` command.
     """
     cmd = (
         "sacct "
-        f"-j {slurm_job_id_str} "
+        f"-j {job_string} "
         "--noheader "
         "--parsable2 "
         f'--format "{SACCT_FMT}" '

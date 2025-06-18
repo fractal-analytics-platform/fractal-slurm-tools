@@ -22,6 +22,7 @@ dev = [
     "pytest >=8.3.0, <9.0.0",
     "coverage >=7.6.0,<7.7.0",
     "types-humanfriendly",
+    "types-requests",
     "pandas-stubs",
     "mypy",
 ]

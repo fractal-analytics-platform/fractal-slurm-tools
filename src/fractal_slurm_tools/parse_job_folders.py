@@ -33,15 +33,16 @@ def find_task_subfolders(fractal_job_folder: Path) -> list[Path]:
     return task_subfolders
 
 
-def find_slurm_job_ids(task_subfolder: Path) -> list[int]:
+def find_slurm_job_ids(task_subfolder: Path) -> list[str]:
     logging.debug(f"Find SLURM job IDs for {task_subfolder.as_posix()}")
     slurm_job_ids_set = set()
     for f in task_subfolder.glob("*.out"):
         # Split both using `_` and `-`, to cover conventions for fractal-server
         # below/above 2.14.0.
         jobid_str = f.with_suffix("").name.split("_")[-1].split("-")[-1]
-        jobid = int(jobid_str)
-        slurm_job_ids_set.add(jobid)
+        # Verify that `jobid_str` can be cast to `int`, and then append it
+        int(jobid_str)
+        slurm_job_ids_set.add(jobid_str)
     slurm_job_ids_list = sorted(list(slurm_job_ids_set))
     logging.debug(
         f"SLURM job IDs for {task_subfolder.as_posix()}: {slurm_job_ids_list}"

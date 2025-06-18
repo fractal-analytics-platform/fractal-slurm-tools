@@ -6,16 +6,18 @@ import sys
 from datetime import datetime
 from datetime import timezone
 from pathlib import Path
-from typing import Any
 
 import requests
 
 from .parse_sacct_info import parse_sacct_info
+from .parse_sacct_info import SLURMTaskInfo
 from .sacct_parsers import _str_to_bytes
 
 logger = logging.getLogger(__name__)
 
+SACCT_BATCH_SIZE = 20
 
+# Override default parsers with non-human-readable ones.
 PARSERS = {
     field: _str_to_bytes
     for field in (
@@ -23,28 +25,32 @@ PARSERS = {
         "MaxDiskRead",
         "AveDiskWrite",
         "AveDiskRead",
-        # "MaxRSS",
-        # "MaxVMSize",
-        # "AveRSS",
-        # "AveVMSize",
     )
 }
 
 
-AVE_MAX_LABELS = ("DiskRead", "DiskWrite", "RSS", "VMSize")
-
-
-def _verify_max_same_as_ave(outputs: list[dict[str, Any]]) -> None:
+def _verify_single_task_per_job(outputs: list[SLURMTaskInfo]) -> None:
     """
+    Verify the single-task-per-step assumption.
+
     Since each relevant `srun` line in `sacct` is made by a single
     task, its maximum and average values must be identical.
-
     """
+    AVE_MAX_LABELS = ("DiskRead", "DiskWrite", "RSS", "VMSize")
     for out in outputs:
+        if out["NTasks"] > 1:
+            logger.error(json.dumps(out, indent=2))
+            raise ValueError(
+                "Single-task-per-step assumption violation "
+                f"(NTasks={out['NTasks']})"
+            )
         for label in AVE_MAX_LABELS:
             if out[f"Ave{label}"] != out[f"Max{label}"]:
                 logger.error(json.dumps(out, indent=2))
-                raise ValueError(f"Ave{label} differs from Max{label}.")
+                raise ValueError(
+                    "Single-task-per-step assumption violation "
+                    f"(Ave{label} differs from Max{label})."
+                )
 
 
 def get_slurm_job_ids_user_month(
@@ -138,39 +144,44 @@ def cli_entrypoint(
         json.dump(slurm_job_ids, f, indent=2)
 
     # Parse sacct
-
     tot_num_jobs = len(slurm_job_ids)
-    batch_size = 10
     logger.info(
-        f"Start processing {tot_num_jobs} SLURM jobs, with {batch_size=}."
+        f"Start processing {tot_num_jobs} SLURM jobs "
+        f"(in batches of {SACCT_BATCH_SIZE} jobs at a time)."
     )
 
     tot_cputime_hours = 0.0
     tot_diskread_GB = 0.0
     tot_diskwrite_GB = 0.0
     tot_num_tasks = 0
-    for starting_ind in range(0, tot_num_jobs, batch_size):
+    for starting_ind in range(0, tot_num_jobs, SACCT_BATCH_SIZE):
+
+        # Prepare batch string
         slurm_job_ids_batch = ",".join(
             list(
                 map(
                     str,
-                    slurm_job_ids[starting_ind : starting_ind + batch_size],
+                    slurm_job_ids[
+                        starting_ind : starting_ind + SACCT_BATCH_SIZE
+                    ],
                 )
             )
         )
         logger.debug(f">> {slurm_job_ids_batch=}")
-        outputs = parse_sacct_info(
-            slurm_job_id=slurm_job_ids_batch,
+
+        # Run `sacct` and pars its output
+        list_task_info = parse_sacct_info(
+            job_string=slurm_job_ids_batch,
             task_subfolder_name=None,
             parser_overrides=PARSERS,
         )
-        _verify_max_same_as_ave(outputs)
+        _verify_single_task_per_job(list_task_info)
 
-        num_tasks = len(outputs)
+        # Aggregate statistics
+        num_tasks = len(list_task_info)
         tot_num_tasks += num_tasks
         logger.debug(f">> {slurm_job_ids_batch=} has {num_tasks=}.")
-
-        for out in outputs:
+        for out in list_task_info:
             cputime_hours = out["CPUTimeRaw"] / 3600
             diskread_GB = out["AveDiskRead"] / 1e9
             diskwrite_GB = out["AveDiskWrite"] / 1e9
@@ -183,7 +194,6 @@ def cli_entrypoint(
         f"{tot_diskread_GB=:.3f} "
         f"{tot_diskwrite_GB=:.3f}"
     )
-
     stats = dict(
         user_email=user_email,
         year=year,
@@ -195,8 +205,4 @@ def cli_entrypoint(
         tot_diskwrite_GB=tot_diskwrite_GB,
     )
     with (outdir / f"{year:4d}_{month:02d}_stats.json").open("w") as f:
-        json.dump(
-            stats,
-            f,
-            indent=2,
-        )
+        json.dump(stats, f, indent=2)

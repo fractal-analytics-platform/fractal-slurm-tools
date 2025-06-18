@@ -15,6 +15,9 @@ def _str_to_float_to_int(arg: str) -> int:
 
 
 def _dhhmmss_to_seconds(arg: str) -> int:
+    """
+    Supports both `HH:MM:SS` and `D-HH:MM:SS`.
+    """
     if "-" in arg:
         days, hhmmss = arg.split("-")
     else:

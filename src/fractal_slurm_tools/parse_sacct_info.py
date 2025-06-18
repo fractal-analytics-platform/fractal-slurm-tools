@@ -1,5 +1,7 @@
 import logging
+from copy import deepcopy
 from typing import Any
+from typing import Callable
 
 from .run_sacct_command import run_sacct_command
 from .sacct_fields import DELIMITER
@@ -8,57 +10,69 @@ from .sacct_parsers import SACCT_FIELD_PARSERS
 
 logger = logging.getLogger(__name__)
 
+SLURMTaskInfo = dict[str, Any]
+
 INDEX_JOB_NAME = SACCT_FIELDS.index("JobName")
 INDEX_STATE = SACCT_FIELDS.index("State")
 
 
 def parse_sacct_info(
-    slurm_job_id: str,
-    task_subfolder_name: str,
-    parser_overrides: dict | None = None,
-) -> list[dict[str, Any]]:
+    job_string: str,
+    task_subfolder_name: str | None = None,
+    parser_overrides: dict[str, Callable] | None = None,
+) -> list[SLURMTaskInfo]:
     """
-    FIXME: document slurm_job_id arg.
+    Run `sacct` and parse its output
+
+    Args:
+        job_string:
+            Either a single SLURM-job ID or a comma-separated list, which is
+            then provided to `sacct` option `-j`.
+        task_subfolder_name:
+            Name of task subfolder, which is included in the output.
+        parser_overrides:
+            Overrides of the parser defined in `SACCT_FIELD_PARSERS`
+
+    Returns:
+        List of `SLURMTaskInfo` dictionaries (one per `python` line in
+        `sacct` output).
     """
+    logger.debug(f"START, with {job_string=}.")
 
-    actual_parsers = SACCT_FIELD_PARSERS
-    actual_parsers.update(parser_overrides)
-
-    logger.debug(f"Process {slurm_job_id=}.")
+    # Update parsers, if needed
+    actual_parsers = deepcopy(SACCT_FIELD_PARSERS)
+    actual_parsers.update(parser_overrides or {})
 
     # Run `sacct` command
-    stdout = run_sacct_command(slurm_job_id_str=slurm_job_id)
-
+    stdout = run_sacct_command(job_string=job_string)
     lines = stdout.splitlines()
-    job_name = lines[0].split(DELIMITER)[INDEX_JOB_NAME]
-    python_lines = [
-        line
-        for line in lines
-        if line.split(DELIMITER)[INDEX_JOB_NAME] in ["python", "python3"]
-    ]
-    output_rows = []
-    for python_line in python_lines:
-        python_line_items = python_line.split(DELIMITER)
-        if python_line_items[INDEX_STATE] == "RUNNING":
-            logger.debug("Skip RUNNING task")
+
+    list_task_info = []
+    for line in lines:
+        line_items = line.split(DELIMITER)
+        # Skip non-Python steps/tasks
+        if line_items[INDEX_JOB_NAME] not in ["python", "python3"]:
             continue
+        # Skip running steps
+        if line_items[INDEX_STATE] == "RUNNING":
+            continue
+
+        # Parse all fields
         try:
-            output_row = {
+            task_info = {
                 SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)
-                for ind, item in enumerate(python_line_items)
+                for ind, item in enumerate(line_items)
             }
         except Exception as e:
-            logger.error("Error while parsing the following line")
-            logger.error(f"{python_line}")
-            for ind, item in enumerate(python_line_items):
-                logger.error(f"{ind:3d}, {SACCT_FIELDS[ind]}, {item}")
-            logger.error(f"{python_line_items}")
+            logger.error(f"Could not parse {line=}")
+            for ind, item in enumerate(line_items):
+                logger.error(f"'{SACCT_FIELDS[ind]}' raw item: {item}")
+                logger.error(
+                    f"'{SACCT_FIELDS[ind]}' parsed item: "
+                    f"{actual_parsers[SACCT_FIELDS[ind]](item)}"
+                )
             raise e
-        output_row.update(
-            dict(
-                JobName=job_name,
-                task_subfolder=task_subfolder_name,
-            )
-        )
-        output_rows.append(output_row)
-    return output_rows
+        if task_subfolder_name is not None:
+            task_info.update(dict(task_subfolder=task_subfolder_name))
+        list_task_info.append(task_info)
+    return list_task_info
