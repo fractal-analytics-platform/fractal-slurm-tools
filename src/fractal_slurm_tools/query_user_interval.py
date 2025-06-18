@@ -117,9 +117,9 @@ def cli_entrypoint(
         num_tasks = len(outputs)
         if num_tasks < 2:
             logger.debug(f"Skip because {num_tasks=}")
-        elif outputs[0]["NCPUS"] == 1:
-            #     logger.debug(f"Skip because {outputs[0]['NCPUS']=}")
-            # elif "Stardist" in str(outputs):
+        # elif outputs[0]["NCPUS"] == 1:
+        #     logger.debug(f"Skip because {outputs[0]['NCPUS']=}")
+        elif "Stardist" in str(outputs):
             logger.debug("Skip because stardist")
         else:
             for out in outputs:
