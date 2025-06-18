@@ -119,7 +119,7 @@ def cli_entrypoint(
         else:
             for out in outputs:
                 print(json.dumps(out, indent=2))
-
+            exit()
     #         print(out)
     #     logger.debug(f"SLURM job {slurm_job_id} has {num_tasks=}.")
     #     keys = ("ElapsedRaw", "NCPUS")
