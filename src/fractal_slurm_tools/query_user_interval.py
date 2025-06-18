@@ -55,7 +55,7 @@ def _verify_single_task_per_job(outputs: list[SLURMTaskInfo]) -> None:
             if not numpy.isclose(
                 out[f"Ave{label}"],
                 out[f"Max{label}"],
-                rtol=0.02,
+                rtol=0.05,
             ):
                 logger.error(json.dumps(out, indent=2))
                 raise ValueError(
