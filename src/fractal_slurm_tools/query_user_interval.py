@@ -56,6 +56,7 @@ def get_slurm_job_ids_user_month(
         timestamp_min=timestamp_min,
         timestamp_max=timestamp_max,
     )
+    logger.debug(f"{request_body=}")
     resp = requests.post(
         f"{fractal_backend_url}/admin/v2/accounting/slurm/",
         headers=headers,
