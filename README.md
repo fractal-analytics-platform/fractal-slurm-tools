@@ -12,9 +12,9 @@
 | src/fractal\_slurm\_tools/process\_fractal\_job.py |       34 |       34 |     0% |      1-66 |
 | src/fractal\_slurm\_tools/query\_user\_interval.py |       89 |       89 |     0% |     1-208 |
 | src/fractal\_slurm\_tools/run\_sacct\_command.py   |        8 |        8 |     0% |      1-35 |
-| src/fractal\_slurm\_tools/sacct\_fields.py         |       12 |       12 |     0% |      1-51 |
+| src/fractal\_slurm\_tools/sacct\_fields.py         |       17 |       17 |     0% |      1-59 |
 | src/fractal\_slurm\_tools/sacct\_parsers.py        |       30 |       30 |     0% |      1-78 |
-|                                          **TOTAL** |  **283** |  **283** | **0%** |           |
+|                                          **TOTAL** |  **288** |  **288** | **0%** |           |
 
 
 ## Setup coverage badge
