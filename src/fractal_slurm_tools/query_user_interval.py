@@ -115,7 +115,7 @@ def cli_entrypoint(
         )
         num_tasks = len(outputs)
         ncpus = outputs[0]["NCPUS"]
-        if num_tasks == 1 or ncpus == 1:
+        if num_tasks == 1 or ncpus == 1 or "Stardist" in str(outputs):
             continue
         else:
             for out in outputs:
