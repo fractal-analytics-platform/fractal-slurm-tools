@@ -20,6 +20,8 @@ def _hhmmss_to_seconds(arg: str) -> int:
 
 
 def _str_to_datetime(arg: str) -> str:
+    if arg == "Unknown":
+        return arg
     return datetime.fromisoformat(arg).isoformat()
 
 
