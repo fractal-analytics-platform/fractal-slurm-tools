@@ -25,6 +25,10 @@ PARSERS = {
         "MaxDiskRead",
         "AveDiskWrite",
         "AveDiskRead",
+        "AveRSS",
+        "MaxRSS",
+        "AveVMSize",
+        "MaxVMSize",
     )
 }
 
