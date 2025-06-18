@@ -11,6 +11,7 @@ SACCT_FIELDS: list[str] = [
     "Elapsed",
     "ElapsedRaw",
     "CPUTime",
+    "CPUTimeRaw",
     "TotalCPU",
     "NCPUS",
     "MaxDiskRead",

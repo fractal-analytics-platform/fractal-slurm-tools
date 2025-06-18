@@ -106,20 +106,31 @@ def cli_entrypoint(
 
     # Parse sacct
     logger.info(f"Start processing {len(slurm_job_ids)} SLURM jobs.")
-    elapsed = 0.0
+
+    # cputime_tot = 0.0
     for slurm_job_id in slurm_job_ids:
         outputs = parse_sacct_info(
             slurm_job_id=slurm_job_id,
             task_subfolder_name=None,
         )
         num_tasks = len(outputs)
-        logger.debug(f"SLURM job {slurm_job_id} has {num_tasks=}.")
-        keys = ("ElapsedRaw", "NCPUS")
-        slim_outputs = [{key: out[key] for key in keys} for out in outputs]
-        logger.debug(slim_outputs)
-        job_tot_elapsed = sum(
-            int(out["ElapsedRaw"]) * int(out["NCPUS"]) for out in slim_outputs
-        )
-        logger.debug(f"{job_tot_elapsed=}")
-        elapsed += job_tot_elapsed
-    logger.info(f"{elapsed=}")
+        if num_tasks == 1:
+            continue
+        else:
+            for out in outputs:
+                print(json.dumps(out, indent=2))
+
+    #         print(out)
+    #     logger.debug(f"SLURM job {slurm_job_id} has {num_tasks=}.")
+    #     keys = ("ElapsedRaw", "NCPUS")
+    #     slim_outputs = [{key: out[key] for key in keys} for out in outputs]
+    #     logger.debug(slim_outputs)
+    #     job_tot_elapsed = sum(
+    #         int(out["CPUTimeRaw"]) for out in slim_outputs
+    #     )
+    #     logger.debug(f"{job_tot_elapsed=}")
+    #     elapsed += job_tot_elapsed
+    # logger.info(f"{elapsed=}")
+
+    # with (outdir / f"{year:4d}_{month:02d}_slurm_jobs.json").open("w") as f:
+    #     json.dump(slurm_job_ids, f)

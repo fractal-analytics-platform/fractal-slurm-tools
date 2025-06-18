@@ -69,6 +69,7 @@ def main():
     from . import __VERSION__
 
     logging.debug(f"fractal-slurm-tools-user-interval version: {__VERSION__}")
+    logging.debug(f"{args=}")
 
     cli_entrypoint(
         fractal_backend_url=args.fractal_backend_url,
