@@ -62,10 +62,11 @@ def _parse_arguments(sys_argv: list[str] | None = None) -> ap.Namespace:
 def main():
     args = _parse_arguments()
 
+    fmt = "%(asctime)s; %(levelname)s; %(message)s"
     if args.verbose:
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(level=logging.DEBUG, format=fmt)
     else:
-        logging.basicConfig(level=logging.INFO)
+        logging.basicConfig(level=logging.INFO, format=fmt)
     from . import __VERSION__
 
     logging.debug(f"fractal-slurm-tools-user-interval version: {__VERSION__}")
