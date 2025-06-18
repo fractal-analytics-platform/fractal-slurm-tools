@@ -14,7 +14,9 @@ def parse_sacct_info(
     task_subfolder_name: str,
     parser_overrides: dict | None = None,
 ) -> list[dict[str, Any]]:
-    """ """
+    """
+    FIXME: document slurm_job_id arg.
+    """
 
     actual_parsers = SACCT_FIELD_PARSERS
     actual_parsers.update(parser_overrides)
@@ -22,7 +24,7 @@ def parse_sacct_info(
     logger.debug(f"Process {slurm_job_id=}.")
 
     # Run `sacct` command
-    stdout = run_sacct_command(slurm_job_id=slurm_job_id)
+    stdout = run_sacct_command(slurm_job_id_str=slurm_job_id)
 
     lines = stdout.splitlines()
     index_job_name = SACCT_FIELDS.index("JobName")
