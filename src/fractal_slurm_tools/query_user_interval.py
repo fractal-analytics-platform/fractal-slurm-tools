@@ -138,15 +138,29 @@ def cli_entrypoint(
         json.dump(slurm_job_ids, f, indent=2)
 
     # Parse sacct
-    logger.info(f"Start processing {len(slurm_job_ids)} SLURM jobs.")
+
+    tot_num_jobs = len(slurm_job_ids)
+    batch_size = 10
+    logger.info(
+        f"Start processing {tot_num_jobs} SLURM jobs, with {batch_size=}."
+    )
 
     tot_cputime_hours = 0.0
     tot_diskread_GB = 0.0
     tot_diskwrite_GB = 0.0
     tot_num_tasks = 0
-    for slurm_job_id in slurm_job_ids:
+    for starting_ind in range(0, tot_num_jobs, batch_size):
+        slurm_job_ids_batch = ",".join(
+            list(
+                map(
+                    str,
+                    slurm_job_ids[starting_ind : starting_ind + batch_size],
+                )
+            )
+        )
+        logger.debug(f">> {slurm_job_ids_batch=}")
         outputs = parse_sacct_info(
-            slurm_job_id=slurm_job_id,
+            slurm_job_id=slurm_job_ids_batch,
             task_subfolder_name=None,
             parser_overrides=PARSERS,
         )
@@ -154,15 +168,12 @@ def cli_entrypoint(
 
         num_tasks = len(outputs)
         tot_num_tasks += num_tasks
-        logger.debug(f"SLURM job {slurm_job_id} has {num_tasks=}.")
+        logger.debug(f">> {slurm_job_ids_batch=} has {num_tasks=}.")
 
         for out in outputs:
             cputime_hours = out["CPUTimeRaw"] / 3600
             diskread_GB = out["AveDiskRead"] / 1e9
             diskwrite_GB = out["AveDiskWrite"] / 1e9
-            logger.debug(
-                f">> {cputime_hours=}, {diskread_GB=}, {diskwrite_GB=}"
-            )
             tot_cputime_hours += cputime_hours
             tot_diskread_GB += diskread_GB
             tot_diskwrite_GB += diskwrite_GB

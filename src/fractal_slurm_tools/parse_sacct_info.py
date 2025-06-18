@@ -10,10 +10,11 @@ logger = logging.getLogger(__name__)
 
 
 def parse_sacct_info(
-    slurm_job_id: int,
+    slurm_job_id: str,
     task_subfolder_name: str,
     parser_overrides: dict | None = None,
 ) -> list[dict[str, Any]]:
+    """ """
 
     actual_parsers = SACCT_FIELD_PARSERS
     actual_parsers.update(parser_overrides)
