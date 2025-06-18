@@ -43,8 +43,9 @@ def parse_sacct_info(
                 for ind, item in enumerate(python_line_items)
             }
         except Exception as e:
-            logger.error("Error while parsing output_row:")
-            logger.error(f"{output_row}")
+            logger.error("Error while parsing the following line")
+            logger.error(f"{python_line}")
+            logger.error(f"{python_line_items}")
             raise e
         output_row.update(
             dict(
