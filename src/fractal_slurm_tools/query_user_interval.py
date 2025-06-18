@@ -114,7 +114,8 @@ def cli_entrypoint(
             task_subfolder_name=None,
         )
         num_tasks = len(outputs)
-        if num_tasks == 1:
+        ncpus = outputs[0]["NCPUs"]
+        if num_tasks == 1 or ncpus == 1:
             continue
         else:
             for out in outputs:
