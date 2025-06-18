@@ -172,6 +172,9 @@ def cli_entrypoint(
     logger.info(f"{tot_diskwrite_GB=}")
 
     stats = dict(
+        user_email=user_email,
+        year=year,
+        month=month,
         tot_number_jobs=len(slurm_job_ids),
         tot_number_tasks=tot_num_tasks,
         tot_cputime_hours=tot_cputime_hours,
