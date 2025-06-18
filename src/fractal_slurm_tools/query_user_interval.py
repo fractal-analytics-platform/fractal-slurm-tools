@@ -7,7 +7,6 @@ from datetime import datetime
 from datetime import timezone
 from pathlib import Path
 
-import numpy
 import requests
 
 from .parse_sacct_info import parse_sacct_info
@@ -41,9 +40,10 @@ def _verify_single_task_per_job(outputs: list[SLURMTaskInfo]) -> None:
     Since each relevant `srun` line in `sacct` is made by a single
     task, its maximum and average values must be identical.
 
-    Note: we add a 10% tolerance in `numpy.isclose`.
+    Note: see
+    https://github.com/fractal-analytics-platform/fractal-slurm-tools/issues/11.
     """
-    AVE_MAX_LABELS = ("DiskRead", "DiskWrite", "RSS", "VMSize")
+    # AVE_MAX_LABELS = ("DiskRead", "DiskWrite", "RSS", "VMSize")
     for out in outputs:
         if out["NTasks"] > 1:
             logger.error(json.dumps(out, indent=2))
@@ -51,17 +51,17 @@ def _verify_single_task_per_job(outputs: list[SLURMTaskInfo]) -> None:
                 "Single-task-per-step assumption violation "
                 f"(NTasks={out['NTasks']})"
             )
-        for label in AVE_MAX_LABELS:
-            if not numpy.isclose(
-                out[f"Ave{label}"],
-                out[f"Max{label}"],
-                rtol=0.1,
-            ):
-                logger.error(json.dumps(out, indent=2))
-                raise ValueError(
-                    "Single-task-per-step assumption violation "
-                    f"(Ave{label} differs from Max{label})."
-                )
+        # for label in AVE_MAX_LABELS:
+        #     if not numpy.isclose(
+        #         out[f"Ave{label}"],
+        #         out[f"Max{label}"],
+        #         rtol=0.1,
+        #     ):
+        #         logger.error(json.dumps(out, indent=2))
+        #         raise ValueError(
+        #             "Single-task-per-step assumption violation "
+        #             f"(Ave{label} differs from Max{label})."
+        #         )
 
 
 def get_slurm_job_ids_user_month(
