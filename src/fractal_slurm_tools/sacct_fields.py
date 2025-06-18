@@ -1,16 +1,15 @@
+import os
+
 SACCT_FIELDS: list[str] = [
     "JobID",
     "JobName",
     "NodeList",
     "NTasks",
-    "SubmitLine",
-    "WorkDir",
     "Submit",
     "Start",
     "End",
     "State",
     "Elapsed",
-    "ElapsedRaw",
     "CPUTime",
     "CPUTimeRaw",
     "TotalCPU",
@@ -33,10 +32,19 @@ SACCT_FIELDS: list[str] = [
     "ReqTRES",
     "AllocTRES",
     "Partition",
-    # "MaxPages",
-    # "MaxPagesTask",
-    # "QOS",
+    "QOS",
+    "SubmitLine",
+    "WorkDir",
+    "ElapsedRaw",
 ]
+
+if os.getenv("USE_LEGACY_SLURM_FIELDS") is not None:
+    # Expose legacy mode, which works with slurm 15.08.7
+    SACCT_FIELDS.pop(SACCT_FIELDS.index("WorkDir"))
+    SACCT_FIELDS.pop(SACCT_FIELDS.index("SubmitLine"))
+    SACCT_FIELDS.pop(SACCT_FIELDS.index("ElapsedRaw"))
+
+
 SACCT_FIELDS_PERCENT: list[str] = []
 for field in SACCT_FIELDS:
     mod_field = field
