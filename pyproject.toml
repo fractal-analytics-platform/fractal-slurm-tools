@@ -1,6 +1,6 @@
 [project]
 name = "fractal-slurm-tools"
-version = "0.0.18"
+version = "0.0.19"
 description = "Shared tools for parsing&processing SLURM data"
 authors = [
     {name="Tommaso Comparin", email="tommaso.comparin@exact-lab.it"},
@@ -42,7 +42,7 @@ fractal-slurm-tools = "fractal_slurm_tools.cli:main"
 fractal-slurm-tools-user-interval = "fractal_slurm_tools.cli_2:main"
 
 [tool.bumpver]
-current_version = "0.0.18"
+current_version = "0.0.19"
 version_pattern = "MAJOR.MINOR.PATCH[PYTAGNUM]"
 commit_message = "bump version {old_version} -> {new_version}"
 commit = true
