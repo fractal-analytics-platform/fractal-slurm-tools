@@ -14,9 +14,17 @@ def _str_to_float_to_int(arg: str) -> int:
     return int(float(arg))
 
 
-def _hhmmss_to_seconds(arg: str) -> int:
-    hh, mm, ss = arg.split(":")[:]
-    return int(hh) * 3600 + int(mm) * 60 + int(ss)
+def _dhhmmss_to_seconds(arg: str) -> int:
+    """
+    Supports both `HH:MM:SS` and `D-HH:MM:SS`.
+    """
+    if "-" in arg:
+        days, hhmmss = arg.split("-")
+    else:
+        days = "0"
+        hhmmss = arg[:]
+    hh, mm, ss = hhmmss.split(":")[:]
+    return int(days) * 3600 * 24 + int(hh) * 3600 + int(mm) * 60 + int(ss)
 
 
 def _str_to_datetime(arg: str) -> str:
@@ -45,11 +53,14 @@ for field in [
     "MaxPagesTask",
     "MaxRSSTask",
     "MaxVMSizeTask",
+    "CPUTimeRaw",
+    "ElapsedRaw",
+    "NCPUS",
 ]:
     SACCT_FIELD_PARSERS[field] = _str_to_float_to_int
 
 for field in ["Elapsed", "CPUTime", "MinCPU", "AveCPU"]:
-    SACCT_FIELD_PARSERS[field] = _hhmmss_to_seconds
+    SACCT_FIELD_PARSERS[field] = _dhhmmss_to_seconds
 
 for field in ["Submit", "Start", "End"]:
     SACCT_FIELD_PARSERS[field] = _str_to_datetime

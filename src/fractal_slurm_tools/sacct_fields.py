@@ -8,9 +8,11 @@ SACCT_FIELDS: list[str] = [
     "Submit",
     "Start",
     "End",
+    "State",
     "Elapsed",
     "ElapsedRaw",
     "CPUTime",
+    "CPUTimeRaw",
     "TotalCPU",
     "NCPUS",
     "MaxDiskRead",
@@ -30,9 +32,9 @@ SACCT_FIELDS: list[str] = [
     "MinCPUTask",
     "ReqTRES",
     "AllocTRES",
+    "Partition",
     # "MaxPages",
     # "MaxPagesTask",
-    # "Partition",
     # "QOS",
 ]
 SACCT_FIELDS_PERCENT: list[str] = []

@@ -4,8 +4,6 @@ import sys
 from pathlib import Path
 from typing import Any
 
-import pandas as pd
-
 from .parse_job_folders import find_job_folder
 from .parse_job_folders import find_slurm_job_ids
 from .parse_job_folders import find_task_subfolders
@@ -46,6 +44,8 @@ def cli_entrypoint(
     fractal_job_id: int,
     output_folder: Path,
 ):
+    import pandas as pd
+
     # Preliminary steps
     if not Path(jobs_base_folder).exists():
         sys.exit(f"ERROR: missing {jobs_base_folder=}.")
