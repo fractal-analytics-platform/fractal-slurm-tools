@@ -114,8 +114,11 @@ def cli_entrypoint(
             task_subfolder_name=None,
         )
         num_tasks = len(outputs)
-        ncpus = outputs[0]["NCPUS"]
-        if num_tasks == 1 or ncpus == 1 or "Stardist" in str(outputs):
+        if (
+            num_tasks < 2
+            or outputs[0]["NCPUS"] == 1
+            or "Stardist" in str(outputs)
+        ):
             continue
         else:
             for out in outputs:
