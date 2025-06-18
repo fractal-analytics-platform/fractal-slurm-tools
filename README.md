@@ -30,7 +30,7 @@ $ pipx run --spec git+https://github.com/fractal-analytics-platform/fractal-slur
 
 # A useful `sacct` command
 ```console
-sacct --format='JobID%18,JobName%18,ReqMem,MaxRSS,AveRSS,Elapsed,NCPUS,CPUTimeRaw,MaxDiskRead,MaxDiskWrite' -j XXXX
+sacct --format='JobID%18,JobName%18,State,ReqMem,MaxRSS,AveRSS,Elapsed,NCPUS,CPUTimeRaw,MaxDiskRead,MaxDiskWrite' -j XXXX
 ```
 
 # Development

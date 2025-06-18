@@ -51,7 +51,7 @@ def parse_sacct_info(
             logger.error("Error while parsing the following line")
             logger.error(f"{python_line}")
             for ind, item in enumerate(python_line_items):
-                logger.error(f"{ind=}, {item=}, {SACCT_FIELDS[ind]=}")
+                logger.error(f"{ind:3d}, {SACCT_FIELDS[ind]}, {item}")
             logger.error(f"{python_line_items}")
             raise e
         output_row.update(
