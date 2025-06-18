@@ -45,7 +45,8 @@ for field in [
     "MaxPagesTask",
     "MaxRSSTask",
     "MaxVMSizeTask",
-    "CPUTimeRaw" "ElapsedRaw",
+    "CPUTimeRaw",
+    "ElapsedRaw",
     "NCPUS",
 ]:
     SACCT_FIELD_PARSERS[field] = _str_to_float_to_int
