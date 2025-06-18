@@ -41,7 +41,7 @@ def _verify_single_task_per_job(outputs: list[SLURMTaskInfo]) -> None:
     Since each relevant `srun` line in `sacct` is made by a single
     task, its maximum and average values must be identical.
 
-    Note: we add a 2% tolerance in `numpy.isclose`.
+    Note: we add a 5% tolerance in `numpy.isclose`.
     """
     AVE_MAX_LABELS = ("DiskRead", "DiskWrite", "RSS", "VMSize")
     for out in outputs:
