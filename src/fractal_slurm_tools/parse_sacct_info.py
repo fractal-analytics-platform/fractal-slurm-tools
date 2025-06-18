@@ -37,10 +37,15 @@ def parse_sacct_info(
     output_rows = []
     for python_line in python_lines:
         python_line_items = python_line.split(DELIMITER)
-        output_row = {
-            SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)
-            for ind, item in enumerate(python_line_items)
-        }
+        try:
+            output_row = {
+                SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)
+                for ind, item in enumerate(python_line_items)
+            }
+        except Exception as e:
+            logger.error("Error while parsing output_row:")
+            logger.error(f"{output_row}")
+            raise e
         output_row.update(
             dict(
                 JobName=job_name,

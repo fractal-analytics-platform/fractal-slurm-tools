@@ -178,9 +178,11 @@ def cli_entrypoint(
             tot_diskread_GB += diskread_GB
             tot_diskwrite_GB += diskwrite_GB
 
-    logger.info(f"{tot_cputime_hours=}")
-    logger.info(f"{tot_diskread_GB=}")
-    logger.info(f"{tot_diskwrite_GB=}")
+    logger.info(
+        f"{tot_cputime_hours=:.1f}, "
+        f"{tot_diskread_GB=:.3f} "
+        f"{tot_diskwrite_GB=:.3f}"
+    )
 
     stats = dict(
         user_email=user_email,
