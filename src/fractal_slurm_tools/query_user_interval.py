@@ -64,8 +64,8 @@ def get_slurm_job_ids_user_month(
     )
     if not resp.ok:
         logger.error("Could not get the IDs of SLURM jobs.")
-        logger.error(f"Request body: {request_body}")
         logger.error(f"Response status: {resp.status_code}.")
+        logger.error(f"Request body: {request_body}")
         logger.error(f"Response body: {resp.json()}.")
         sys.exit(1)
     slurm_job_ids = resp.json()
@@ -86,7 +86,7 @@ def cli_entrypoint(
 
     # Get IDs of SLURM jobs
     logger.info(
-        f"Find SLURM jobs " f"for {user_email=} (month {year:4d}/{month:02d})."
+        f"Find SLURM jobs for {user_email=} (month {year:4d}/{month:02d})."
     )
     slurm_job_ids = get_slurm_job_ids_user_month(
         fractal_backend_url=fractal_backend_url,
@@ -115,12 +115,12 @@ def cli_entrypoint(
             task_subfolder_name=None,
         )
         num_tasks = len(outputs)
-        if (
-            num_tasks < 2
-            or outputs[0]["NCPUS"] == 1
-            or "Stardist" in str(outputs)
-        ):
-            continue
+        if num_tasks < 2:
+            logger.debug(f"Skip because {num_tasks=}")
+        elif outputs[0]["NCPUS"] == 1:
+            logger.debug(f"Skip because {outputs[0]['NCPUS']=}")
+        elif "Stardist" in str(outputs):
+            logger.debug("Skip because stardist")
         else:
             for out in outputs:
                 print(json.dumps(out, indent=2))
