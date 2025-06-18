@@ -18,14 +18,17 @@ $ uvx fractal-slurm-tools
 $ pipx run fractal-slurm-tools==0.0.3
 $ uvx fractal-slurm-tools==0.0.3
 
-# Latest GitHub commit
+# Latest git commit on the default branch
 $ pipx run --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git fractal-slurm-tools
+$ uvx --from git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git fractal-slurm-tools
 
-# Specific GitHub commit
+# Specific git commit
 $ pipx run --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@3faeefd0eac0f53c6c73d2e3179b10ff2a111793 fractal-slurm-tools
+$ uvx --from git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@3faeefd0eac0f53c6c73d2e3179b10ff2a111793 fractal-slurm-tools
 
-# Specific GitHub branch
+# Specific git branch
 $ pipx run --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@main fractal-slurm-tools
+$ uvx --from git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@main fractal-slurm-tools
 ```
 
 # A useful `sacct` command
