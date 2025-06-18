@@ -8,6 +8,9 @@ from .sacct_parsers import SACCT_FIELD_PARSERS
 
 logger = logging.getLogger(__name__)
 
+INDEX_JOB_NAME = SACCT_FIELDS.index("JobName")
+INDEX_STATE = SACCT_FIELDS.index("State")
+
 
 def parse_sacct_info(
     slurm_job_id: str,
@@ -27,16 +30,18 @@ def parse_sacct_info(
     stdout = run_sacct_command(slurm_job_id_str=slurm_job_id)
 
     lines = stdout.splitlines()
-    index_job_name = SACCT_FIELDS.index("JobName")
-    job_name = lines[0].split(DELIMITER)[index_job_name]
+    job_name = lines[0].split(DELIMITER)[INDEX_JOB_NAME]
     python_lines = [
         line
         for line in lines
-        if line.split(DELIMITER)[index_job_name] in ["python", "python3"]
+        if line.split(DELIMITER)[INDEX_JOB_NAME] in ["python", "python3"]
     ]
     output_rows = []
     for python_line in python_lines:
         python_line_items = python_line.split(DELIMITER)
+        if python_line_items[INDEX_STATE] == "RUNNING":
+            logger.debug("Skip RUNNING task")
+            continue
         try:
             output_row = {
                 SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)

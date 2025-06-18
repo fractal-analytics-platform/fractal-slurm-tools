@@ -8,6 +8,7 @@ SACCT_FIELDS: list[str] = [
     "Submit",
     "Start",
     "End",
+    "State",
     "Elapsed",
     "ElapsedRaw",
     "CPUTime",
