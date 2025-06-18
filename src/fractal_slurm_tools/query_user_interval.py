@@ -177,7 +177,7 @@ def cli_entrypoint(
         month=month,
         tot_number_jobs=len(slurm_job_ids),
         tot_number_tasks=tot_num_tasks,
-        tot_cputime_hours=tot_cputime_hours,
+        tot_cpu_hours=tot_cputime_hours,
         tot_diskread_GB=tot_diskread_GB,
         tot_diskwrite_GB=tot_diskwrite_GB,
     )
@@ -186,5 +186,4 @@ def cli_entrypoint(
             stats,
             f,
             indent=2,
-            sort_keys=True,
         )
