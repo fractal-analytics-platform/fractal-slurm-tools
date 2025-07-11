@@ -51,7 +51,7 @@ def parse_sacct_info(
     for line in lines:
         line_items = line.split(DELIMITER)
         # Skip non-Python steps/tasks
-        if line_items[INDEX_JOB_NAME] not in ["python", "python3"]:
+        if "python" not in line_items[INDEX_JOB_NAME]:
             continue
         # Skip running steps
         if line_items[INDEX_STATE] == "RUNNING":
