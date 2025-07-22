@@ -11,7 +11,7 @@ import requests
 
 from .parse_sacct_info import parse_sacct_info
 from .parse_sacct_info import SLURMTaskInfo
-from .sacct_parsers import _str_to_bytes
+from .sacct_parser_functions import _str_to_bytes
 
 logger = logging.getLogger(__name__)
 

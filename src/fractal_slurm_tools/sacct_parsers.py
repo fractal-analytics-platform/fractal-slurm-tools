@@ -1,42 +1,14 @@
-from datetime import datetime
 from typing import Callable
 
-import humanfriendly
+from fractal_slurm_tools.sacct_parser_functions import _dhhmmss_to_seconds
+from fractal_slurm_tools.sacct_parser_functions import _identity
+from fractal_slurm_tools.sacct_parser_functions import (
+    _str_to_bytes_to_friendly,
+)
+from fractal_slurm_tools.sacct_parser_functions import _str_to_datetime
+from fractal_slurm_tools.sacct_parser_functions import _str_to_float_to_int
 
 from .sacct_fields import SACCT_FIELDS
-
-
-def _identity(arg: str) -> str:
-    return arg
-
-
-def _str_to_float_to_int(arg: str) -> int:
-    return int(float(arg))
-
-
-def _dhhmmss_to_seconds(arg: str) -> int:
-    """
-    Supports both `HH:MM:SS` and `D-HH:MM:SS`.
-    """
-    if "-" in arg:
-        days, hhmmss = arg.split("-")
-    else:
-        days = "0"
-        hhmmss = arg[:]
-    hh, mm, ss = hhmmss.split(":")[:]
-    return int(days) * 3600 * 24 + int(hh) * 3600 + int(mm) * 60 + int(ss)
-
-
-def _str_to_datetime(arg: str) -> str:
-    return datetime.fromisoformat(arg).isoformat()
-
-
-def _str_to_bytes(arg: str) -> int:
-    return humanfriendly.parse_size(arg)
-
-
-def _str_to_bytes_to_friendly(arg: str) -> str:
-    return humanfriendly.format_size(_str_to_bytes(arg))
 
 
 SACCT_FIELD_PARSERS: dict[str, Callable] = {
