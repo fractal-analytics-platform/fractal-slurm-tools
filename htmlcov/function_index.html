@@ -11,7 +11,7 @@
 <header>
     <div class="content">
         <h1>Coverage report:
-            <span class="pc_cov">0%</span>
+            <span class="pc_cov">26%</span>
         </h1>
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
@@ -27,6 +27,8 @@
                         <kbd>s</kbd>
                         <kbd>m</kbd>
                         <kbd>x</kbd>
+                        <kbd>b</kbd>
+                        <kbd>p</kbd>
                         <kbd>c</kbd>
                         &nbsp; change column sorting
                     </p>
@@ -55,7 +57,7 @@
         </h2>
         <p class="text">
             <a class="nav" href="https://coverage.readthedocs.io/en/7.9.2">coverage.py v7.9.2</a>,
-            created at 2025-07-22 07:15 +0000
+            created at 2025-07-22 07:17 +0000
         </p>
     </div>
 </header>
@@ -68,6 +70,8 @@
                 <th id="statements" aria-sort="none" data-default-sort-order="descending" data-shortcut="s">statements<span class="arrows"></span></th>
                 <th id="missing" aria-sort="none" data-default-sort-order="descending" data-shortcut="m">missing<span class="arrows"></span></th>
                 <th id="excluded" aria-sort="none" data-default-sort-order="descending" data-shortcut="x">excluded<span class="arrows"></span></th>
+                <th id="branches" aria-sort="none" data-default-sort-order="descending" data-shortcut="b">branches<span class="arrows"></span></th>
+                <th id="partial" aria-sort="none" data-default-sort-order="descending" data-shortcut="p">partial<span class="arrows"></span></th>
                 <th id="coverage" class="right" aria-sort="none" data-shortcut="c">coverage<span class="arrows"></span></th>
             </tr>
         </thead>
@@ -76,9 +80,11 @@
                 <td class="name left"><a href="z_37e8571b1d146eb2___init___py.html">src/fractal_slurm_tools/__init__.py</a></td>
                 <td class="name left"><a href="z_37e8571b1d146eb2___init___py.html"><data value=''><span class='no-noun'>(no function)</span></data></a></td>
                 <td>1</td>
-                <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 1">0%</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="1 1">100%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_cli_py.html#t40">src/fractal_slurm_tools/cli.py</a></td>
@@ -86,7 +92,9 @@
                 <td>4</td>
                 <td>4</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 4">0%</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 6">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_cli_py.html#t53">src/fractal_slurm_tools/cli.py</a></td>
@@ -94,13 +102,17 @@
                 <td>6</td>
                 <td>6</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 6">0%</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 8">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_cli_py.html">src/fractal_slurm_tools/cli.py</a></td>
                 <td class="name left"><a href="z_37e8571b1d146eb2_cli_py.html"><data value=''><span class='no-noun'>(no function)</span></data></a></td>
                 <td>12</td>
                 <td>12</td>
+                <td>0</td>
+                <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="0 12">0%</td>
             </tr>
@@ -110,7 +122,9 @@
                 <td>4</td>
                 <td>4</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 4">0%</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 6">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_cli_2_py.html#t62">src/fractal_slurm_tools/cli_2.py</a></td>
@@ -118,13 +132,17 @@
                 <td>9</td>
                 <td>9</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 9">0%</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 11">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_cli_2_py.html">src/fractal_slurm_tools/cli_2.py</a></td>
                 <td class="name left"><a href="z_37e8571b1d146eb2_cli_2_py.html"><data value=''><span class='no-noun'>(no function)</span></data></a></td>
                 <td>13</td>
                 <td>13</td>
+                <td>0</td>
+                <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="0 13">0%</td>
             </tr>
@@ -134,13 +152,17 @@
                 <td>6</td>
                 <td>6</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 6">0%</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 8">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_parse_job_folders_py.html#t29">src/fractal_slurm_tools/parse_job_folders.py</a></td>
                 <td class="name left"><a href="z_37e8571b1d146eb2_parse_job_folders_py.html#t29"><data value='find_task_subfolders'>find_task_subfolders</data></a></td>
                 <td>2</td>
                 <td>2</td>
+                <td>0</td>
+                <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="0 2">0%</td>
             </tr>
@@ -150,7 +172,9 @@
                 <td>9</td>
                 <td>9</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 9">0%</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 11">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_parse_job_folders_py.html">src/fractal_slurm_tools/parse_job_folders.py</a></td>
@@ -158,15 +182,19 @@
                 <td>7</td>
                 <td>7</td>
                 <td>0</td>
+                <td>0</td>
+                <td>0</td>
                 <td class="right" data-ratio="0 7">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_parse_sacct_info_py.html#t34">src/fractal_slurm_tools/parse_sacct_info.py</a></td>
                 <td class="name left"><a href="z_37e8571b1d146eb2_parse_sacct_info_py.html#t34"><data value='get_job_submit_start_end_times'>get_job_submit_start_end_times</data></a></td>
                 <td>12</td>
-                <td>12</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 12">0%</td>
+                <td>0</td>
+                <td>2</td>
+                <td>1</td>
+                <td class="right" data-ratio="13 14">93%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_parse_sacct_info_py.html#t74">src/fractal_slurm_tools/parse_sacct_info.py</a></td>
@@ -174,15 +202,19 @@
                 <td>26</td>
                 <td>26</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 26">0%</td>
+                <td>10</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 36">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_parse_sacct_info_py.html">src/fractal_slurm_tools/parse_sacct_info.py</a></td>
                 <td class="name left"><a href="z_37e8571b1d146eb2_parse_sacct_info_py.html"><data value=''><span class='no-noun'>(no function)</span></data></a></td>
                 <td>26</td>
-                <td>26</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 26">0%</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="26 26">100%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_process_fractal_job_py.html#t15">src/fractal_slurm_tools/process_fractal_job.py</a></td>
@@ -190,7 +222,9 @@
                 <td>10</td>
                 <td>10</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 10">0%</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 14">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_process_fractal_job_py.html#t41">src/fractal_slurm_tools/process_fractal_job.py</a></td>
@@ -198,13 +232,17 @@
                 <td>12</td>
                 <td>12</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 12">0%</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 16">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_process_fractal_job_py.html">src/fractal_slurm_tools/process_fractal_job.py</a></td>
                 <td class="name left"><a href="z_37e8571b1d146eb2_process_fractal_job_py.html"><data value=''><span class='no-noun'>(no function)</span></data></a></td>
                 <td>12</td>
                 <td>12</td>
+                <td>0</td>
+                <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="0 12">0%</td>
             </tr>
@@ -214,7 +252,9 @@
                 <td>4</td>
                 <td>4</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 4">0%</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 8">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_query_user_interval_py.html#t67">src/fractal_slurm_tools/query_user_interval.py</a></td>
@@ -222,7 +262,9 @@
                 <td>27</td>
                 <td>27</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 27">0%</td>
+                <td>4</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 31">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_query_user_interval_py.html#t125">src/fractal_slurm_tools/query_user_interval.py</a></td>
@@ -230,13 +272,17 @@
                 <td>35</td>
                 <td>35</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 35">0%</td>
+                <td>6</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 41">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_query_user_interval_py.html">src/fractal_slurm_tools/query_user_interval.py</a></td>
                 <td class="name left"><a href="z_37e8571b1d146eb2_query_user_interval_py.html"><data value=''><span class='no-noun'>(no function)</span></data></a></td>
                 <td>18</td>
                 <td>18</td>
+                <td>0</td>
+                <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="0 18">0%</td>
             </tr>
@@ -246,29 +292,37 @@
                 <td>8</td>
                 <td>8</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 8">0%</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 10">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_run_sacct_command_py.html">src/fractal_slurm_tools/run_sacct_command.py</a></td>
                 <td class="name left"><a href="z_37e8571b1d146eb2_run_sacct_command_py.html"><data value=''><span class='no-noun'>(no function)</span></data></a></td>
                 <td>6</td>
-                <td>6</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 6">0%</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="6 6">100%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_sacct_fields_py.html">src/fractal_slurm_tools/sacct_fields.py</a></td>
                 <td class="name left"><a href="z_37e8571b1d146eb2_sacct_fields_py.html"><data value=''><span class='no-noun'>(no function)</span></data></a></td>
                 <td>17</td>
-                <td>17</td>
+                <td>3</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 17">0%</td>
+                <td>8</td>
+                <td>1</td>
+                <td class="right" data-ratio="21 25">84%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_sacct_parser_functions_py.html#t6">src/fractal_slurm_tools/sacct_parser_functions.py</a></td>
                 <td class="name left"><a href="z_37e8571b1d146eb2_sacct_parser_functions_py.html#t6"><data value='identity'>_identity</data></a></td>
                 <td>1</td>
                 <td>1</td>
+                <td>0</td>
+                <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="0 1">0%</td>
             </tr>
@@ -278,6 +332,8 @@
                 <td>1</td>
                 <td>1</td>
                 <td>0</td>
+                <td>0</td>
+                <td>0</td>
                 <td class="right" data-ratio="0 1">0%</td>
             </tr>
             <tr class="region">
@@ -286,13 +342,17 @@
                 <td>6</td>
                 <td>6</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 6">0%</td>
+                <td>2</td>
+                <td>0</td>
+                <td class="right" data-ratio="0 8">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_sacct_parser_functions_py.html#t27">src/fractal_slurm_tools/sacct_parser_functions.py</a></td>
                 <td class="name left"><a href="z_37e8571b1d146eb2_sacct_parser_functions_py.html#t27"><data value='str_to_datetime'>_str_to_datetime</data></a></td>
                 <td>1</td>
                 <td>1</td>
+                <td>0</td>
+                <td>0</td>
                 <td>0</td>
                 <td class="right" data-ratio="0 1">0%</td>
             </tr>
@@ -302,6 +362,8 @@
                 <td>1</td>
                 <td>1</td>
                 <td>0</td>
+                <td>0</td>
+                <td>0</td>
                 <td class="right" data-ratio="0 1">0%</td>
             </tr>
             <tr class="region">
@@ -310,31 +372,39 @@
                 <td>1</td>
                 <td>1</td>
                 <td>0</td>
+                <td>0</td>
+                <td>0</td>
                 <td class="right" data-ratio="0 1">0%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_sacct_parser_functions_py.html#t39">src/fractal_slurm_tools/sacct_parser_functions.py</a></td>
                 <td class="name left"><a href="z_37e8571b1d146eb2_sacct_parser_functions_py.html#t39"><data value='isoformat_to_datetime'>_isoformat_to_datetime</data></a></td>
                 <td>1</td>
-                <td>1</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 1">0%</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="1 1">100%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_sacct_parser_functions_py.html">src/fractal_slurm_tools/sacct_parser_functions.py</a></td>
                 <td class="name left"><a href="z_37e8571b1d146eb2_sacct_parser_functions_py.html"><data value=''><span class='no-noun'>(no function)</span></data></a></td>
                 <td>9</td>
-                <td>9</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 9">0%</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td class="right" data-ratio="9 9">100%</td>
             </tr>
             <tr class="region">
                 <td class="name left"><a href="z_37e8571b1d146eb2_sacct_parsers_py.html">src/fractal_slurm_tools/sacct_parsers.py</a></td>
                 <td class="name left"><a href="z_37e8571b1d146eb2_sacct_parsers_py.html"><data value=''><span class='no-noun'>(no function)</span></data></a></td>
                 <td>16</td>
-                <td>16</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 16">0%</td>
+                <td>0</td>
+                <td>8</td>
+                <td>0</td>
+                <td class="right" data-ratio="24 24">100%</td>
             </tr>
         </tbody>
         <tfoot>
@@ -342,9 +412,11 @@
                 <td class="name left">Total</td>
                 <td class="name left">&nbsp;</td>
                 <td>323</td>
-                <td>323</td>
+                <td>238</td>
                 <td>0</td>
-                <td class="right" data-ratio="0 323">0%</td>
+                <td>66</td>
+                <td>2</td>
+                <td class="right" data-ratio="101 389">26%</td>
             </tr>
         </tfoot>
     </table>
@@ -356,7 +428,7 @@
     <div class="content">
         <p>
             <a class="nav" href="https://coverage.readthedocs.io/en/7.9.2">coverage.py v7.9.2</a>,
-            created at 2025-07-22 07:15 +0000
+            created at 2025-07-22 07:17 +0000
         </p>
     </div>
     <aside class="hidden">

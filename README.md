@@ -2,20 +2,20 @@
 
 [Full report](https://htmlpreview.github.io/?https://github.com/fractal-analytics-platform/fractal-slurm-tools/blob/python-coverage-comment-action-data/htmlcov/index.html)
 
-| Name                                                  |    Stmts |     Miss |  Cover |   Missing |
-|------------------------------------------------------ | -------: | -------: | -----: | --------: |
-| src/fractal\_slurm\_tools/\_\_init\_\_.py             |        1 |        1 |     0% |         1 |
-| src/fractal\_slurm\_tools/cli.py                      |       22 |       22 |     0% |      1-62 |
-| src/fractal\_slurm\_tools/cli\_2.py                   |       26 |       26 |     0% |      1-75 |
-| src/fractal\_slurm\_tools/parse\_job\_folders.py      |       24 |       24 |     0% |      1-50 |
-| src/fractal\_slurm\_tools/parse\_sacct\_info.py       |       64 |       64 |     0% |     1-144 |
-| src/fractal\_slurm\_tools/process\_fractal\_job.py    |       34 |       34 |     0% |      1-66 |
-| src/fractal\_slurm\_tools/query\_user\_interval.py    |       84 |       84 |     0% |     1-219 |
-| src/fractal\_slurm\_tools/run\_sacct\_command.py      |       14 |       14 |     0% |      1-41 |
-| src/fractal\_slurm\_tools/sacct\_fields.py            |       17 |       17 |     0% |      1-59 |
-| src/fractal\_slurm\_tools/sacct\_parser\_functions.py |       21 |       21 |     0% |      1-45 |
-| src/fractal\_slurm\_tools/sacct\_parsers.py           |       16 |       16 |     0% |      1-50 |
-|                                             **TOTAL** |  **323** |  **323** | **0%** |           |
+| Name                                                  |    Stmts |     Miss |   Branch |   BrPart |   Cover |   Missing |
+|------------------------------------------------------ | -------: | -------: | -------: | -------: | ------: | --------: |
+| src/fractal\_slurm\_tools/\_\_init\_\_.py             |        1 |        0 |        0 |        0 |    100% |           |
+| src/fractal\_slurm\_tools/cli.py                      |       22 |       22 |        4 |        0 |      0% |      1-62 |
+| src/fractal\_slurm\_tools/cli\_2.py                   |       26 |       26 |        4 |        0 |      0% |      1-75 |
+| src/fractal\_slurm\_tools/parse\_job\_folders.py      |       24 |       24 |        4 |        0 |      0% |      1-50 |
+| src/fractal\_slurm\_tools/parse\_sacct\_info.py       |       64 |       26 |       12 |        1 |     51% |39->exit, 95-144 |
+| src/fractal\_slurm\_tools/process\_fractal\_job.py    |       34 |       34 |        8 |        0 |      0% |      1-66 |
+| src/fractal\_slurm\_tools/query\_user\_interval.py    |       84 |       84 |       14 |        0 |      0% |     1-219 |
+| src/fractal\_slurm\_tools/run\_sacct\_command.py      |       14 |        8 |        2 |        0 |     38% |     21-41 |
+| src/fractal\_slurm\_tools/sacct\_fields.py            |       17 |        3 |        8 |        1 |     84% |     43-45 |
+| src/fractal\_slurm\_tools/sacct\_parser\_functions.py |       21 |       11 |        2 |        0 |     43% |7, 11, 18-24, 28, 32, 36 |
+| src/fractal\_slurm\_tools/sacct\_parsers.py           |       16 |        0 |        8 |        0 |    100% |           |
+|                                             **TOTAL** |  **323** |  **238** |   **66** |    **2** | **26%** |           |
 
 
 ## Setup coverage badge
