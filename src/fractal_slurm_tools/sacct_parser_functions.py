@@ -3,6 +3,7 @@ import logging
 
 import humanfriendly
 
+logger = logging.getLogger(__name__)
 
 def _identity(arg: str) -> str:
     return arg
@@ -30,8 +31,7 @@ def _str_to_datetime(arg: str) -> str:
 
 
 def _str_to_bytes(arg: str) -> int:
-    logger = logging.getLogger(__name__)
-    logger.debug(f"🔥 {arg}")
+    logger.info(f"🔥 {arg}")
     return humanfriendly.parse_size(arg)
 
 
