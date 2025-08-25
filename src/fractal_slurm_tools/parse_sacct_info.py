@@ -108,17 +108,19 @@ def parse_sacct_info(
     )
 
     list_task_info = []
+    inferred_zeros = 0
     for line in lines:
         line_items = line.split(DELIMITER)
         # Skip non-Python steps/tasks
         if "python" not in line_items[INDEX_JOB_NAME]:
             continue
         # Skip running steps
-        if line_items[INDEX_STATE] in ["RUNNING", "FAILED"]:
+        if line_items[INDEX_STATE] == "RUNNING":
             continue
 
         # Parse all fields
         try:
+            inferred_zeros = line_items.count("")
             task_info = {
                 SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)
                 for ind, item in enumerate(line_items)
@@ -141,4 +143,8 @@ def parse_sacct_info(
             task_info.update(dict(task_subfolder=task_subfolder_name))
 
         list_task_info.append(task_info)
+
+    if inferred_zeros > 0:
+        logger.info(f"Inferred {inferred_zeros} missing values.")
+
     return list_task_info
