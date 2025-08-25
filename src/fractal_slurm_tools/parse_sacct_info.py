@@ -100,7 +100,6 @@ def parse_sacct_info(
 
     # Run `sacct` command
     stdout = run_sacct_command(job_string=job_string)
-    logger.info(f"🐲 stdout={stdout} 🌞")
     lines = stdout.splitlines()
 
     job_info = get_job_submit_start_end_times(
@@ -120,20 +119,17 @@ def parse_sacct_info(
 
         # Parse all fields
         try:
-            task_info = {}
-            for ind, item in enumerate(line_items):
-                logger.info(f"🍄 {ind=}")
-                logger.info(f"🍄 {SACCT_FIELDS[ind]=}")
-                logger.info(f"🍄 {item=}")
-                logger.info(f"🍄 {actual_parsers[SACCT_FIELDS[ind]]=}")
-                task_info[SACCT_FIELDS[ind]] = actual_parsers[SACCT_FIELDS[ind]](item)
+            task_info = {
+                SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)
+                for ind, item in enumerate(line_items)
+            }
             
         except Exception as e:
-            logger.error(f"❌ Could not parse {line=}")
+            logger.error(f"Could not parse {line=}")
             for ind, item in enumerate(line_items):
-                logger.error(f"❌ '{SACCT_FIELDS[ind]}' raw item: {item}")
+                logger.error(f"'{SACCT_FIELDS[ind]}' raw item: {item}")
                 logger.error(
-                    f"❌ '{SACCT_FIELDS[ind]}' parsed item: "
+                    f"'{SACCT_FIELDS[ind]}' parsed item: "
                     f"{actual_parsers[SACCT_FIELDS[ind]](item)}"
                 )
             raise e
