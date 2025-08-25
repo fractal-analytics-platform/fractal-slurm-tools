@@ -120,10 +120,14 @@ def parse_sacct_info(
 
         # Parse all fields
         try:
-            task_info = {
-                SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)
-                for ind, item in enumerate(line_items)
-            }
+            task_info = {}
+            for ind, item in enumerate(line_items):
+                logger.info(f"🍄 {ind=}")
+                logger.info(f"🍄 {SACCT_FIELDS[ind]=}")
+                logger.info(f"🍄 {item=}")
+                logger.info(f"🍄 {actual_parsers[SACCT_FIELDS[ind]]=}")
+                task_info[SACCT_FIELDS[ind]] = actual_parsers[SACCT_FIELDS[ind]](item)
+            
         except Exception as e:
             logger.error(f"❌ Could not parse {line=}")
             for ind, item in enumerate(line_items):
