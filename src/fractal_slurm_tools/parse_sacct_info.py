@@ -109,7 +109,8 @@ def parse_sacct_info(
     )
 
     list_task_info = []
-    for line in lines:
+    for i, line in enumerate(lines):
+        logger.info(f"🍄 {i}")
         line_items = line.split(DELIMITER)
         # Skip non-Python steps/tasks
         if "python" not in line_items[INDEX_JOB_NAME]:
