@@ -1,4 +1,5 @@
 from datetime import datetime
+import logging
 
 import humanfriendly
 
@@ -29,6 +30,8 @@ def _str_to_datetime(arg: str) -> str:
 
 
 def _str_to_bytes(arg: str) -> int:
+    logger = logging.getLogger(__name__)
+    logger.debug(f"🔥 {arg}")
     return humanfriendly.parse_size(arg)
 
 
