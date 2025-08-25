@@ -135,10 +135,13 @@ def parse_sacct_info(
                 logger.info(f"item={item}")
 
                 logger.error(f"'{SACCT_FIELDS[ind]}' raw item: {item}")
-                logger.error(
-                    f"'{SACCT_FIELDS[ind]}' parsed item: "
-                    f"{actual_parsers[SACCT_FIELDS[ind]](item)}"
-                )
+                if actual_parsers.get(SACCT_FIELDS[ind]) is not None:
+                    logger.error(
+                        f"'{SACCT_FIELDS[ind]}' parsed item: "
+                        f"{actual_parsers[SACCT_FIELDS[ind]](item)}"
+                    )
+                else:
+                    logger.error("🔥"*20)
             raise e
 
         # Enrich `sacct` output for single-step lines with job-level info
