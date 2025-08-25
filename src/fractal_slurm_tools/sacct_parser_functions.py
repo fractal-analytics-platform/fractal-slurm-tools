@@ -17,6 +17,8 @@ def _dhhmmss_to_seconds(arg: str) -> int:
     """
     Supports both `HH:MM:SS` and `D-HH:MM:SS`.
     """
+    import logging
+    logging.error(f"[_dhhmmss_to_seconds] ⭐️⭐️⭐️⭐️⭐️⭐️ {arg=}")
     if "-" in arg:
         days, hhmmss = arg.split("-")
     else:
