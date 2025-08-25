@@ -114,7 +114,7 @@ def parse_sacct_info(
         if "python" not in line_items[INDEX_JOB_NAME]:
             continue
         # Skip running steps
-        if line_items[INDEX_STATE] == "RUNNING":
+        if line_items[INDEX_STATE] in ["RUNNING", "FAILED"]:
             continue
 
         # Parse all fields
