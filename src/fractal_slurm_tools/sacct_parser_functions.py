@@ -31,7 +31,6 @@ def _str_to_datetime(arg: str) -> str:
 
 
 def _str_to_bytes(arg: str) -> int:
-    logger.info(f"🔥 {arg}")
     return humanfriendly.parse_size(arg)
 
 
