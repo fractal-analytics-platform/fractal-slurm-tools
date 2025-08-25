@@ -100,6 +100,7 @@ def parse_sacct_info(
 
     # Run `sacct` command
     stdout = run_sacct_command(job_string=job_string)
+    logger.info(f"🐲 stdout={stdout}")
     lines = stdout.splitlines()
 
     job_info = get_job_submit_start_end_times(
@@ -126,7 +127,7 @@ def parse_sacct_info(
         except Exception as e:
             logger.error(f"Could not parse {line=}")
             for ind, item in enumerate(line_items):
-                
+
                 logger.info(f"actual_parsers={actual_parsers}")
                 logger.info(f"SACCT_FIELDS={SACCT_FIELDS}")
                 logger.info(f"ind={ind}")
