@@ -1,19 +1,14 @@
 from datetime import datetime
-import logging
 
 import humanfriendly
 
-logger = logging.getLogger(__name__)
 
 def _identity(arg: str) -> str:
     return arg
 
 
 def _str_to_float_to_int(arg: str) -> int:
-    if arg:
-        return int(float(arg))
-    else:
-        return
+    return int(float(arg))
 
 
 def _dhhmmss_to_seconds(arg: str) -> int:
@@ -34,11 +29,7 @@ def _str_to_datetime(arg: str) -> str:
 
 
 def _str_to_bytes(arg: str) -> int:
-    logging.error(f"ARG!!!! {arg} {type(arg)} 🚀🚀🚀🚀🚀🚀🚀🚀")
-    if arg:
-        return humanfriendly.parse_size(arg)
-    else:
-        return
+    return humanfriendly.parse_size(arg)
 
 
 def _str_to_bytes_to_friendly(arg: str) -> str:

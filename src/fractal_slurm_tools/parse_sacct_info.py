@@ -109,8 +109,7 @@ def parse_sacct_info(
     )
 
     list_task_info = []
-    for i, line in enumerate(lines):
-        logger.info(f"🍄 {i}")
+    for line in lines:
         line_items = line.split(DELIMITER)
         # Skip non-Python steps/tasks
         if "python" not in line_items[INDEX_JOB_NAME]:
@@ -126,22 +125,13 @@ def parse_sacct_info(
                 for ind, item in enumerate(line_items)
             }
         except Exception as e:
-            logger.error(f"Could not parse {line=}")
+            logger.error(f"❌ Could not parse {line=}")
             for ind, item in enumerate(line_items):
-
-                logger.info(f"actual_parsers={actual_parsers}")
-                logger.info(f"SACCT_FIELDS={SACCT_FIELDS}")
-                logger.info(f"ind={ind}")
-                logger.info(f"item={item}")
-
-                logger.error(f"'{SACCT_FIELDS[ind]}' raw item: {item}")
-                if actual_parsers.get(SACCT_FIELDS[ind]) is not None:
-                    logger.error(
-                        f"'{SACCT_FIELDS[ind]}' parsed item: "
-                        f"{actual_parsers[SACCT_FIELDS[ind]](item)}"
-                    )
-                else:
-                    logger.error("🔥"*20)
+                logger.error(f"❌ '{SACCT_FIELDS[ind]}' raw item: {item}")
+                logger.error(
+                    f"❌ '{SACCT_FIELDS[ind]}' parsed item: "
+                    f"{actual_parsers[SACCT_FIELDS[ind]](item)}"
+                )
             raise e
 
         # Enrich `sacct` output for single-step lines with job-level info
