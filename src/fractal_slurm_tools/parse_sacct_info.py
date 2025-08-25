@@ -122,7 +122,7 @@ def parse_sacct_info(
         try:
             inferred_zeros += line_items.count("")
             if line_items.count("") > 0:
-                logger.error(f"🚨 LINE: {line=}")
+                logger.error(f"🚨 {line_items.count('')=}")
             task_info = {
                 SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)
                 for ind, item in enumerate(line_items)
