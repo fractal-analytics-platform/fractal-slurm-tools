@@ -10,7 +10,10 @@ def _identity(arg: str) -> str:
 
 
 def _str_to_float_to_int(arg: str) -> int:
-    return int(float(arg))
+    if arg:
+        return int(float(arg))
+    else:
+        return
 
 
 def _dhhmmss_to_seconds(arg: str) -> int:
