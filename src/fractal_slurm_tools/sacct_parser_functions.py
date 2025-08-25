@@ -8,6 +8,8 @@ def _identity(arg: str) -> str:
 
 
 def _str_to_float_to_int(arg: str) -> int:
+    if arg == "":
+        return 0
     return int(float(arg))
 
 
@@ -29,6 +31,8 @@ def _str_to_datetime(arg: str) -> str:
 
 
 def _str_to_bytes(arg: str) -> int:
+    if arg == "":
+        return 0
     return humanfriendly.parse_size(arg)
 
 
