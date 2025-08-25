@@ -126,6 +126,12 @@ def parse_sacct_info(
         except Exception as e:
             logger.error(f"Could not parse {line=}")
             for ind, item in enumerate(line_items):
+                
+                logger.info(f"actual_parsers={actual_parsers}")
+                logger.info(f"SACCT_FIELDS={SACCT_FIELDS}")
+                logger.info(f"ind={ind}")
+                logger.info(f"item={item}")
+
                 logger.error(f"'{SACCT_FIELDS[ind]}' raw item: {item}")
                 logger.error(
                     f"'{SACCT_FIELDS[ind]}' parsed item: "

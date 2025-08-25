@@ -181,6 +181,10 @@ def cli_entrypoint(
         logger.debug(f">> {slurm_job_ids_batch=}")
 
         # Run `sacct` and pars its output
+        logger.info(f"job_string={slurm_job_ids_batch},")
+        logger.info(f"task_subfolder_name={None},")
+        logger.info(f"parser_overrides={PARSERS},")
+        
         list_task_info = parse_sacct_info(
             job_string=slurm_job_ids_batch,
             task_subfolder_name=None,
