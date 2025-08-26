@@ -160,6 +160,5 @@ def parse_sacct_info(
             f"Found {jobs_with_missing_values} Jobs with missing values, "
             f"for a total of {total_missing_values} missing values."
         )
-        logger.info()
 
     return list_task_info
