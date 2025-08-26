@@ -157,9 +157,8 @@ def parse_sacct_info(
 
     if jobs_with_missing_values > 0:
         logger.warning(
-            f"Found {jobs_with_missing_values} SLURM "
-            f"job{'s' if jobs_with_missing_values > 1 else ''} with missing "
-            f"values, for a total of {total_missing_values} missing values."
+            f"Found {jobs_with_missing_values} SLURM jobs with missing values,"
+            f" for a total of {total_missing_values} missing values."
         )
 
     return list_task_info
