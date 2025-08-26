@@ -74,7 +74,7 @@ def main():
 
     cli_entrypoint(
         fractal_backend_url=args.fractal_backend_url,
-        user_email=args.user_email,
+        emails=args.emails,
         year=args.year,
         month=args.month,
         base_output_folder=args.base_output_folder,
