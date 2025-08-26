@@ -179,6 +179,8 @@ def process(
             parser_overrides=PARSERS,
         )
 
+        logger.error(f"{warning=}")
+
         _verify_single_task_per_job(list_task_info)
         # Aggregate statistics
         num_tasks = len(list_task_info)
@@ -233,7 +235,6 @@ def cli_entrypoint(
     months = months.split(",")
 
     warnings = {}
-
     for user_email in user_emails:
         for year in map(int, years):
             for month in map(int, months):
@@ -247,9 +248,6 @@ def cli_entrypoint(
                 )
                 if warning is not None:
                     warnings[user_email] = warning
-
-    for k, v in warnings.items():
-        logger.warning(f"User {k}: {v}")
 
     for user_email, warning in warnings.items():
         logger.warning(f"User {user_email}: {warning}")
