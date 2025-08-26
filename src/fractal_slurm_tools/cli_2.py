@@ -16,7 +16,7 @@ main_parser.add_argument(
     required=True,
 )
 main_parser.add_argument(
-    "--user-email",
+    "--emails",
     type=str,
     required=True,
 )
