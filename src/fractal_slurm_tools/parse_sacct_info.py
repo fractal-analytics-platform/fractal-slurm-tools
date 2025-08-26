@@ -124,7 +124,7 @@ def parse_sacct_info(
         # Parse all fields
         try:
             missing_values = [
-                item
+                item.strip()
                 for i, item in enumerate(line_items)
                 # Discarding ReqTRES, Partition and QOS, which are always empty
                 if i not in {28, 30, 31}
