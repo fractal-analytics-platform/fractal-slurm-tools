@@ -75,7 +75,7 @@ def parse_sacct_info(
     job_string: str,
     task_subfolder_name: str | None = None,
     parser_overrides: dict[str, Callable] | None = None,
-) -> list[SLURMTaskInfo]:
+) -> tuple[list[SLURMTaskInfo], str | None]:
     """
     Run `sacct` and parse its output
 
@@ -155,10 +155,11 @@ def parse_sacct_info(
 
         list_task_info.append(task_info)
 
+    warning = None
     if jobs_with_missing_values > 0:
-        logger.warning(
+        warning = (
             f"Found {jobs_with_missing_values} SLURM jobs with missing values,"
             f" for a total of {total_missing_values} missing values."
         )
 
-    return list_task_info
+    return list_task_info, warning
