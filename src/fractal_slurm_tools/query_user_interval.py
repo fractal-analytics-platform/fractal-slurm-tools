@@ -122,11 +122,101 @@ def get_slurm_job_ids_user_month(
     return slurm_job_ids
 
 
+def process(
+    user_email: str,
+    year: int,
+    month: int,
+    fractal_backend_url: str,
+    base_output_folder: str,
+    token: str,
+) -> str | None:
+    # Get IDs of SLURM jobs
+    logger.info(
+        f"Find SLURM jobs for {user_email=} (month {year:4d}/{month:02d})."
+    )
+    slurm_job_ids = get_slurm_job_ids_user_month(
+        fractal_backend_url=fractal_backend_url,
+        user_email=user_email,
+        year=year,
+        month=month,
+        token=token,
+    )
+    logger.info(
+        f"Found {len(slurm_job_ids)} SLURM jobs "
+        f"for {user_email=} (month {year:4d}/{month:02d})."
+    )
+    outdir = Path(base_output_folder, user_email)
+    outdir.mkdir(exist_ok=True, parents=True)
+    with (outdir / f"{year:4d}_{month:02d}_slurm_jobs.json").open("w") as f:
+        json.dump(slurm_job_ids, f, indent=2)
+    # Parse sacct
+    tot_num_jobs = len(slurm_job_ids)
+    logger.info(
+        f"Start processing {tot_num_jobs} SLURM jobs "
+        f"(in batches of {SACCT_BATCH_SIZE} jobs at a time)."
+    )
+    tot_cputime_hours = 0.0
+    tot_diskread_GB = 0.0
+    tot_diskwrite_GB = 0.0
+    tot_num_tasks = 0
+    for starting_ind in range(0, tot_num_jobs, SACCT_BATCH_SIZE):
+        # Prepare batch string
+        slurm_job_ids_batch = ",".join(
+            list(
+                map(
+                    str,
+                    slurm_job_ids[
+                        starting_ind : starting_ind + SACCT_BATCH_SIZE
+                    ],
+                )
+            )
+        )
+        logger.debug(f">> {slurm_job_ids_batch=}")
+        # Run `sacct` and pars its output
+        list_task_info, warning = parse_sacct_info(
+            job_string=slurm_job_ids_batch,
+            task_subfolder_name=None,
+            parser_overrides=PARSERS,
+        )
+
+        _verify_single_task_per_job(list_task_info)
+        # Aggregate statistics
+        num_tasks = len(list_task_info)
+        tot_num_tasks += num_tasks
+        logger.debug(f">> {slurm_job_ids_batch=} has {num_tasks=}.")
+        for out in list_task_info:
+            cputime_hours = out["CPUTimeRaw"] / 3600
+            diskread_GB = out["AveDiskRead"] / 1e9
+            diskwrite_GB = out["AveDiskWrite"] / 1e9
+            tot_cputime_hours += cputime_hours
+            tot_diskread_GB += diskread_GB
+            tot_diskwrite_GB += diskwrite_GB
+    logger.info(
+        f"{tot_cputime_hours=:.1f}, "
+        f"{tot_diskread_GB=:.3f} "
+        f"{tot_diskwrite_GB=:.3f}"
+    )
+    stats = dict(
+        user_email=user_email,
+        year=year,
+        month=month,
+        tot_number_jobs=len(slurm_job_ids),
+        tot_number_tasks=tot_num_tasks,
+        tot_cpu_hours=tot_cputime_hours,
+        tot_diskread_GB=tot_diskread_GB,
+        tot_diskwrite_GB=tot_diskwrite_GB,
+    )
+    with (outdir / f"{year:4d}_{month:02d}_stats.json").open("w") as f:
+        json.dump(stats, f, indent=2)
+
+    return warning
+
+
 def cli_entrypoint(
     fractal_backend_url: str,
     emails: str,
-    year: int,
-    month: int,
+    years: str,
+    months: str,
     base_output_folder: str,
 ) -> None:
     token = os.getenv("FRACTAL_TOKEN", None)
@@ -139,98 +229,27 @@ def cli_entrypoint(
     else:
         user_emails = emails.split(",")
 
+    years = years.split(",")
+    months = months.split(",")
+
     warnings = {}
 
     for user_email in user_emails:
-        # Get IDs of SLURM jobs
-        logger.info(
-            f"Find SLURM jobs for {user_email=} (month {year:4d}/{month:02d})."
-        )
-        slurm_job_ids = get_slurm_job_ids_user_month(
-            fractal_backend_url=fractal_backend_url,
-            user_email=user_email,
-            year=year,
-            month=month,
-            token=token,
-        )
-        logger.info(
-            f"Found {len(slurm_job_ids)} SLURM jobs "
-            f"for {user_email=} (month {year:4d}/{month:02d})."
-        )
-
-        outdir = Path(base_output_folder, user_email)
-        outdir.mkdir(exist_ok=True, parents=True)
-        with (outdir / f"{year:4d}_{month:02d}_slurm_jobs.json").open(
-            "w"
-        ) as f:
-            json.dump(slurm_job_ids, f, indent=2)
-
-        # Parse sacct
-        tot_num_jobs = len(slurm_job_ids)
-        logger.info(
-            f"Start processing {tot_num_jobs} SLURM jobs "
-            f"(in batches of {SACCT_BATCH_SIZE} jobs at a time)."
-        )
-
-        tot_cputime_hours = 0.0
-        tot_diskread_GB = 0.0
-        tot_diskwrite_GB = 0.0
-        tot_num_tasks = 0
-        for starting_ind in range(0, tot_num_jobs, SACCT_BATCH_SIZE):
-
-            # Prepare batch string
-            slurm_job_ids_batch = ",".join(
-                list(
-                    map(
-                        str,
-                        slurm_job_ids[
-                            starting_ind : starting_ind + SACCT_BATCH_SIZE
-                        ],
-                    )
+        for year in map(int, years):
+            for month in map(int, months):
+                warning = process(
+                    user_email=user_email,
+                    year=year,
+                    month=month,
+                    fractal_backend_url=fractal_backend_url,
+                    base_output_folder=base_output_folder,
+                    token=token,
                 )
-            )
-            logger.debug(f">> {slurm_job_ids_batch=}")
+                if warning is not None:
+                    warnings[user_email] = warning
 
-            # Run `sacct` and pars its output
-            list_task_info, warning = parse_sacct_info(
-                job_string=slurm_job_ids_batch,
-                task_subfolder_name=None,
-                parser_overrides=PARSERS,
-            )
-            if warning is not None:
-                warnings[user_email] = warning
-
-            _verify_single_task_per_job(list_task_info)
-
-            # Aggregate statistics
-            num_tasks = len(list_task_info)
-            tot_num_tasks += num_tasks
-            logger.debug(f">> {slurm_job_ids_batch=} has {num_tasks=}.")
-            for out in list_task_info:
-                cputime_hours = out["CPUTimeRaw"] / 3600
-                diskread_GB = out["AveDiskRead"] / 1e9
-                diskwrite_GB = out["AveDiskWrite"] / 1e9
-                tot_cputime_hours += cputime_hours
-                tot_diskread_GB += diskread_GB
-                tot_diskwrite_GB += diskwrite_GB
-
-        logger.info(
-            f"{tot_cputime_hours=:.1f}, "
-            f"{tot_diskread_GB=:.3f} "
-            f"{tot_diskwrite_GB=:.3f}"
-        )
-        stats = dict(
-            user_email=user_email,
-            year=year,
-            month=month,
-            tot_number_jobs=len(slurm_job_ids),
-            tot_number_tasks=tot_num_tasks,
-            tot_cpu_hours=tot_cputime_hours,
-            tot_diskread_GB=tot_diskread_GB,
-            tot_diskwrite_GB=tot_diskwrite_GB,
-        )
-        with (outdir / f"{year:4d}_{month:02d}_stats.json").open("w") as f:
-            json.dump(stats, f, indent=2)
+    for k, v in warnings.items():
+        logger.warning(f"User {k}: {v}")
 
     for user_email, warning in warnings.items():
         logger.warning(f"User {user_email}: {warning}")

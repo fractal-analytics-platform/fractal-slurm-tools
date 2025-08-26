@@ -28,13 +28,13 @@ main_parser.add_argument(
 )
 
 main_parser.add_argument(
-    "--year",
-    type=int,
+    "--years",
+    type=str,
     required=True,
 )
 main_parser.add_argument(
-    "--month",
-    type=int,
+    "--months",
+    type=str,
     required=True,
 )
 
@@ -75,7 +75,7 @@ def main():
     cli_entrypoint(
         fractal_backend_url=args.fractal_backend_url,
         emails=args.emails,
-        year=args.year,
-        month=args.month,
+        years=args.years,
+        months=args.months,
         base_output_folder=args.base_output_folder,
     )
