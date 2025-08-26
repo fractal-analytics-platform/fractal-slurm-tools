@@ -111,7 +111,7 @@ def parse_sacct_info(
 
     jobs_with_missing_values = 0
     total_missing_values = 0
-    
+
     for line in lines:
         line_items = line.split(DELIMITER)
         # Skip non-Python steps/tasks
@@ -126,12 +126,12 @@ def parse_sacct_info(
             missing_values = [
                 item
                 for i, item in enumerate(line_items)
-                # We discard ReqTRES, Partition and QOS, which are always empty.
+                # Discarding ReqTRES, Partition and QOS, which are always empty
                 if i not in {28, 30, 31}
             ].count("")
             if missing_values > 0:
                 jobs_with_missing_values += 1
-                total_missing_values += missing_values 
+                total_missing_values += missing_values
             task_info = {
                 SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)
                 for ind, item in enumerate(line_items)
