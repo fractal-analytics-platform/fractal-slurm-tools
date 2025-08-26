@@ -248,6 +248,6 @@ def cli_entrypoint(
                 )
                 if warning is not None:
                     warnings[user_email] = warning
-
+    logger.error(f"🚨🚨🚨 {warnings=}")
     for user_email, warning in warnings.items():
         logger.warning(f"User {user_email}: {warning}")
