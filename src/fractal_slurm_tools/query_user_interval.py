@@ -159,6 +159,7 @@ def process(
     tot_diskread_GB = 0.0
     tot_diskwrite_GB = 0.0
     tot_num_tasks = 0
+    warnings = []
     for starting_ind in range(0, tot_num_jobs, SACCT_BATCH_SIZE):
         # Prepare batch string
         slurm_job_ids_batch = ",".join(
@@ -178,8 +179,7 @@ def process(
             task_subfolder_name=None,
             parser_overrides=PARSERS,
         )
-
-        logger.error(f"{warning=}")
+        warnings.append(warning)
 
         _verify_single_task_per_job(list_task_info)
         # Aggregate statistics
@@ -211,7 +211,8 @@ def process(
     with (outdir / f"{year:4d}_{month:02d}_stats.json").open("w") as f:
         json.dump(stats, f, indent=2)
 
-    return warning
+    logger.error(f"🌞 {warnings=}")
+    return warnings
 
 
 def cli_entrypoint(
@@ -238,7 +239,7 @@ def cli_entrypoint(
     for user_email in user_emails:
         for year in map(int, years):
             for month in map(int, months):
-                warning = process(
+                xxx = process(
                     user_email=user_email,
                     year=year,
                     month=month,
@@ -246,8 +247,9 @@ def cli_entrypoint(
                     base_output_folder=base_output_folder,
                     token=token,
                 )
-                if warning is not None:
-                    warnings[user_email] = warning
+                if xxx is not None:
+                    warnings[user_email] = xxx
+
     logger.error(f"🚨🚨🚨 {warnings=}")
     for user_email, warning in warnings.items():
         logger.warning(f"User {user_email}: {warning}")
