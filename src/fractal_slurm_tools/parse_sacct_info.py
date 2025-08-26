@@ -156,7 +156,7 @@ def parse_sacct_info(
         list_task_info.append(task_info)
 
     if jobs_with_missing_values > 0:
-        logger.info(
+        logger.warning(
             f"Found {jobs_with_missing_values} Jobs with missing values, "
             f"for a total of {total_missing_values} missing values."
         )
