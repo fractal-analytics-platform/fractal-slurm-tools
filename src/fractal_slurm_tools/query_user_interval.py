@@ -179,7 +179,8 @@ def process(
             task_subfolder_name=None,
             parser_overrides=PARSERS,
         )
-        warnings.append(warning)
+        if warning is not None:
+            warnings.append(warning)
 
         _verify_single_task_per_job(list_task_info)
         # Aggregate statistics
@@ -248,7 +249,7 @@ def cli_entrypoint(
                     token=token,
                 )
                 if xxx is not None:
-                    warnings[user_email] = xxx
+                    warnings.setdefault(user_email, []).append(xxx)
 
     logger.error(f"🚨🚨🚨 {warnings=}")
     for user_email, warning in warnings.items():
