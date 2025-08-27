@@ -113,9 +113,7 @@ def parse_sacct_info(
     )
 
     list_task_info = []
-
-    jobs_with_missing_values = 0
-    total_missing_values = 0
+    missing = {}
 
     for line in lines:
         line_items = line.split(DELIMITER)
@@ -139,9 +137,9 @@ def parse_sacct_info(
                 }
             ].count("")
             if missing_values > 0:
-                logger.error(f"🚨 {line_items=}")
-                jobs_with_missing_values += 1
-                total_missing_values += missing_values
+                missing[
+                    line_items[SACCT_FIELDS.index("JobID")]
+                ] = missing_values
 
             task_info = {
                 SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)
@@ -168,10 +166,7 @@ def parse_sacct_info(
         list_task_info.append(task_info)
 
     warning = None
-    if jobs_with_missing_values > 0:
-        warning = (
-            f"Found {jobs_with_missing_values} SLURM jobs with missing values,"
-            f" for a total of {total_missing_values} missing values."
-        )
+    if missing:
+        warning = f"{missing=}"
 
     return list_task_info, warning
