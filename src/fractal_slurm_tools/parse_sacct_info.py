@@ -131,8 +131,12 @@ def parse_sacct_info(
             missing_values = [
                 item.strip()
                 for i, item in enumerate(line_items)
-                # Discarding ReqTRES, Partition and QOS, which are always empty
-                if i not in {28, 30, 31}
+                if i
+                not in {
+                    SACCT_FIELDS.index("ReqTRES"),
+                    SACCT_FIELDS.index("Partition"),
+                    SACCT_FIELDS.index("QOS"),
+                }
             ].count("")
             if missing_values > 0:
                 logger.error(f"🚨 {line_items=}")
