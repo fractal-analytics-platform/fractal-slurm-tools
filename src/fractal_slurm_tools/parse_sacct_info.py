@@ -57,8 +57,7 @@ def get_job_submit_start_end_times(
                     _isoformat_to_datetime(job_End)
                     - _isoformat_to_datetime(job_Start)
                 ).total_seconds()
-            except Exception as e:
-                logger.error(f"🚨🚨🚨🚨🚨 {e=}")
+            except ValueError:
                 job_queue_time = 0
                 job_runtime = 0
 
