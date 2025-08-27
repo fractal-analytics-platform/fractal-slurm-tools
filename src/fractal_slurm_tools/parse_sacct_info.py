@@ -44,14 +44,19 @@ def get_job_submit_start_end_times(
                 if line.split(DELIMITER)[INDEX_JOB_ID] == job_id
             )
             logger.error(f"🚨 {main_job_line=}")
+
             main_job_line_fields = main_job_line.split(DELIMITER)
             logger.error(f"🚨 {main_job_line_fields=}")
-            logger.error(f"🚨 {INDEX_JOB_SUBMIT=}")
-            logger.error(f"🚨 {INDEX_JOB_START=}")
-            logger.error(f"🚨 {INDEX_JOB_END=}")
+
             job_Submit = main_job_line_fields[INDEX_JOB_SUBMIT]
+            logger.error(f"🚨 {INDEX_JOB_SUBMIT=} -> {job_Submit=}")
+
             job_Start = main_job_line_fields[INDEX_JOB_START]
+            logger.error(f"🚨 {INDEX_JOB_START=} -> {job_Start=}")
+
             job_End = main_job_line_fields[INDEX_JOB_END]
+            logger.error(f"🚨 {INDEX_JOB_END=} -> {job_End=}")
+
             job_queue_time = (
                 _isoformat_to_datetime(job_Start)
                 - _isoformat_to_datetime(job_Submit)
