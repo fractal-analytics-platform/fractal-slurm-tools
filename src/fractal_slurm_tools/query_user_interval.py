@@ -228,7 +228,7 @@ def cli_entrypoint(
 
     if Path(emails).is_file():
         with Path(emails).open("r") as f:
-            user_emails = f.readlines()
+            user_emails = f.read().splitlines()
     else:
         user_emails = emails.split(",")
 
