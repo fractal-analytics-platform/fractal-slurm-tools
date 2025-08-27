@@ -212,7 +212,6 @@ def process(
     with (outdir / f"{year:4d}_{month:02d}_stats.json").open("w") as f:
         json.dump(stats, f, indent=2)
 
-    logger.error(f"🌞 {warnings=}")
     return warnings
 
 
@@ -240,7 +239,7 @@ def cli_entrypoint(
     for user_email in user_emails:
         for year in map(int, years):
             for month in map(int, months):
-                xxx = process(
+                warning = process(
                     user_email=user_email,
                     year=year,
                     month=month,
@@ -249,9 +248,8 @@ def cli_entrypoint(
                     token=token,
                 )
 
-                if xxx is not None:
-                    warnings.setdefault(user_email, []).extend(xxx)
+                if warning is not None:
+                    warnings.setdefault(user_email, []).extend(warning)
 
-    logger.error(f"🚨🚨🚨 {warnings=}")
     for user_email, warning in warnings.items():
         logger.warning(f"User {user_email}: {warning}")
