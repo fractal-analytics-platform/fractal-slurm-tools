@@ -137,7 +137,9 @@ def parse_sacct_info(
             ].count("")
             if missing_values > 0:
                 warning = {
-                    "job_id": int(line_items[SACCT_FIELDS.index("JobID")]),
+                    "job_id": int(
+                        float(line_items[SACCT_FIELDS.index("JobID")])
+                    ),
                     "missing_values": missing_values,
                 }
             else:
