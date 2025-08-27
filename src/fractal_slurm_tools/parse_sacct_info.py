@@ -135,12 +135,15 @@ def parse_sacct_info(
                 if i not in {28, 30, 31}
             ].count("")
             if missing_values > 0:
+                logger.error(f"🚨 {line_items=}")
                 jobs_with_missing_values += 1
                 total_missing_values += missing_values
+
             task_info = {
                 SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)
                 for ind, item in enumerate(line_items)
             }
+
         except Exception as e:
             logger.error(f"Could not parse {line=}")
             for ind, item in enumerate(line_items):
