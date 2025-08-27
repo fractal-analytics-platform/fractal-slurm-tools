@@ -197,7 +197,7 @@ def process(
     logger.info(
         f"{tot_cputime_hours=:.1f}, "
         f"{tot_diskread_GB=:.3f} "
-        f"{tot_diskwrite_GB=:.3f}"
+        f"{tot_diskwrite_GB=:.3f}\n\n"
     )
     stats = dict(
         user_email=user_email,
