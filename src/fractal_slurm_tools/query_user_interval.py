@@ -248,8 +248,9 @@ def cli_entrypoint(
                     base_output_folder=base_output_folder,
                     token=token,
                 )
+
                 if xxx is not None:
-                    warnings.setdefault(user_email, []).append(xxx)
+                    warnings.setdefault(user_email, []).extend(xxx)
 
     logger.error(f"🚨🚨🚨 {warnings=}")
     for user_email, warning in warnings.items():
