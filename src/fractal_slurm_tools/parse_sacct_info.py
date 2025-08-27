@@ -113,7 +113,6 @@ def parse_sacct_info(
     )
 
     list_task_info = []
-    missing = {}
 
     for line in lines:
         line_items = line.split(DELIMITER)
@@ -137,10 +136,12 @@ def parse_sacct_info(
                 }
             ].count("")
             if missing_values > 0:
-                missing[
-                    line_items[SACCT_FIELDS.index("JobID")]
-                ] = missing_values
-
+                warning = {
+                    "job_id": int(line_items[SACCT_FIELDS.index("JobID")]),
+                    "missing_values": missing_values,
+                }
+            else:
+                warning = None
             task_info = {
                 SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)
                 for ind, item in enumerate(line_items)
@@ -164,9 +165,5 @@ def parse_sacct_info(
             task_info.update(dict(task_subfolder=task_subfolder_name))
 
         list_task_info.append(task_info)
-
-    warning = None
-    if missing:
-        warning = f"{missing=}"
 
     return list_task_info, warning

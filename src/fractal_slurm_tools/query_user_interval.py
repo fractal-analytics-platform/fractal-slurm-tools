@@ -235,11 +235,11 @@ def cli_entrypoint(
     years = years.split(",")
     months = months.split(",")
 
-    warnings = {}
+    user_warnings = {}
     for user_email in user_emails:
         for year in map(int, years):
             for month in map(int, months):
-                warning = process(
+                warnings = process(
                     user_email=user_email,
                     year=year,
                     month=month,
@@ -248,9 +248,16 @@ def cli_entrypoint(
                     token=token,
                 )
 
-                if warning is not None:
-                    warnings.setdefault(user_email, []).extend(warning)
+                if warnings != []:
+                    user_warnings.setdefault(user_email, []).extend(warnings)
 
-    for user_email, warning in warnings.items():
-        if warning != []:
-            logger.warning(f"User {user_email}: {warning}")
+    for user_email, warnings in user_warnings.items():
+        if warnings != []:
+            warning_message = ",".join(
+                [
+                    f"found {warning['missing_values']} missing values "
+                    f"in Job {warning['job_id']}"
+                    for warning in warnings
+                ]
+            )
+            logger.warning(f"User {user_email}: {warning_message}.")
