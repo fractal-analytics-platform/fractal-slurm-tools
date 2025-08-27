@@ -113,7 +113,7 @@ def parse_sacct_info(
     )
 
     list_task_info = []
-
+    logger.error(f"🐲 {len(lines)=}")
     for line in lines:
         line_items = line.split(DELIMITER)
         # Skip non-Python steps/tasks
