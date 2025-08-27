@@ -252,4 +252,5 @@ def cli_entrypoint(
                     warnings.setdefault(user_email, []).extend(warning)
 
     for user_email, warning in warnings.items():
-        logger.warning(f"User {user_email}: {warning}")
+        if warning != []:
+            logger.warning(f"User {user_email}: {warning}")
