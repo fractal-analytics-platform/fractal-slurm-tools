@@ -159,7 +159,7 @@ def process(
     tot_diskread_GB = 0.0
     tot_diskwrite_GB = 0.0
     tot_num_tasks = 0
-    warnings = []
+    user_warnings = []
     for starting_ind in range(0, tot_num_jobs, SACCT_BATCH_SIZE):
         # Prepare batch string
         slurm_job_ids_batch = ",".join(
@@ -174,13 +174,12 @@ def process(
         )
         logger.debug(f">> {slurm_job_ids_batch=}")
         # Run `sacct` and pars its output
-        list_task_info, warning = parse_sacct_info(
+        list_task_info, warnings = parse_sacct_info(
             job_string=slurm_job_ids_batch,
             task_subfolder_name=None,
             parser_overrides=PARSERS,
         )
-        if warning is not None:
-            warnings.append(warning)
+        user_warnings = warnings.extend(warnings)
 
         _verify_single_task_per_job(list_task_info)
         # Aggregate statistics
@@ -212,7 +211,7 @@ def process(
     with (outdir / f"{year:4d}_{month:02d}_stats.json").open("w") as f:
         json.dump(stats, f, indent=2)
 
-    return warnings
+    return user_warnings
 
 
 def cli_entrypoint(
@@ -235,11 +234,11 @@ def cli_entrypoint(
     years = years.split(",")
     months = months.split(",")
 
-    user_warnings = {}
+    users_warnings = {}
     for user_email in user_emails:
         for year in map(int, years):
             for month in map(int, months):
-                warnings = process(
+                user_warnings = process(
                     user_email=user_email,
                     year=year,
                     month=month,
@@ -248,16 +247,18 @@ def cli_entrypoint(
                     token=token,
                 )
 
-                if warnings != []:
-                    user_warnings.setdefault(user_email, []).extend(warnings)
+                if user_warnings != []:
+                    users_warnings.setdefault(user_email, []).extend(
+                        user_warnings
+                    )
 
-    for user_email, warnings in user_warnings.items():
-        if warnings != []:
+    for user_email, user_warnings in users_warnings.items():
+        if user_warnings != []:
             warning_message = ",".join(
                 [
                     f"found {warning['missing_values']} missing values "
                     f"in Job {warning['job_id']}"
-                    for warning in warnings
+                    for warning in user_warnings
                 ]
             )
             logger.warning(f"User {user_email}: {warning_message}.")
