@@ -179,7 +179,7 @@ def process(
             task_subfolder_name=None,
             parser_overrides=PARSERS,
         )
-        user_warnings = warnings.extend(warnings)
+        user_warnings.extend(warnings)
 
         _verify_single_task_per_job(list_task_info)
         # Aggregate statistics
@@ -234,7 +234,7 @@ def cli_entrypoint(
     years = years.split(",")
     months = months.split(",")
 
-    users_warnings = {}
+    warnings = {}
     for user_email in user_emails:
         for year in map(int, years):
             for month in map(int, months):
@@ -248,17 +248,15 @@ def cli_entrypoint(
                 )
 
                 if user_warnings != []:
-                    users_warnings.setdefault(user_email, []).extend(
-                        user_warnings
-                    )
+                    warnings.setdefault(user_email, []).extend(user_warnings)
 
-    for user_email, user_warnings in users_warnings.items():
-        if user_warnings != []:
+    for user_email, warning_list in warnings.items():
+        if warning_list != []:
             warning_message = ",".join(
                 [
                     f"found {warning['missing_values']} missing values "
                     f"in Job {warning['job_id']}"
-                    for warning in user_warnings
+                    for warning in warning_list
                 ]
             )
             logger.warning(f"User {user_email}: {warning_message}.")
