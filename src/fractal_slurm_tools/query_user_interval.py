@@ -259,11 +259,12 @@ def cli_entrypoint(
                         | set(user_missing_values)
                     }
 
-    for user_email in users_missing_values:
-        for job_id, missing_values_count in users_missing_values[
-            user_email
-        ].items():
-            logger.warning(
-                f"User {user_email}: "
-                f"{missing_values_count} missing values in Job {job_id}."
-            )
+    if os.getenv("SHOW_MISSING_VALUES") is not None:
+        for user_email in users_missing_values:
+            for job_id, missing_values_count in users_missing_values[
+                user_email
+            ].items():
+                logger.warning(
+                    f"User {user_email}: "
+                    f"{missing_values_count} missing values in Job {job_id}."
+                )
