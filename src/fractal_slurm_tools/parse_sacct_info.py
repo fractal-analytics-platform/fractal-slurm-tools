@@ -1,5 +1,4 @@
 import logging
-import os
 from copy import deepcopy
 from typing import Any
 from typing import Callable
@@ -126,7 +125,7 @@ def parse_sacct_info(
 
         # Parse all fields
         try:
-            if os.getenv("USE_LEGACY_SLURM_FIELDS") is not None:
+            if "WorkDir" in SACCT_FIELDS:
                 WorkDir_index = SACCT_FIELDS.index("WorkDir")
             else:
                 WorkDir_index = None
