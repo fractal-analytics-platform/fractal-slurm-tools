@@ -17,6 +17,10 @@ main_parser.add_argument(
 )
 main_parser.add_argument(
     "--emails",
+    help=(
+        "Comma-separated list of user emails, "
+        "or path to a file with one email per line."
+    ),
     type=str,
     required=True,
 )
@@ -29,11 +33,13 @@ main_parser.add_argument(
 
 main_parser.add_argument(
     "--years",
+    help="Comma-separated list of years",
     type=str,
     required=True,
 )
 main_parser.add_argument(
     "--months",
+    help="Comma-separated list of months (1-12)",
     type=str,
     required=True,
 )
