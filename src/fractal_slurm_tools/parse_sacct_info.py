@@ -1,4 +1,5 @@
 import logging
+import os
 from copy import deepcopy
 from typing import Any
 from typing import Callable
@@ -125,10 +126,10 @@ def parse_sacct_info(
 
         # Parse all fields
         try:
-            try:
-                workdir_index = SACCT_FIELDS.index("WorkDir")
-            except ValueError:
-                workdir_index = None
+            if os.getenv("USE_LEGACY_SLURM_FIELDS") is not None:
+                WorkDir_index = SACCT_FIELDS.index("WorkDir")
+            else:
+                WorkDir_index = None
 
             missing_values_count = [
                 item.strip()
@@ -138,7 +139,7 @@ def parse_sacct_info(
                     SACCT_FIELDS.index("ReqTRES"),
                     SACCT_FIELDS.index("Partition"),
                     SACCT_FIELDS.index("QOS"),
-                    workdir_index,
+                    WorkDir_index,
                 }
             ].count("")
             if missing_values_count > 0:
