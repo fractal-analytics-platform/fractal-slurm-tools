@@ -142,21 +142,6 @@ def parse_sacct_info(
                 }
             ].count("")
             if missing_values_count > 0:
-                if missing_values_count > 1:
-                    logger.warning(f"🚨{missing_values_count} {line_items}")
-                else:
-                    i = [
-                        item.strip()
-                        for i, item in enumerate(line_items)
-                        if i
-                        not in {
-                            SACCT_FIELDS.index("ReqTRES"),
-                            SACCT_FIELDS.index("Partition"),
-                            SACCT_FIELDS.index("QOS"),
-                            workdir_index,
-                        }
-                    ].index("")
-                    logger.warning(f"🐲 {i}")
                 key = int(float(line_items[SACCT_FIELDS.index("JobID")]))
                 missing_values.setdefault(key, 0)
                 missing_values[key] += missing_values_count
