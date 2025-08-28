@@ -129,7 +129,7 @@ def process(
     fractal_backend_url: str,
     base_output_folder: str,
     token: str,
-) -> str | None:
+) -> list[dict[str, int]]:
     # Get IDs of SLURM jobs
     logger.info(
         f"Find SLURM jobs for {user_email=} (month {year:4d}/{month:02d})."
@@ -253,8 +253,9 @@ def cli_entrypoint(
                     )
 
     for user_email in users_missing_values:
-        for x in users_missing_values[user_email]:
+        for missing_values_dict in users_missing_values[user_email]:
             logger.warning(
                 f"User {user_email}: "
-                f"{x['missing_values']} missing values in Job {x['job_id']}."
+                f"{missing_values_dict['missing_values']} missing values "
+                f"in Job {missing_values_dict['job_id']}."
             )

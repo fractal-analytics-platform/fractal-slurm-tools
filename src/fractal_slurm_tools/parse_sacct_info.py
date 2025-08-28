@@ -43,11 +43,11 @@ def get_job_submit_start_end_times(
                 for line in sacct_lines
                 if line.split(DELIMITER)[INDEX_JOB_ID] == job_id
             )
+
             main_job_line_fields = main_job_line.split(DELIMITER)
             job_Submit = main_job_line_fields[INDEX_JOB_SUBMIT]
             job_Start = main_job_line_fields[INDEX_JOB_START]
             job_End = main_job_line_fields[INDEX_JOB_END]
-
             try:
                 job_queue_time = (
                     _isoformat_to_datetime(job_Start)
@@ -113,7 +113,6 @@ def parse_sacct_info(
     )
 
     list_task_info = []
-
     missing_values = []
     for line in lines:
         line_items = line.split(DELIMITER)
