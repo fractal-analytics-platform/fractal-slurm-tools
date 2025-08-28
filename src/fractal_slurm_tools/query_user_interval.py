@@ -159,7 +159,7 @@ def process(
     tot_diskread_GB = 0.0
     tot_diskwrite_GB = 0.0
     tot_num_tasks = 0
-    user_missing_values = []
+    user_missing_values = {}
     for starting_ind in range(0, tot_num_jobs, SACCT_BATCH_SIZE):
         # Prepare batch string
         slurm_job_ids_batch = ",".join(
@@ -179,7 +179,10 @@ def process(
             task_subfolder_name=None,
             parser_overrides=PARSERS,
         )
-        user_missing_values.extend(missing_values)
+        user_missing_values = {
+            k: user_missing_values.get(k, 0) + missing_values.get(k, 0)
+            for k in set(user_missing_values) | set(missing_values)
+        }
 
         _verify_single_task_per_job(list_task_info)
         # Aggregate statistics
@@ -247,15 +250,20 @@ def cli_entrypoint(
                     token=token,
                 )
 
-                if user_missing_values != []:
-                    users_missing_values.setdefault(user_email, []).extend(
-                        user_missing_values
-                    )
+                if user_missing_values != {}:
+                    users_missing_values.setdefault(user_email, {})
+                    users_missing_values[user_email] = {
+                        k: users_missing_values[user_email].get(k, 0)
+                        + user_missing_values.get(k, 0)
+                        for k in set(users_missing_values[user_email])
+                        | set(user_missing_values)
+                    }
 
     for user_email in users_missing_values:
-        for missing_values_dict in users_missing_values[user_email]:
+        for job_id, missing_values_count in users_missing_values[
+            user_email
+        ].items():
             logger.warning(
                 f"User {user_email}: "
-                f"{missing_values_dict['missing_values']} missing values "
-                f"in Job {missing_values_dict['job_id']}."
+                f"{missing_values_count} missing values in Job {job_id}."
             )

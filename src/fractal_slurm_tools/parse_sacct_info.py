@@ -113,7 +113,7 @@ def parse_sacct_info(
     )
 
     list_task_info = []
-    missing_values = []
+    missing_values = {}
     for line in lines:
         line_items = line.split(DELIMITER)
         # Skip non-Python steps/tasks
@@ -136,14 +136,9 @@ def parse_sacct_info(
                 }
             ].count("")
             if missing_values_count > 0:
-                missing_values.append(
-                    {
-                        "job_id": int(
-                            float(line_items[SACCT_FIELDS.index("JobID")])
-                        ),
-                        "missing_values": missing_values_count,
-                    }
-                )
+                key = int(float(line_items[SACCT_FIELDS.index("JobID")]))
+                missing_values.setdefault(key, 0)
+                missing_values[key] += missing_values_count
             task_info = {
                 SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)
                 for ind, item in enumerate(line_items)
