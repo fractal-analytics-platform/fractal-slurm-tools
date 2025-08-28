@@ -136,7 +136,7 @@ def parse_sacct_info(
                     SACCT_FIELDS.index("QOS"),
                 }
             ].count("")
-            if missing_values > 0:
+            if missing_values_count > 0:
                 missing_values.append(
                     {
                         "job_id": int(
