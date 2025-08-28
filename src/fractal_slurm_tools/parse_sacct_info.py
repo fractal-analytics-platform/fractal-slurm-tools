@@ -125,6 +125,11 @@ def parse_sacct_info(
 
         # Parse all fields
         try:
+            try:
+                workdir_index = (SACCT_FIELDS.index("WorkDir"),)
+            except ValueError:
+                workdir_index = None
+
             missing_values_count = [
                 item.strip()
                 for i, item in enumerate(line_items)
@@ -133,6 +138,7 @@ def parse_sacct_info(
                     SACCT_FIELDS.index("ReqTRES"),
                     SACCT_FIELDS.index("Partition"),
                     SACCT_FIELDS.index("QOS"),
+                    workdir_index,
                 }
             ].count("")
             if missing_values_count > 0:
@@ -147,6 +153,7 @@ def parse_sacct_info(
                             SACCT_FIELDS.index("ReqTRES"),
                             SACCT_FIELDS.index("Partition"),
                             SACCT_FIELDS.index("QOS"),
+                            workdir_index,
                         }
                     ].index("")
                     logger.warning(f"🚨 {i}")
