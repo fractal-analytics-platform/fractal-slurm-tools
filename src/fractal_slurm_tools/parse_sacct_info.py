@@ -136,7 +136,8 @@ def parse_sacct_info(
                 }
             ].count("")
             if missing_values_count > 0:
-                logger.warning(f"🚨{missing_values_count} {line_items}")
+                if missing_values_count > 1:
+                    logger.warning(f"🚨{missing_values_count} {line_items}")
                 key = int(float(line_items[SACCT_FIELDS.index("JobID")]))
                 missing_values.setdefault(key, 0)
                 missing_values[key] += missing_values_count
