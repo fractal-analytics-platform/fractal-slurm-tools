@@ -114,7 +114,7 @@ def parse_sacct_info(
 
     list_task_info = []
 
-    warnings = []
+    missing_values = []
     for line in lines:
         line_items = line.split(DELIMITER)
         # Skip non-Python steps/tasks
@@ -137,7 +137,7 @@ def parse_sacct_info(
                 }
             ].count("")
             if missing_values > 0:
-                warnings.append(
+                missing_values.append(
                     {
                         "job_id": int(
                             float(line_items[SACCT_FIELDS.index("JobID")])
@@ -169,4 +169,4 @@ def parse_sacct_info(
 
         list_task_info.append(task_info)
 
-    return list_task_info, warnings
+    return list_task_info, missing_values
