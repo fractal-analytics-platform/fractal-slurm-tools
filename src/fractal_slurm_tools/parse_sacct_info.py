@@ -48,17 +48,23 @@ def get_job_submit_start_end_times(
             job_Submit = main_job_line_fields[INDEX_JOB_SUBMIT]
             job_Start = main_job_line_fields[INDEX_JOB_START]
             job_End = main_job_line_fields[INDEX_JOB_END]
-            if job_Start is not None:
+            if job_Start is not None and job_Submit is not None:
+                logger.warning("CASE A")
                 job_queue_time = (
                     _isoformat_to_datetime(job_Start)
                     - _isoformat_to_datetime(job_Submit)
                 ).total_seconds()
+            else:
+                logger.warning("CASE B")
+                job_queue_time = 0
+            if job_Start is not None and job_End is not None:
+                logger.warning("CASE C")
                 job_runtime = (
                     _isoformat_to_datetime(job_End)
                     - _isoformat_to_datetime(job_Start)
                 ).total_seconds()
             else:
-                job_queue_time = 0
+                logger.warning("CASE D")
                 job_runtime = 0
 
             return dict(
