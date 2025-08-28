@@ -126,7 +126,7 @@ def parse_sacct_info(
         # Parse all fields
         try:
             try:
-                workdir_index = (SACCT_FIELDS.index("WorkDir"),)
+                workdir_index = SACCT_FIELDS.index("WorkDir")
             except ValueError:
                 workdir_index = None
 
@@ -156,7 +156,7 @@ def parse_sacct_info(
                             workdir_index,
                         }
                     ].index("")
-                    logger.warning(f"🚨 {i}")
+                    logger.warning(f"🐲 {i}")
                 key = int(float(line_items[SACCT_FIELDS.index("JobID")]))
                 missing_values.setdefault(key, 0)
                 missing_values[key] += missing_values_count
