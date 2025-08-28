@@ -48,7 +48,7 @@ def get_job_submit_start_end_times(
             job_Submit = main_job_line_fields[INDEX_JOB_SUBMIT]
             job_Start = main_job_line_fields[INDEX_JOB_START]
             job_End = main_job_line_fields[INDEX_JOB_END]
-            try:
+            if job_Start is not None:
                 job_queue_time = (
                     _isoformat_to_datetime(job_Start)
                     - _isoformat_to_datetime(job_Submit)
@@ -57,7 +57,7 @@ def get_job_submit_start_end_times(
                     _isoformat_to_datetime(job_End)
                     - _isoformat_to_datetime(job_Start)
                 ).total_seconds()
-            except ValueError:
+            else:
                 job_queue_time = 0
                 job_runtime = 0
 
