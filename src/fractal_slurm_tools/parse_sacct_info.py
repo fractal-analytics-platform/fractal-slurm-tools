@@ -80,7 +80,7 @@ def parse_sacct_info(
     job_string: str,
     task_subfolder_name: str | None = None,
     parser_overrides: dict[str, Callable] | None = None,
-) -> tuple[list[SLURMTaskInfo], str | None]:
+) -> tuple[list[SLURMTaskInfo], list[dict[str, int]]]:
     """
     Run `sacct` and parse its output
 
@@ -126,7 +126,7 @@ def parse_sacct_info(
 
         # Parse all fields
         try:
-            missing_values = [
+            missing_values_count = [
                 item.strip()
                 for i, item in enumerate(line_items)
                 if i
@@ -142,7 +142,7 @@ def parse_sacct_info(
                         "job_id": int(
                             float(line_items[SACCT_FIELDS.index("JobID")])
                         ),
-                        "missing_values": missing_values,
+                        "missing_values": missing_values_count,
                     }
                 )
             task_info = {
