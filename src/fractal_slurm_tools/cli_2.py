@@ -16,7 +16,11 @@ main_parser.add_argument(
     required=True,
 )
 main_parser.add_argument(
-    "--user-email",
+    "--emails",
+    help=(
+        "Comma-separated list of user emails, "
+        "or path to a file with one email per line."
+    ),
     type=str,
     required=True,
 )
@@ -28,13 +32,15 @@ main_parser.add_argument(
 )
 
 main_parser.add_argument(
-    "--year",
-    type=int,
+    "--years",
+    help="Comma-separated list of years",
+    type=str,
     required=True,
 )
 main_parser.add_argument(
-    "--month",
-    type=int,
+    "--months",
+    help="Comma-separated list of months (1-12)",
+    type=str,
     required=True,
 )
 
@@ -74,8 +80,8 @@ def main():
 
     cli_entrypoint(
         fractal_backend_url=args.fractal_backend_url,
-        user_email=args.user_email,
-        year=args.year,
-        month=args.month,
+        emails=args.emails,
+        years=args.years,
+        months=args.months,
         base_output_folder=args.base_output_folder,
     )

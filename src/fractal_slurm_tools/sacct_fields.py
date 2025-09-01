@@ -40,8 +40,8 @@ SACCT_FIELDS: list[str] = [
 
 if os.getenv("USE_LEGACY_SLURM_FIELDS") is not None:
     # Expose legacy mode, which works with slurm 15.08.7
-    SACCT_FIELDS.pop(SACCT_FIELDS.index("WorkDir"))
     SACCT_FIELDS.pop(SACCT_FIELDS.index("SubmitLine"))
+    SACCT_FIELDS.pop(SACCT_FIELDS.index("WorkDir"))
     SACCT_FIELDS.pop(SACCT_FIELDS.index("ElapsedRaw"))
 
 

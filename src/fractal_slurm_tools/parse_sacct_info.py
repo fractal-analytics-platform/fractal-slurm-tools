@@ -48,14 +48,19 @@ def get_job_submit_start_end_times(
             job_Submit = main_job_line_fields[INDEX_JOB_SUBMIT]
             job_Start = main_job_line_fields[INDEX_JOB_START]
             job_End = main_job_line_fields[INDEX_JOB_END]
-            job_queue_time = (
-                _isoformat_to_datetime(job_Start)
-                - _isoformat_to_datetime(job_Submit)
-            ).total_seconds()
-            job_runtime = (
-                _isoformat_to_datetime(job_End)
-                - _isoformat_to_datetime(job_Start)
-            ).total_seconds()
+            if job_Start != "None":
+                job_queue_time = (
+                    _isoformat_to_datetime(job_Start)
+                    - _isoformat_to_datetime(job_Submit)
+                ).total_seconds()
+                job_runtime = (
+                    _isoformat_to_datetime(job_End)
+                    - _isoformat_to_datetime(job_Start)
+                ).total_seconds()
+            else:
+                job_queue_time = 0
+                job_runtime = 0
+
             return dict(
                 job_Submit=job_Submit,
                 job_Start=job_Start,
@@ -75,7 +80,7 @@ def parse_sacct_info(
     job_string: str,
     task_subfolder_name: str | None = None,
     parser_overrides: dict[str, Callable] | None = None,
-) -> list[SLURMTaskInfo]:
+) -> tuple[list[SLURMTaskInfo], list[dict[str, int]]]:
     """
     Run `sacct` and parse its output
 
@@ -108,6 +113,7 @@ def parse_sacct_info(
     )
 
     list_task_info = []
+    missing_values = {}
     for line in lines:
         line_items = line.split(DELIMITER)
         # Skip non-Python steps/tasks
@@ -119,10 +125,31 @@ def parse_sacct_info(
 
         # Parse all fields
         try:
+            if "WorkDir" in SACCT_FIELDS:
+                WorkDir_index = SACCT_FIELDS.index("WorkDir")
+            else:
+                WorkDir_index = None
+
+            missing_values_count = [
+                item.strip()
+                for i, item in enumerate(line_items)
+                if i
+                not in {
+                    SACCT_FIELDS.index("ReqTRES"),
+                    SACCT_FIELDS.index("Partition"),
+                    SACCT_FIELDS.index("QOS"),
+                    WorkDir_index,
+                }
+            ].count("")
+            if missing_values_count > 0:
+                key = int(float(line_items[SACCT_FIELDS.index("JobID")]))
+                missing_values.setdefault(key, 0)
+                missing_values[key] += missing_values_count
             task_info = {
                 SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)
                 for ind, item in enumerate(line_items)
             }
+
         except Exception as e:
             logger.error(f"Could not parse {line=}")
             for ind, item in enumerate(line_items):
@@ -141,4 +168,5 @@ def parse_sacct_info(
             task_info.update(dict(task_subfolder=task_subfolder_name))
 
         list_task_info.append(task_info)
-    return list_task_info
+
+    return list_task_info, missing_values

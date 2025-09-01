@@ -122,17 +122,14 @@ def get_slurm_job_ids_user_month(
     return slurm_job_ids
 
 
-def cli_entrypoint(
-    fractal_backend_url: str,
+def process(
     user_email: str,
     year: int,
     month: int,
+    fractal_backend_url: str,
     base_output_folder: str,
-) -> None:
-    token = os.getenv("FRACTAL_TOKEN", None)
-    if token is None:
-        sys.exit("Missing env variable FRACTAL_TOKEN")
-
+    token: str,
+) -> list[dict[str, int]]:
     # Get IDs of SLURM jobs
     logger.info(
         f"Find SLURM jobs for {user_email=} (month {year:4d}/{month:02d})."
@@ -148,25 +145,22 @@ def cli_entrypoint(
         f"Found {len(slurm_job_ids)} SLURM jobs "
         f"for {user_email=} (month {year:4d}/{month:02d})."
     )
-
     outdir = Path(base_output_folder, user_email)
     outdir.mkdir(exist_ok=True, parents=True)
     with (outdir / f"{year:4d}_{month:02d}_slurm_jobs.json").open("w") as f:
         json.dump(slurm_job_ids, f, indent=2)
-
     # Parse sacct
     tot_num_jobs = len(slurm_job_ids)
     logger.info(
         f"Start processing {tot_num_jobs} SLURM jobs "
         f"(in batches of {SACCT_BATCH_SIZE} jobs at a time)."
     )
-
     tot_cputime_hours = 0.0
     tot_diskread_GB = 0.0
     tot_diskwrite_GB = 0.0
     tot_num_tasks = 0
+    user_missing_values = {}
     for starting_ind in range(0, tot_num_jobs, SACCT_BATCH_SIZE):
-
         # Prepare batch string
         slurm_job_ids_batch = ",".join(
             list(
@@ -179,15 +173,18 @@ def cli_entrypoint(
             )
         )
         logger.debug(f">> {slurm_job_ids_batch=}")
-
         # Run `sacct` and pars its output
-        list_task_info = parse_sacct_info(
+        list_task_info, missing_values = parse_sacct_info(
             job_string=slurm_job_ids_batch,
             task_subfolder_name=None,
             parser_overrides=PARSERS,
         )
-        _verify_single_task_per_job(list_task_info)
+        user_missing_values = {
+            k: user_missing_values.get(k, 0) + missing_values.get(k, 0)
+            for k in set(user_missing_values) | set(missing_values)
+        }
 
+        _verify_single_task_per_job(list_task_info)
         # Aggregate statistics
         num_tasks = len(list_task_info)
         tot_num_tasks += num_tasks
@@ -199,11 +196,10 @@ def cli_entrypoint(
             tot_cputime_hours += cputime_hours
             tot_diskread_GB += diskread_GB
             tot_diskwrite_GB += diskwrite_GB
-
     logger.info(
         f"{tot_cputime_hours=:.1f}, "
         f"{tot_diskread_GB=:.3f} "
-        f"{tot_diskwrite_GB=:.3f}"
+        f"{tot_diskwrite_GB=:.3f}\n\n"
     )
     stats = dict(
         user_email=user_email,
@@ -217,3 +213,58 @@ def cli_entrypoint(
     )
     with (outdir / f"{year:4d}_{month:02d}_stats.json").open("w") as f:
         json.dump(stats, f, indent=2)
+
+    return user_missing_values
+
+
+def cli_entrypoint(
+    fractal_backend_url: str,
+    emails: str,
+    years: str,
+    months: str,
+    base_output_folder: str,
+) -> None:
+    token = os.getenv("FRACTAL_TOKEN", None)
+    if token is None:
+        sys.exit("Missing env variable FRACTAL_TOKEN")
+
+    if Path(emails).is_file():
+        with Path(emails).open("r") as f:
+            user_emails = f.read().splitlines()
+    else:
+        user_emails = emails.split(",")
+
+    years = years.split(",")
+    months = months.split(",")
+
+    users_missing_values = {}
+    for user_email in user_emails:
+        for year in map(int, years):
+            for month in map(int, months):
+                user_missing_values = process(
+                    user_email=user_email,
+                    year=year,
+                    month=month,
+                    fractal_backend_url=fractal_backend_url,
+                    base_output_folder=base_output_folder,
+                    token=token,
+                )
+
+                if user_missing_values != {}:
+                    users_missing_values.setdefault(user_email, {})
+                    users_missing_values[user_email] = {
+                        k: users_missing_values[user_email].get(k, 0)
+                        + user_missing_values.get(k, 0)
+                        for k in set(users_missing_values[user_email])
+                        | set(user_missing_values)
+                    }
+
+    if os.getenv("SHOW_MISSING_VALUES") is not None:
+        for user_email in users_missing_values:
+            for job_id, missing_values_count in users_missing_values[
+                user_email
+            ].items():
+                logger.warning(
+                    f"User {user_email}: "
+                    f"{missing_values_count} missing values in Job {job_id}."
+                )
