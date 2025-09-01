@@ -6,16 +6,16 @@
 |------------------------------------------------------ | -------: | -------: | -------: | -------: | ------: | --------: |
 | src/fractal\_slurm\_tools/\_\_init\_\_.py             |        1 |        0 |        0 |        0 |    100% |           |
 | src/fractal\_slurm\_tools/cli.py                      |       22 |       22 |        4 |        0 |      0% |      1-62 |
-| src/fractal\_slurm\_tools/cli\_2.py                   |       26 |       26 |        4 |        0 |      0% |      1-75 |
+| src/fractal\_slurm\_tools/cli\_2.py                   |       26 |       26 |        4 |        0 |      0% |      1-81 |
 | src/fractal\_slurm\_tools/parse\_job\_folders.py      |       24 |       24 |        4 |        0 |      0% |      1-50 |
-| src/fractal\_slurm\_tools/parse\_sacct\_info.py       |       64 |       26 |       12 |        1 |     51% |39->exit, 95-144 |
+| src/fractal\_slurm\_tools/parse\_sacct\_info.py       |       76 |       37 |       18 |        2 |     44% |39->exit, 61-62, 100-172 |
 | src/fractal\_slurm\_tools/process\_fractal\_job.py    |       34 |       34 |        8 |        0 |      0% |      1-66 |
-| src/fractal\_slurm\_tools/query\_user\_interval.py    |       84 |       84 |       14 |        0 |      0% |     1-219 |
+| src/fractal\_slurm\_tools/query\_user\_interval.py    |      106 |      106 |       30 |        0 |      0% |     1-267 |
 | src/fractal\_slurm\_tools/run\_sacct\_command.py      |       14 |        8 |        2 |        0 |     38% |     21-41 |
 | src/fractal\_slurm\_tools/sacct\_fields.py            |       17 |        3 |        8 |        1 |     84% |     43-45 |
-| src/fractal\_slurm\_tools/sacct\_parser\_functions.py |       21 |       11 |        2 |        0 |     43% |7, 11, 18-24, 28, 32, 36 |
+| src/fractal\_slurm\_tools/sacct\_parser\_functions.py |       29 |       17 |        8 |        0 |     32% |10, 14-16, 23-31, 35, 39-41, 45 |
 | src/fractal\_slurm\_tools/sacct\_parsers.py           |       16 |        0 |        8 |        0 |    100% |           |
-|                                             **TOTAL** |  **323** |  **238** |   **66** |    **2** | **26%** |           |
+|                                             **TOTAL** |  **365** |  **277** |   **94** |    **3** | **23%** |           |
 
 
 ## Setup coverage badge
