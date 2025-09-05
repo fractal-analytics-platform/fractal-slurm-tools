@@ -146,7 +146,7 @@ def parse_sacct_info(
                 if i not in SKIPPED_INDICES_FOR_MISSING_VALUES
             ].count("")
             if missing_values_count > 0:
-                key = int(float(line_items[SACCT_FIELDS.index("JobID")]))
+                key = line_items[INDEX_JOB_ID].split(".")[0]
                 missing_values.setdefault(key, 0)
                 missing_values[key] += missing_values_count
             task_info = {
