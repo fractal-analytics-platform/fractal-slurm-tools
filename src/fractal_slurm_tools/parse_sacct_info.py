@@ -27,7 +27,7 @@ INDEX_REQ_TRES = SACCT_FIELDS.index("ReqTRES")
 INDEX_PARTITION = SACCT_FIELDS.index("Partition")
 INDEX_QOS = SACCT_FIELDS.index("QOS")
 INDEX_WORK_DIR = (
-    SACCT_FIELDS.index("WorkDir") if os.env["USE_LEGACY_FIELDS"] else None
+    SACCT_FIELDS.index("WorkDir") if os.getenv["USE_LEGACY_FIELDS"] else None
 )
 SKIPPED_INDICES_FOR_MISSING_VALUES = {
     INDEX_REQ_TRES,
