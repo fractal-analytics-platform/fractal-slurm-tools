@@ -2,20 +2,22 @@
 
 [Full report](https://htmlpreview.github.io/?https://github.com/fractal-analytics-platform/fractal-slurm-tools/blob/python-coverage-comment-action-data/htmlcov/index.html)
 
-| Name                                                  |    Stmts |     Miss |   Branch |   BrPart |   Cover |   Missing |
-|------------------------------------------------------ | -------: | -------: | -------: | -------: | ------: | --------: |
-| src/fractal\_slurm\_tools/\_\_init\_\_.py             |        1 |        0 |        0 |        0 |    100% |           |
-| src/fractal\_slurm\_tools/cli.py                      |       22 |       22 |        4 |        0 |      0% |      1-62 |
-| src/fractal\_slurm\_tools/cli\_2.py                   |       26 |       26 |        4 |        0 |      0% |      1-81 |
-| src/fractal\_slurm\_tools/parse\_job\_folders.py      |       24 |       24 |        4 |        0 |      0% |      1-50 |
-| src/fractal\_slurm\_tools/parse\_sacct\_info.py       |       76 |       37 |       18 |        2 |     44% |39->exit, 61-62, 100-172 |
-| src/fractal\_slurm\_tools/process\_fractal\_job.py    |       34 |       34 |        8 |        0 |      0% |      1-66 |
-| src/fractal\_slurm\_tools/query\_user\_interval.py    |      106 |      106 |       30 |        0 |      0% |     1-267 |
-| src/fractal\_slurm\_tools/run\_sacct\_command.py      |       14 |        8 |        2 |        0 |     38% |     21-41 |
-| src/fractal\_slurm\_tools/sacct\_fields.py            |       17 |        3 |        8 |        1 |     84% |     43-45 |
-| src/fractal\_slurm\_tools/sacct\_parser\_functions.py |       29 |       17 |        8 |        0 |     32% |10, 14-16, 23-31, 35, 39-41, 45 |
-| src/fractal\_slurm\_tools/sacct\_parsers.py           |       16 |        0 |        8 |        0 |    100% |           |
-|                                             **TOTAL** |  **365** |  **277** |   **94** |    **3** | **23%** |           |
+| Name                                                     |    Stmts |     Miss |   Branch |   BrPart |   Cover |   Missing |
+|--------------------------------------------------------- | -------: | -------: | -------: | -------: | ------: | --------: |
+| src/fractal\_slurm\_tools/\_\_init\_\_.py                |        1 |        0 |        0 |        0 |    100% |           |
+| src/fractal\_slurm\_tools/aggregate\_user\_statistics.py |       21 |       21 |        6 |        0 |      0% |      1-41 |
+| src/fractal\_slurm\_tools/cli.py                         |       22 |       22 |        4 |        0 |      0% |      1-62 |
+| src/fractal\_slurm\_tools/cli\_2.py                      |       26 |       26 |        4 |        0 |      0% |      1-81 |
+| src/fractal\_slurm\_tools/cli\_aggregate.py              |       28 |       28 |        4 |        0 |      0% |      1-57 |
+| src/fractal\_slurm\_tools/parse\_job\_folders.py         |       24 |       24 |        4 |        0 |      0% |      1-50 |
+| src/fractal\_slurm\_tools/parse\_sacct\_info.py          |       76 |       37 |       18 |        2 |     44% |39->exit, 61-62, 100-172 |
+| src/fractal\_slurm\_tools/process\_fractal\_job.py       |       34 |       34 |        8 |        0 |      0% |      1-66 |
+| src/fractal\_slurm\_tools/query\_user\_interval.py       |      106 |      106 |       30 |        0 |      0% |     1-267 |
+| src/fractal\_slurm\_tools/run\_sacct\_command.py         |       14 |        8 |        2 |        0 |     38% |     21-41 |
+| src/fractal\_slurm\_tools/sacct\_fields.py               |       17 |        3 |        8 |        1 |     84% |     43-45 |
+| src/fractal\_slurm\_tools/sacct\_parser\_functions.py    |       29 |       17 |        8 |        0 |     32% |10, 14-16, 23-31, 35, 39-41, 45 |
+| src/fractal\_slurm\_tools/sacct\_parsers.py              |       16 |        0 |        8 |        0 |    100% |           |
+|                                                **TOTAL** |  **414** |  **326** |  **104** |    **3** | **20%** |           |
 
 
 ## Setup coverage badge
