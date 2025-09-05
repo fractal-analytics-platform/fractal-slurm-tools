@@ -1,4 +1,5 @@
 import logging
+import os
 from copy import deepcopy
 from typing import Any
 from typing import Callable
@@ -21,6 +22,19 @@ INDEX_JOB_ID = SACCT_FIELDS.index("JobID")
 INDEX_JOB_SUBMIT = SACCT_FIELDS.index("Submit")
 INDEX_JOB_START = SACCT_FIELDS.index("Start")
 INDEX_JOB_END = SACCT_FIELDS.index("End")
+
+INDEX_REQ_TRES = SACCT_FIELDS.index("ReqTRES")
+INDEX_PARTITION = SACCT_FIELDS.index("Partition")
+INDEX_QOS = SACCT_FIELDS.index("QOS")
+INDEX_WORK_DIR = (
+    SACCT_FIELDS.index("WorkDir") if os.getenv("USE_LEGACY_FIELDS") else None
+)
+SKIPPED_INDICES_FOR_MISSING_VALUES = {
+    INDEX_REQ_TRES,
+    INDEX_PARTITION,
+    INDEX_QOS,
+    INDEX_WORK_DIR,
+}
 
 
 class JobSubmitStartEnd(TypedDict):
@@ -125,24 +139,14 @@ def parse_sacct_info(
 
         # Parse all fields
         try:
-            if "WorkDir" in SACCT_FIELDS:
-                WorkDir_index = SACCT_FIELDS.index("WorkDir")
-            else:
-                WorkDir_index = None
 
             missing_values_count = [
                 item.strip()
                 for i, item in enumerate(line_items)
-                if i
-                not in {
-                    SACCT_FIELDS.index("ReqTRES"),
-                    SACCT_FIELDS.index("Partition"),
-                    SACCT_FIELDS.index("QOS"),
-                    WorkDir_index,
-                }
+                if i not in SKIPPED_INDICES_FOR_MISSING_VALUES
             ].count("")
             if missing_values_count > 0:
-                key = int(float(line_items[SACCT_FIELDS.index("JobID")]))
+                key = line_items[INDEX_JOB_ID].split(".")[0]
                 missing_values.setdefault(key, 0)
                 missing_values[key] += missing_values_count
             task_info = {
