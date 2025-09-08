@@ -33,6 +33,34 @@ PARSERS = {
 }
 
 
+def _get_months_range(
+    first_month: str, last_month: str
+) -> list[tuple[int, int]]:
+    """
+    Generate a range of months between two "MM-YYYY" strings.
+
+    E.g.:
+        >>> _get_months_range("11-2023", "02-2024")
+        [(11, 2023), (12, 2023), (1, 2024), (2, 2024)]
+    """
+    start = datetime.strptime(first_month, "%m-%Y")
+    stop = datetime.strptime(last_month, "%m-%Y")
+    if start > stop:
+        raise ValueError(f"{last_month=} is before {first_month=}.")
+    months_diff = (
+        (stop.year - start.year) * 12 + (stop.month - start.month) + 1
+    )
+    dates_range = [
+        datetime(
+            year=start.year + (start.month - 1 + i) // 12,
+            month=(start.month - 1 + i) % 12 + 1,
+            day=1,
+        )
+        for i in range(months_diff)
+    ]
+    return [(dt.month, dt.year) for dt in dates_range]
+
+
 def _verify_single_task_per_job(outputs: list[SLURMTaskInfo]) -> None:
     """
     Verify the single-task-per-step assumption.
@@ -220,8 +248,8 @@ def process(
 def cli_entrypoint(
     fractal_backend_url: str,
     emails: str,
-    years: str,
-    months: str,
+    first_month: str,
+    last_month: str,
     base_output_folder: str,
 ) -> None:
     token = os.getenv("FRACTAL_TOKEN", None)
@@ -234,30 +262,30 @@ def cli_entrypoint(
     else:
         user_emails = emails.split(",")
 
-    years = years.split(",")
-    months = months.split(",")
+    months_range = _get_months_range(
+        first_month=first_month, last_month=last_month
+    )
 
     users_missing_values = {}
     for user_email in user_emails:
-        for year in map(int, years):
-            for month in map(int, months):
-                user_missing_values = process(
-                    user_email=user_email,
-                    year=year,
-                    month=month,
-                    fractal_backend_url=fractal_backend_url,
-                    base_output_folder=base_output_folder,
-                    token=token,
-                )
+        for month, year in months_range:
+            user_missing_values = process(
+                user_email=user_email,
+                year=year,
+                month=month,
+                fractal_backend_url=fractal_backend_url,
+                base_output_folder=base_output_folder,
+                token=token,
+            )
 
-                if user_missing_values != {}:
-                    users_missing_values.setdefault(user_email, {})
-                    users_missing_values[user_email] = {
-                        k: users_missing_values[user_email].get(k, 0)
-                        + user_missing_values.get(k, 0)
-                        for k in set(users_missing_values[user_email])
-                        | set(user_missing_values)
-                    }
+            if user_missing_values != {}:
+                users_missing_values.setdefault(user_email, {})
+                users_missing_values[user_email] = {
+                    k: users_missing_values[user_email].get(k, 0)
+                    + user_missing_values.get(k, 0)
+                    for k in set(users_missing_values[user_email])
+                    | set(user_missing_values)
+                }
 
     if os.getenv("SHOW_MISSING_VALUES") is not None:
         for user_email in users_missing_values:
