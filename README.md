@@ -7,17 +7,17 @@
 | src/fractal\_slurm\_tools/\_\_init\_\_.py                |        1 |        0 |        0 |        0 |    100% |           |
 | src/fractal\_slurm\_tools/aggregate\_user\_statistics.py |       21 |       21 |        6 |        0 |      0% |      1-41 |
 | src/fractal\_slurm\_tools/cli.py                         |       22 |       22 |        4 |        0 |      0% |      1-62 |
-| src/fractal\_slurm\_tools/cli\_2.py                      |       26 |       26 |        4 |        0 |      0% |      1-81 |
+| src/fractal\_slurm\_tools/cli\_2.py                      |       26 |       26 |        4 |        0 |      0% |      1-78 |
 | src/fractal\_slurm\_tools/cli\_aggregate.py              |       28 |       28 |        4 |        0 |      0% |      1-57 |
 | src/fractal\_slurm\_tools/parse\_job\_folders.py         |       24 |       24 |        4 |        0 |      0% |      1-50 |
 | src/fractal\_slurm\_tools/parse\_sacct\_info.py          |       79 |       34 |       16 |        2 |     49% |53->exit, 75-76, 114-176 |
 | src/fractal\_slurm\_tools/process\_fractal\_job.py       |       34 |       34 |        8 |        0 |      0% |      1-66 |
-| src/fractal\_slurm\_tools/query\_user\_interval.py       |      106 |      106 |       30 |        0 |      0% |     1-267 |
+| src/fractal\_slurm\_tools/query\_user\_interval.py       |      112 |       85 |       30 |        0 |     20% |75-78, 103-150, 162-245, 255-295 |
 | src/fractal\_slurm\_tools/run\_sacct\_command.py         |       14 |        8 |        2 |        0 |     38% |     21-41 |
 | src/fractal\_slurm\_tools/sacct\_fields.py               |       17 |        3 |        8 |        1 |     84% |     43-45 |
 | src/fractal\_slurm\_tools/sacct\_parser\_functions.py    |       29 |       17 |        8 |        0 |     32% |10, 14-16, 23-31, 35, 39-41, 45 |
 | src/fractal\_slurm\_tools/sacct\_parsers.py              |       16 |        0 |        8 |        0 |    100% |           |
-|                                                **TOTAL** |  **417** |  **323** |  **102** |    **3** | **21%** |           |
+|                                                **TOTAL** |  **423** |  **302** |  **102** |    **3** | **27%** |           |
 
 
 ## Setup coverage badge
