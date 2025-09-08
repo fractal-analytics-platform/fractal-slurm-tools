@@ -30,21 +30,18 @@ main_parser.add_argument(
     help="Base folder for output files.",
     required=True,
 )
-
 main_parser.add_argument(
-    "--years",
-    help="Comma-separated list of years",
+    "--first-month",
+    help="First month to consider, in MM-YYYY format (e.g. 01-2025)",
     type=str,
     required=True,
 )
 main_parser.add_argument(
-    "--months",
-    help="Comma-separated list of months (1-12)",
+    "--last-month",
+    help="Last month to consider, in MM-YYYY format (e.g. 12-2025)",
     type=str,
     required=True,
 )
-
-
 main_parser.add_argument(
     "--verbose",
     help="If set, use DEBUG as a logging level.",
@@ -81,7 +78,7 @@ def main():
     cli_entrypoint(
         fractal_backend_url=args.fractal_backend_url,
         emails=args.emails,
-        years=args.years,
-        months=args.months,
+        first_month=args.first_month,
+        last_month=args.last_month,
         base_output_folder=args.base_output_folder,
     )
