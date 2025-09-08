@@ -3,29 +3,29 @@ from devtools import debug
 from fractal_slurm_tools.query_user_interval import _get_months_range
 
 
-def print_err(e):
-    debug(e._excinfo[1])
-
-
 def test_unit_get_months_range():
 
     # Fail 1: invalid MM-YYYY
     with pytest.raises(ValueError) as e:
+        _get_months_range("01-2025", "abc")
+    debug(e.value)
+
+    with pytest.raises(ValueError) as e:
         _get_months_range("13-2025", "12-2026")
-    print_err(e)
+    debug(e.value)
 
     with pytest.raises(ValueError) as e:
         _get_months_range("01-2025", "14-03-2026")
-    print_err(e)
+    debug(e.value)
 
     with pytest.raises(ValueError) as e:
         _get_months_range("01-2025", "03-26")
-    print_err(e)
+    debug(e.value)
 
     # Fail 2: stop < start
     with pytest.raises(ValueError) as e:
         _get_months_range("01-2025", "12-2024")
-    print_err(e)
+    debug(e.value)
 
     # Same date
     assert _get_months_range("02-2025", "02-2025") == [(2, 2025)]

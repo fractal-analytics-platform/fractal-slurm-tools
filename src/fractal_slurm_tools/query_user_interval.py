@@ -150,7 +150,7 @@ def get_slurm_job_ids_user_month(
     return slurm_job_ids
 
 
-def process(
+def _run_single_user_single_month(
     user_email: str,
     year: int,
     month: int,
@@ -269,7 +269,7 @@ def cli_entrypoint(
     users_missing_values = {}
     for user_email in user_emails:
         for month, year in months_range:
-            user_missing_values = process(
+            user_missing_values = _run_single_user_single_month(
                 user_email=user_email,
                 year=year,
                 month=month,
