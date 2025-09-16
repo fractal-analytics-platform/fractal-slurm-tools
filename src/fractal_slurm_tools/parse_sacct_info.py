@@ -5,7 +5,6 @@ from typing import Any
 from typing import Callable
 from typing import TypedDict
 
-from .run_sacct_command import run_sacct_command
 from .sacct_fields import DELIMITER
 from .sacct_fields import SACCT_FIELDS
 from .sacct_parser_functions import _isoformat_to_datetime
@@ -49,49 +48,54 @@ def get_job_submit_start_end_times(
     *,
     job_string: str,
     sacct_lines: list[str],
-) -> JobSubmitStartEnd:
-    for job_id in job_string.split(","):
-        try:
-            main_job_line = next(
-                line
-                for line in sacct_lines
-                if line.split(DELIMITER)[INDEX_JOB_ID] == job_id
-            )
+) -> tuple[bool, JobSubmitStartEnd]:
+    job_id = job_string.split(",")[0]
+    try:
+        main_job_line = next(
+            line
+            for line in sacct_lines
+            if line.split(DELIMITER)[INDEX_JOB_ID] == job_id
+        )
 
-            main_job_line_fields = main_job_line.split(DELIMITER)
-            job_Submit = main_job_line_fields[INDEX_JOB_SUBMIT]
-            job_Start = main_job_line_fields[INDEX_JOB_START]
-            job_End = main_job_line_fields[INDEX_JOB_END]
-            try:
-                job_queue_time = (
-                    _isoformat_to_datetime(job_Start)
-                    - _isoformat_to_datetime(job_Submit)
-                ).total_seconds()
-                job_runtime = (
-                    _isoformat_to_datetime(job_End)
-                    - _isoformat_to_datetime(job_Start)
-                ).total_seconds()
-            except ValueError:
-                job_queue_time = 0
-                job_runtime = 0
+        main_job_line_fields = main_job_line.split(DELIMITER)
+        job_Submit = main_job_line_fields[INDEX_JOB_SUBMIT]
+        job_Start = main_job_line_fields[INDEX_JOB_START]
+        job_End = main_job_line_fields[INDEX_JOB_END]
 
-            return dict(
-                job_Submit=job_Submit,
-                job_Start=job_Start,
-                job_End=job_End,
-                job_queue_time=job_queue_time,
-                job_runtime=job_runtime,
-            )
+        if any(
+            [
+                job_Start == "None",
+                job_End == "Unknown",
+            ]
+        ):
+            return False, {}
 
-        except StopIteration:
-            raise ValueError(
-                f"Could not find the main job line for {job_id=} in"
-                f"\n{sacct_lines}"
-            )
+        job_queue_time = (
+            _isoformat_to_datetime(job_Start)
+            - _isoformat_to_datetime(job_Submit)
+        ).total_seconds()
+        job_runtime = (
+            _isoformat_to_datetime(job_End) - _isoformat_to_datetime(job_Start)
+        ).total_seconds()
+
+        return True, dict(
+            job_Submit=job_Submit,
+            job_Start=job_Start,
+            job_End=job_End,
+            job_queue_time=job_queue_time,
+            job_runtime=job_runtime,
+        )
+
+    except StopIteration:
+        raise ValueError(
+            f"Could not find the main job line for {job_id=} in"
+            f"\n{sacct_lines}"
+        )
 
 
 def parse_sacct_info(
     job_string: str,
+    sacct_stdout: str,
     task_subfolder_name: str | None = None,
     parser_overrides: dict[str, Callable] | None = None,
 ) -> tuple[list[SLURMTaskInfo], list[dict[str, int]]]:
@@ -118,13 +122,15 @@ def parse_sacct_info(
     actual_parsers.update(parser_overrides or {})
 
     # Run `sacct` command
-    stdout = run_sacct_command(job_string=job_string)
-    lines = stdout.splitlines()
+    lines = sacct_stdout.splitlines()
 
-    job_info = get_job_submit_start_end_times(
+    success, job_info = get_job_submit_start_end_times(
         job_string=job_string,
         sacct_lines=lines,
     )
+
+    if not success:
+        return [], {}
 
     list_task_info = []
     missing_values = {}

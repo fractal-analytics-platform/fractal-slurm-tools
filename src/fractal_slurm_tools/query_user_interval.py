@@ -11,6 +11,7 @@ import requests
 
 from .parse_sacct_info import parse_sacct_info
 from .parse_sacct_info import SLURMTaskInfo
+from .run_sacct_command import run_sacct_command
 from .sacct_parser_functions import _str_to_bytes
 
 logger = logging.getLogger(__name__)
@@ -201,9 +202,11 @@ def _run_single_user_single_month(
             )
         )
         logger.debug(f">> {slurm_job_ids_batch=}")
-        # Run `sacct` and pars its output
+        # Run `sacct` and parse its output
+        sacct_stdout = run_sacct_command(job_string=slurm_job_ids_batch)
         list_task_info, missing_values = parse_sacct_info(
             job_string=slurm_job_ids_batch,
+            sacct_stdout=sacct_stdout,
             task_subfolder_name=None,
             parser_overrides=PARSERS,
         )
