@@ -264,6 +264,7 @@ def cli_entrypoint(
             user_emails = f.read().splitlines()
     else:
         user_emails = emails.split(",")
+    user_emails = [e.strip() for e in user_emails if e.strip() != ""]
 
     months_range = _get_months_range(
         first_month=first_month, last_month=last_month
