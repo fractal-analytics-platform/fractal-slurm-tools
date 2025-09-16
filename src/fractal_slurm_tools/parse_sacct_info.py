@@ -43,11 +43,17 @@ def get_job_submit_start_end_times(
                 for line in sacct_lines
                 if line.split(DELIMITER)[INDEX_JOB_ID] == job_id
             )
+            print(f"{job_id=}")
+            print(main_job_line)
 
             main_job_line_fields = main_job_line.split(DELIMITER)
+            for field in main_job_line_fields:
+                print("  ", field)
+            print()
             job_Submit = main_job_line_fields[INDEX_JOB_SUBMIT]
             job_Start = main_job_line_fields[INDEX_JOB_START]
             job_End = main_job_line_fields[INDEX_JOB_END]
+            print(f"{job_Submit=}, {job_Start=}, {job_End=}")
             job_queue_time = (
                 _isoformat_to_datetime(job_Start)
                 - _isoformat_to_datetime(job_Submit)
