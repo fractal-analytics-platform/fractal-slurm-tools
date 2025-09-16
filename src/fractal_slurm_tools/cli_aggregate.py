@@ -5,6 +5,7 @@ from pathlib import Path
 
 from .aggregate_user_statistics import aggregate_stats
 
+
 def _parse_arguments(sys_argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Aggregate per-user JSON stats files into a single CSV.",
@@ -14,7 +15,9 @@ def _parse_arguments(sys_argv: list[str] | None = None) -> argparse.Namespace:
         "--base-input-folder",
         type=str,
         required=True,
-        help="Folder that contains per-user subfolders with *_stats.json files.",
+        help=(
+            "Folder that contains per-user subfolders with *_stats.json files."
+        ),
     )
     parser.add_argument(
         "--base-output-folder",
@@ -50,7 +53,9 @@ def main():
     args = _parse_arguments()
 
     log_level = logging.DEBUG if args.verbose else logging.INFO
-    logging.basicConfig(level=log_level, format="%(asctime)s; %(levelname)s; %(message)s")
+    logging.basicConfig(
+        level=log_level, format="%(asctime)s; %(levelname)s; %(message)s"
+    )
 
     logging.debug(f"{args=}")
 

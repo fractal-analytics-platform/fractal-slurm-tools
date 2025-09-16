@@ -31,6 +31,16 @@ repos:
       entry: bash -c 'for file in "$@"; do if grep -n "devtools" "$file"; then echo "$file" && exit 1; fi; done' --
       language: system
       files: src/
+    - id: grep-for-uzh
+      name: Check for uzh in src files
+      entry: bash -c 'for file in "$@"; do if grep -n "uzh" "$file"; then echo "$file" && exit 1; fi; done' --
+      language: system
+      files: ^(src|tests)/
+    - id: grep-for-bvc
+      name: Check for bvc in src files
+      entry: bash -c 'for file in "$@"; do if grep -n "bvc" "$file"; then echo "$file" && exit 1; fi; done' --
+      language: system
+      files: ^(src|tests)/
 -   repo: https://github.com/codespell-project/codespell
     rev: v2.4.1
     hooks:

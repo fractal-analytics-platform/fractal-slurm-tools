@@ -1,6 +1,7 @@
-import json
 import csv
+import json
 from pathlib import Path
+
 
 def aggregate_stats(base_folder: Path, output_csv: Path):
     # Prepare data list
@@ -14,7 +15,7 @@ def aggregate_stats(base_folder: Path, output_csv: Path):
                 try:
                     with open(stats_file, "r") as f:
                         data = json.load(f)
-                    
+
                     record = {
                         "user_email": data.get("user_email", user_folder.name),
                         "year": data.get("year"),
