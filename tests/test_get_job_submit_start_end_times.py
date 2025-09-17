@@ -15,6 +15,10 @@ LINES_2 = (
     "23314079.extern|extern|u20-cva0000-006|1|2025-09-16T10:01:08|2025-09-16T10:01:08|Unknown|RUNNING|00:00:41|00:00:41|41|00:00:00|1|||||||||||||||||billing=1,cpu=1,mem=1M,node=1|||||41"  # noqa: E501
 ).splitlines()
 
+LINES_3 = (
+    "22305195|Harmony_to_OME-Zarr|None assigned||2025-07-14T13:07:55|None|2025-07-14T13:07:57|CANCELLED by 646321139|00:00:00|00:00:00|0|00:00:00|0||||||||||||||||billing=1,cpu=1,mem=4000M,node=1||standard|normal|sbatch --parsable /xxx/proj_v2_0000115_wf_0000236_job_0000996_20250714_110751/0_harmony_to_ome_zarr|0"  # noqa: E501
+).splitlines()
+
 
 def test_get_job_submit_start_end_times():
     with pytest.raises(ValueError):
@@ -44,3 +48,7 @@ def test_get_job_submit_start_end_times():
     )
     assert success is False
     assert job_info == {}
+
+    assert get_job_submit_start_end_times(
+        job_string="22305195", sacct_lines=LINES_3
+    ) == (False, {})
