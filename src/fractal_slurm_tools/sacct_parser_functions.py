@@ -14,6 +14,7 @@ def _identity(arg: str) -> str:
 
 def _str_to_float_to_int(arg: str) -> int:
     if arg.strip() == "":
+        logger.error("Appending: Empty string where float expected.")
         ERRORS.append("Empty string where float expected.")
         return 0
     return int(float(arg))
@@ -24,6 +25,7 @@ def _dhhmmss_to_seconds(arg: str) -> int:
     Supports both `HH:MM:SS` and `D-HH:MM:SS`.
     """
     if arg.strip() == "":
+        logger.error("Appending: Empty string where time expected.")
         ERRORS.append("Empty string where time expected.")
         return 0
     if "-" in arg:
@@ -41,6 +43,7 @@ def _str_to_datetime(arg: str) -> str:
 
 def _str_to_bytes(arg: str) -> int:
     if arg.strip() == "":
+        logger.error("Appending: Empty string where string expected.")
         ERRORS.append("Empty string where string expected.")
         return 0
     return humanfriendly.parse_size(arg)

@@ -64,11 +64,20 @@ def get_job_submit_start_end_times(
         job_End = main_job_line_fields[INDEX_JOB_END]
 
         if job_Start == "None":
+            logger.error(
+                "Appending: "
+                f"Job {job_id} skipped because `job_Start == 'None'`"
+            )
             ERRORS.append(
                 f"Job {job_id} skipped because `job_Start == 'None'`"
             )
+
             return
         if job_End == "Unknown":
+            logger.error(
+                "Appending: "
+                f"Job {job_id} skipped because `job_End == 'Unknown'`"
+            )
             ERRORS.append(
                 f"Job {job_id} skipped because `job_End == 'Unknown'`"
             )
