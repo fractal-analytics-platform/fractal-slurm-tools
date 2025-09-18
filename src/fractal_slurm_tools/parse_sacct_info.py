@@ -6,6 +6,7 @@ from typing import Callable
 from typing import TypedDict
 
 from .errors import ERRORS
+from .errors import ErrorType
 from .sacct_fields import DELIMITER
 from .sacct_fields import SACCT_FIELDS
 from .sacct_parser_functions import _isoformat_to_datetime
@@ -64,15 +65,11 @@ def get_job_submit_start_end_times(
         job_End = main_job_line_fields[INDEX_JOB_END]
 
         if job_Start == "None":
-            ERRORS.add_error(
-                f"Job {job_id} skipped because `job_Start == 'None'`"
-            )
+            ERRORS.add_error(ErrorType.JOB_FAILED)
 
             return
         if job_End == "Unknown":
-            ERRORS.add_error(
-                f"Job {job_id} skipped because `job_End == 'Unknown'`"
-            )
+            ERRORS.add_error(ErrorType.JOB_ONGOING)
             return
 
         job_queue_time = (

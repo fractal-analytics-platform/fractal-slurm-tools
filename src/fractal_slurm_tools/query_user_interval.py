@@ -271,7 +271,6 @@ def cli_entrypoint(
     for user_email in user_emails:
         ERRORS.set_user(email=user_email)
         for month, year in months_range:
-            ERRORS.set_month(year=year, month=month)
             _run_single_user_single_month(
                 user_email=user_email,
                 year=year,

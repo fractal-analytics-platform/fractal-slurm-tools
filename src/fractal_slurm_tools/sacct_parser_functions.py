@@ -4,6 +4,7 @@ from datetime import datetime
 import humanfriendly
 
 from .errors import ERRORS
+from .errors import ErrorType
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +15,7 @@ def _identity(arg: str) -> str:
 
 def _str_to_float_to_int(arg: str) -> int:
     if arg.strip() == "":
-        ERRORS.add_error("Empty string where float expected.")
+        ERRORS.add_error(ErrorType.MISSING_VALUE)
         return 0
     return int(float(arg))
 
@@ -24,7 +25,7 @@ def _dhhmmss_to_seconds(arg: str) -> int:
     Supports both `HH:MM:SS` and `D-HH:MM:SS`.
     """
     if arg.strip() == "":
-        ERRORS.add_error("Empty string where time expected.")
+        ERRORS.add_error(ErrorType.MISSING_VALUE)
         return 0
     if "-" in arg:
         days, hhmmss = arg.split("-")
@@ -41,7 +42,7 @@ def _str_to_datetime(arg: str) -> str:
 
 def _str_to_bytes(arg: str) -> int:
     if arg.strip() == "":
-        ERRORS.add_error("Empty string where string expected.")
+        ERRORS.add_error(ErrorType.MISSING_VALUE)
         return 0
     return humanfriendly.parse_size(arg)
 
