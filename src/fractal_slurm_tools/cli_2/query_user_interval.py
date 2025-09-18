@@ -9,11 +9,11 @@ from pathlib import Path
 
 import requests
 
-from .errors import ERRORS
-from .parse_sacct_info import parse_sacct_info
-from .parse_sacct_info import SLURMTaskInfo
-from .run_sacct_command import run_sacct_command
-from .sacct_parser_functions import _str_to_bytes
+from ..errors import ERRORS
+from ..parse_sacct_info import parse_sacct_info
+from ..parse_sacct_info import SLURMTaskInfo
+from ..run_sacct_command import run_sacct_command
+from ..sacct_parser_functions import _str_to_bytes
 
 logger = logging.getLogger(__name__)
 

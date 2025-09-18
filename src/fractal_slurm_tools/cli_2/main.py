@@ -70,7 +70,7 @@ def main():
         logging.basicConfig(level=logging.DEBUG, format=fmt)
     else:
         logging.basicConfig(level=logging.INFO, format=fmt)
-    from . import __VERSION__
+    from .. import __VERSION__
 
     logging.debug(f"fractal-slurm-tools-user-interval version: {__VERSION__}")
     logging.debug(f"{args=}")

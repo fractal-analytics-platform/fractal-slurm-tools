@@ -4,11 +4,11 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from .parse_job_folders import find_job_folder
-from .parse_job_folders import find_slurm_job_ids
-from .parse_job_folders import find_task_subfolders
-from .parse_sacct_info import parse_sacct_info
-from .run_sacct_command import run_sacct_command
+from ..parse_job_folders import find_job_folder
+from ..parse_job_folders import find_slurm_job_ids
+from ..parse_job_folders import find_task_subfolders
+from ..parse_sacct_info import parse_sacct_info
+from ..run_sacct_command import run_sacct_command
 
 logger = logging.getLogger(__name__)
 
