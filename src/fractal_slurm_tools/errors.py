@@ -2,17 +2,14 @@ from enum import Enum
 
 
 class ErrorType(str, Enum):
-    JOB_ONGOING = "job_ongoing"
-    JOB_FAILED = "job_failed"
-    MISSING_VALUE = "missing_value"
+    JOB_ONGOING = "Job Ongoing"
+    JOB_FAILED = "Job Failed"
+    MISSING_VALUE = "Missing Value"
 
 
 class ErrorCounter(dict):
     def __init__(self):
         super().__init__({error: 0 for error in ErrorType})
-
-    def __str__(self) -> str:
-        return str({error.value: count for error, count in self.items()})
 
 
 class Errors:
@@ -28,7 +25,12 @@ class Errors:
         self._errors[self._current_user][error_type] += 1
 
     def __str__(self) -> str:
-        return str(self._errors)
+        return str(
+            {
+                user: {err.value: count for err, count in counter.items()}
+                for user, counter in self._errors.items()
+            }
+        )
 
 
 ERRORS = Errors()
