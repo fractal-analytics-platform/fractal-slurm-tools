@@ -280,4 +280,5 @@ def cli_entrypoint(
                 base_output_folder=base_output_folder,
                 token=token,
             )
-            logger.warning(f"⚠️ {ERRORS=}.")
+
+    logger.warning(f"⚠️ {ERRORS=}.")
