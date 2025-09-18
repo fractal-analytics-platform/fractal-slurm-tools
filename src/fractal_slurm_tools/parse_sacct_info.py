@@ -143,7 +143,7 @@ def parse_sacct_info(
     )
 
     if job_info is None:
-        return [], {}
+        return []
 
     list_task_info = []
     for line in lines:
