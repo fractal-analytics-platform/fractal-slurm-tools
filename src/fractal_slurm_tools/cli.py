@@ -63,4 +63,5 @@ def main():
         fractal_job_id=args.fractal_job_id,
         output_folder=Path(args.output_folder),
         jobs_base_folder=args.jobs_folder,
+        verbose=args.verbose,
     )

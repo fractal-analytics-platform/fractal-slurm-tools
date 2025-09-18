@@ -252,6 +252,7 @@ def cli_entrypoint(
     first_month: str,
     last_month: str,
     base_output_folder: str,
+    verbose: bool,
 ) -> None:
     token = os.getenv("FRACTAL_TOKEN", None)
     if token is None:
@@ -280,4 +281,4 @@ def cli_entrypoint(
                 token=token,
             )
 
-    logger.warning(ERRORS.report())
+    logger.warning(ERRORS.report(verbose=verbose))

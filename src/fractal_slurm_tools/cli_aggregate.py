@@ -37,7 +37,11 @@ def _parse_arguments(sys_argv: list[str] | None = None) -> argparse.Namespace:
     return args
 
 
-def cli_entrypoint(base_input_folder: str, base_output_folder: str):
+def cli_entrypoint(
+    base_input_folder: str,
+    base_output_folder: str,
+    verbose: bool,
+):
     base_input = Path(base_input_folder).resolve()
     base_output = Path(base_output_folder).resolve()
 
@@ -62,4 +66,5 @@ def main():
     cli_entrypoint(
         base_input_folder=args.base_input_folder,
         base_output_folder=args.base_output_folder,
+        verbose=args.verbose,
     )

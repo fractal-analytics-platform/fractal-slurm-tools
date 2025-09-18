@@ -42,7 +42,7 @@ class Errors:
               ....
         """
 
-        msg = "Some errors took place\n:"
+        msg = "Some errors took place:\n"
         for err_type in ErrorType:
             total = sum(
                 (self._errors[user][err_type] for user in self._errors)

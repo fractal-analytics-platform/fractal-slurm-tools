@@ -46,6 +46,7 @@ def cli_entrypoint(
     jobs_base_folder: str,
     fractal_job_id: int,
     output_folder: Path,
+    verbose: bool,
 ):
     import pandas as pd
 
