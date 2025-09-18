@@ -12,7 +12,21 @@ class ErrorCounter(dict):
         super().__init__({error: 0 for error in ErrorType})
 
 
-class Errors:
+class SingletonMeta(type):
+    """
+    From https://refactoring.guru/design-patterns/singleton/python/example
+    """
+
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            instance = super().__call__(*args, **kwargs)
+            cls._instances[cls] = instance
+        return cls._instances[cls]
+
+
+class Errors(metaclass=SingletonMeta):
     def __init__(self):
         self._current_user: str | None = None
         self._errors: dict[str, ErrorCounter] = {}
