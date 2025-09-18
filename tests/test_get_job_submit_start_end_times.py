@@ -1,5 +1,5 @@
 import pytest
-from devtools import debug
+from fractal_slurm_tools.errors import ERRORS
 from fractal_slurm_tools.parse_sacct_info import get_job_submit_start_end_times
 
 LINES_1 = (
@@ -21,18 +21,18 @@ LINES_3 = (
 
 
 def test_get_job_submit_start_end_times():
+    ERRORS.set_user(email="foo@bar.xy")
+
     with pytest.raises(ValueError):
         get_job_submit_start_end_times(
             job_string="9999999",
             sacct_lines=LINES_1,
         )
 
-    success, job_info = get_job_submit_start_end_times(
+    job_info = get_job_submit_start_end_times(
         job_string="22496092",
         sacct_lines=LINES_1,
     )
-    assert success is True
-    debug(job_info)
     assert abs(job_info["job_queue_time"] - 5.0) < 1e-10
     assert abs(job_info["job_runtime"] - 4.0) < 1e-10
 
@@ -42,13 +42,13 @@ def test_get_job_submit_start_end_times():
             sacct_lines=LINES_1,
         )
 
-    success, job_info = get_job_submit_start_end_times(
+    job_info = get_job_submit_start_end_times(
         job_string="23314079",
         sacct_lines=LINES_2,
     )
-    assert success is False
-    assert job_info == {}
+    assert job_info is None
 
-    assert get_job_submit_start_end_times(
+    job_info = get_job_submit_start_end_times(
         job_string="22305195", sacct_lines=LINES_3
-    ) == (False, {})
+    )
+    assert job_info is None
