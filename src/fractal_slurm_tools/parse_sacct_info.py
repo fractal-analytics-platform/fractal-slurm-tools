@@ -5,6 +5,7 @@ from typing import Any
 from typing import Callable
 from typing import TypedDict
 
+from .errors import ERRORS
 from .sacct_fields import DELIMITER
 from .sacct_fields import SACCT_FIELDS
 from .sacct_parser_functions import _isoformat_to_datetime
@@ -48,7 +49,7 @@ def get_job_submit_start_end_times(
     *,
     job_string: str,
     sacct_lines: list[str],
-) -> tuple[bool, JobSubmitStartEnd]:
+) -> JobSubmitStartEnd | None:
     job_id = job_string.split(",")[0]
     try:
         main_job_line = next(
@@ -62,13 +63,16 @@ def get_job_submit_start_end_times(
         job_Start = main_job_line_fields[INDEX_JOB_START]
         job_End = main_job_line_fields[INDEX_JOB_END]
 
-        if any(
-            [
-                job_Start == "None",
-                job_End == "Unknown",
-            ]
-        ):
-            return False, {}
+        if job_Start == "None":
+            ERRORS.append(
+                f"Job {job_id} skipped because `job_Start == 'None'`"
+            )
+            return
+        if job_End == "Unknown":
+            ERRORS.append(
+                f"Job {job_id} skipped because `job_End == 'Unknown'`"
+            )
+            return
 
         job_queue_time = (
             _isoformat_to_datetime(job_Start)
@@ -78,7 +82,7 @@ def get_job_submit_start_end_times(
             _isoformat_to_datetime(job_End) - _isoformat_to_datetime(job_Start)
         ).total_seconds()
 
-        return True, dict(
+        return dict(
             job_Submit=job_Submit,
             job_Start=job_Start,
             job_End=job_End,
@@ -98,7 +102,7 @@ def parse_sacct_info(
     sacct_stdout: str,
     task_subfolder_name: str | None = None,
     parser_overrides: dict[str, Callable] | None = None,
-) -> tuple[list[SLURMTaskInfo], list[dict[str, int]]]:
+) -> list[SLURMTaskInfo]:
     """
     Run `sacct` and parse its output
 
@@ -121,19 +125,18 @@ def parse_sacct_info(
     actual_parsers = deepcopy(SACCT_FIELD_PARSERS)
     actual_parsers.update(parser_overrides or {})
 
-    # Run `sacct` command
+    # Split `sacct` output into lines
     lines = sacct_stdout.splitlines()
 
-    success, job_info = get_job_submit_start_end_times(
+    job_info = get_job_submit_start_end_times(
         job_string=job_string,
         sacct_lines=lines,
     )
 
-    if not success:
+    if job_info is None:
         return [], {}
 
     list_task_info = []
-    missing_values = {}
     for line in lines:
         line_items = line.split(DELIMITER)
         # Skip non-Python steps/tasks
@@ -142,19 +145,8 @@ def parse_sacct_info(
         # Skip running steps
         if line_items[INDEX_STATE] == "RUNNING":
             continue
-
         # Parse all fields
         try:
-
-            missing_values_count = [
-                item.strip()
-                for i, item in enumerate(line_items)
-                if i not in SKIPPED_INDICES_FOR_MISSING_VALUES
-            ].count("")
-            if missing_values_count > 0:
-                key = line_items[INDEX_JOB_ID].split(".")[0]
-                missing_values.setdefault(key, 0)
-                missing_values[key] += missing_values_count
             task_info = {
                 SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)
                 for ind, item in enumerate(line_items)
@@ -179,4 +171,4 @@ def parse_sacct_info(
 
         list_task_info.append(task_info)
 
-    return list_task_info, missing_values
+    return list_task_info

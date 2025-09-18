@@ -31,7 +31,7 @@ def process_fractal_job(
         slurm_job_ids = find_slurm_job_ids(task_subfolder)
         for slurm_job_id in slurm_job_ids:
             sacct_stdout = run_sacct_command(job_string=slurm_job_id)
-            slurm_job_output_rows, _ = parse_sacct_info(
+            slurm_job_output_rows = parse_sacct_info(
                 slurm_job_id,
                 sacct_stdout=sacct_stdout,
                 task_subfolder_name=task_subfolder.name,
