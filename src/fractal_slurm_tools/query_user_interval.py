@@ -281,4 +281,4 @@ def cli_entrypoint(
                 token=token,
             )
 
-    logger.warning(f"⚠️ {ERRORS=}.")
+    logger.warning(f"⚠️ {ERRORS.show()}.")

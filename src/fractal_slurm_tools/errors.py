@@ -15,5 +15,8 @@ class Errors:
     def add_error(self, error_msg: str):
         self._errors[self._current_user][self._current_month].append(error_msg)
 
+    def show(self) -> str:
+        return self._errors
+
 
 ERRORS = Errors()
