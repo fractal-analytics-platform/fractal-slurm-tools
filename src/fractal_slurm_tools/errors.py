@@ -11,6 +11,9 @@ class ErrorCounter(dict):
     def __init__(self):
         super().__init__({error: 0 for error in ErrorType})
 
+    def __str__(self) -> str:
+        return str({error.value: count for error, count in self.items()})
+
 
 class Errors:
     def __init__(self):
@@ -24,8 +27,8 @@ class Errors:
     def add_error(self, error_type: ErrorType):
         self._errors[self._current_user][error_type] += 1
 
-    def show(self) -> str:
-        return self._errors
+    def __str__(self) -> str:
+        return str(self._errors)
 
 
 ERRORS = Errors()
