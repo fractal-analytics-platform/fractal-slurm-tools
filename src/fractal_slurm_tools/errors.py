@@ -14,8 +14,8 @@ class ErrorCounter(dict):
 
 class Errors:
     def __init__(self):
-        self._current_user = None
-        self._errors = {}
+        self._current_user: str | None = None
+        self._errors: dict[str, dict[ErrorType, int]] = {}
 
     def set_user(self, *, email: str):
         self._current_user = email
@@ -24,13 +24,36 @@ class Errors:
     def add_error(self, error_type: ErrorType):
         self._errors[self._current_user][error_type] += 1
 
-    def __str__(self) -> str:
-        return str(
-            {
-                user: {err.value: count for err, count in counter.items()}
-                for user, counter in self._errors.items()
-            }
-        )
+    def report(self, verbose: bool = False) -> str:
+        """
+        Some errors took place:
+        - 19 Job Ongoing
+        - 98 Job Failed
+        - 21 Missing Value
+
+        # VERBOSE
+        Some errors took place:
+        - 19 Job Ongoing
+              * 10 for patricia
+              * 9 for pippo
+        - 98 Job Failed
+              ...
+        - 21 Missing Value
+              ....
+        """
+
+        msg = "Some errors took place\n:"
+        for err_type in ErrorType:
+            total = sum(
+                (self._errors[user][err_type] for user in self._errors)
+            )
+            msg += f"- {total} {err_type.value}\n"
+            if verbose:
+                for user, counter in self._errors.items():
+                    count = counter[err_type]
+                    if count > 0:
+                        msg += f"      * {count} for {user}\n"
+        return msg
 
 
 ERRORS = Errors()
