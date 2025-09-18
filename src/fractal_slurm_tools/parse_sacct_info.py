@@ -68,6 +68,7 @@ def get_job_submit_start_end_times(
                 "Appending: "
                 f"Job {job_id} skipped because `job_Start == 'None'`"
             )
+            raise NotImplementedError
             ERRORS.append(
                 f"Job {job_id} skipped because `job_Start == 'None'`"
             )
@@ -78,6 +79,7 @@ def get_job_submit_start_end_times(
                 "Appending: "
                 f"Job {job_id} skipped because `job_End == 'Unknown'`"
             )
+            raise NotImplementedError
             ERRORS.append(
                 f"Job {job_id} skipped because `job_End == 'Unknown'`"
             )
