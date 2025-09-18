@@ -15,13 +15,15 @@ class ErrorCounter(dict):
 class Errors:
     def __init__(self):
         self._current_user: str | None = None
-        self._errors: dict[str, dict[ErrorType, int]] = {}
+        self._errors: dict[str, ErrorCounter] = {}
 
     def set_user(self, *, email: str):
         self._current_user = email
         self._errors.setdefault(self._current_user, ErrorCounter())
 
     def add_error(self, error_type: ErrorType):
+        if error_type not in ErrorType:
+            raise ValueError(f"Unknown error type: {error_type}")
         self._errors[self._current_user][error_type] += 1
 
     def report(self, verbose: bool = False) -> str:
@@ -34,8 +36,8 @@ class Errors:
         # VERBOSE
         Some errors took place:
         - 19 Job Ongoing
-              * 10 for patricia
-              * 9 for pippo
+              * 10 for foo@fractal.xy
+              * 9 for bar@fractal.xy
         - 98 Job Failed
               ...
         - 21 Missing Value
