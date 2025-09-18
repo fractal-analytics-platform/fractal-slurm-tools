@@ -269,8 +269,9 @@ def cli_entrypoint(
     )
 
     for user_email in user_emails:
+        ERRORS.set_user(email=user_email)
         for month, year in months_range:
-            ERRORS.clear()
+            ERRORS.set_month(year=year, month=month)
             _run_single_user_single_month(
                 user_email=user_email,
                 year=year,
@@ -279,6 +280,4 @@ def cli_entrypoint(
                 base_output_folder=base_output_folder,
                 token=token,
             )
-            logger.warning(
-                f"Errors for {user_email} on {year:4d}/{month:02d}: {ERRORS}."
-            )
+            logger.warning(f"⚠️ {ERRORS=}.")
