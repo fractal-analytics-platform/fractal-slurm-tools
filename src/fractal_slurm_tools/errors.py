@@ -7,23 +7,23 @@ class ErrorType(str, Enum):
     MISSING_VALUE = "Missing Value"
 
 
-def default_errors() -> dict[str, int]:
-    return {error: 0 for error in ErrorType}
-
-
 class Errors:
     def __init__(self):
         self._current_user: str | None = None
-        self._errors: dict[str, dict[str, int]] = {}
+        self._errors: dict[tuple[str, ErrorType], int] = {}
 
     def set_user(self, *, email: str):
         self._current_user = email
-        self._errors.setdefault(self._current_user, default_errors())
 
     def add_error(self, error_type: ErrorType):
+        self._errors.setdefault((self._current_user, error_type), 0)
         if error_type not in ErrorType:
             raise ValueError(f"Unknown error type: {error_type}")
-        self._errors[self._current_user][error_type] += 1
+        self._errors[(self._current_user, error_type)] += 1
+
+    @property
+    def _users(self) -> set[str]:
+        return set(key[1] for key in self._errors)
 
     def report(self, verbose: bool = False) -> str:
         """
@@ -46,12 +46,12 @@ class Errors:
         msg = "Some errors took place:\n"
         for err_type in ErrorType:
             total = sum(
-                (self._errors[user][err_type] for user in self._errors)
+                (self._errors[(user, err_type)] for user in self._users)
             )
             msg += f"- {total} {err_type.value}\n"
             if verbose:
-                for user, counter in self._errors.items():
-                    count = counter[err_type]
+                for user in self._users:
+                    count = self._errors[(user, err_type)]
                     if count > 0:
                         msg += f"      * {count} for {user}\n"
         return msg
