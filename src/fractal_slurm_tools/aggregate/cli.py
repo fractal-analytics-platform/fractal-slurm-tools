@@ -1,13 +1,15 @@
-import argparse
+import argparse as ap
 import logging
 import sys
 from pathlib import Path
 
+from .. import __VERSION__
+from ..errors import ERRORS
 from .aggregate_user_statistics import aggregate_stats
 
 
-def _parse_arguments(sys_argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
+def _parse_arguments(sys_argv: list[str] | None = None) -> ap.Namespace:
+    parser = ap.ArgumentParser(
         description="Aggregate per-user JSON stats files into a single CSV.",
         allow_abbrev=False,
     )
@@ -40,7 +42,6 @@ def _parse_arguments(sys_argv: list[str] | None = None) -> argparse.Namespace:
 def cli_entrypoint(
     base_input_folder: str,
     base_output_folder: str,
-    verbose: bool,
 ):
     base_input = Path(base_input_folder).resolve()
     base_output = Path(base_output_folder).resolve()
@@ -56,15 +57,16 @@ def cli_entrypoint(
 def main():
     args = _parse_arguments()
 
-    log_level = logging.DEBUG if args.verbose else logging.INFO
-    logging.basicConfig(
-        level=log_level, format="%(asctime)s; %(levelname)s; %(message)s"
-    )
+    logging_level = logging.DEBUG if args.verbose else logging.INFO
+    fmt = "%(asctime)s; %(levelname)s; %(message)s"
+    logging.basicConfig(level=logging_level, format=fmt)
 
+    logging.debug(f"fractal-slurm-aggregate version: {__VERSION__}")
     logging.debug(f"{args=}")
 
     cli_entrypoint(
         base_input_folder=args.base_input_folder,
         base_output_folder=args.base_output_folder,
-        verbose=args.verbose,
     )
+
+    logging.warning(ERRORS.report(verbose=args.verbose))
