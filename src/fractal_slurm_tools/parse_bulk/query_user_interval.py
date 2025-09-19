@@ -133,7 +133,6 @@ def get_slurm_job_ids_user_month(
         logger.error(f"Response body: {resp.json()}.")
         sys.exit(1)
     slurm_job_ids = resp.json()
-    print(f"🔥 {slurm_job_ids} 🔥")
     return slurm_job_ids
 
 

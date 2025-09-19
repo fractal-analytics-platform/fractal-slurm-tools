@@ -27,6 +27,8 @@ def run_sacct_command(job_string: str) -> str:
         f'--delimiter "{DELIMITER}" '
     )
 
+    print("🌞", cmd)
+
     res = subprocess.run(  # nosec
         shlex.split(cmd),
         capture_output=True,
@@ -38,4 +40,8 @@ def run_sacct_command(job_string: str) -> str:
         print(f"STDOUT:\n{res.stdout}")
         print(f"STDERR:\n{res.stderr}")
         sys.exit("Exit.")
+
+    print("🌞", res.stdout)
+    raise ValueError("Debugging - remove this line.")
+
     return res.stdout
