@@ -27,8 +27,6 @@ def run_sacct_command(job_string: str) -> str:
         f'--format "{SACCT_FMT}" '
         f'--delimiter "{DELIMITER}" '
     )
-    print(f"🚀 Running {cmd=}")
-
     res = subprocess.run(  # nosec
         shlex.split(cmd),
         capture_output=True,
@@ -40,6 +38,5 @@ def run_sacct_command(job_string: str) -> str:
         print(f"STDOUT:\n{res.stdout}")
         print(f"STDERR:\n{res.stderr}")
         sys.exit("Exit.")
-    print(f"✅ {res.stdout=}")
 
     return res.stdout

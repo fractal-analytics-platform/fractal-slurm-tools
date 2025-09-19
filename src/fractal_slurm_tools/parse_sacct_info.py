@@ -48,10 +48,9 @@ class JobSubmitStartEnd(TypedDict):
 
 def get_job_submit_start_end_times(
     *,
-    job_string: str,  # FIXME: make it a single job_id: str
+    job_id: str,
     sacct_lines: list[str],
 ) -> JobSubmitStartEnd | None:
-    job_id = job_string.split(",")[0]  # FIXME: remove
     main_job_line = next(
         (
             line
@@ -93,7 +92,7 @@ def get_job_submit_start_end_times(
 
 
 def parse_sacct_info(
-    job_string: str,
+    job_id: int,
     sacct_stdout: str,
     task_subfolder_name: str | None = None,
     parser_overrides: dict[str, Callable] | None = None,
@@ -114,7 +113,7 @@ def parse_sacct_info(
         List of `SLURMTaskInfo` dictionaries (one per `python` line in
         `sacct` output).
     """
-    logger.debug(f"START, with {job_string=}.")
+    logger.debug(f"START, with {job_id=}.")
 
     # Update parsers, if needed
     actual_parsers = deepcopy(SACCT_FIELD_PARSERS)
@@ -124,7 +123,7 @@ def parse_sacct_info(
     lines = sacct_stdout.splitlines()
 
     job_info = get_job_submit_start_end_times(
-        job_string=job_string,
+        job_string=job_id,
         sacct_lines=lines,
     )
 

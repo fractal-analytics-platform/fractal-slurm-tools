@@ -180,22 +180,21 @@ def _run_single_user_single_month(
             starting_ind : starting_ind + SACCT_BATCH_SIZE
         ]
         batch_job_ids = list(map(str, batch_job_ids))
-        print(f"🔥 Processing batch {batch_job_ids=}")
 
         # batch string
         slurm_job_ids_batch = ",".join(batch_job_ids)
         logger.debug(f">> {slurm_job_ids_batch=}")
         # Run `sacct` and parse its output
         sacct_stdout = run_sacct_command(job_string=slurm_job_ids_batch)
-        # FIXME: for job_id in batch_job_ids:
-        # FIXME:    current_list = ...
-        # FIXME:    list_task_info.extend(current_list)
-        list_task_info = parse_sacct_info(
-            job_string=slurm_job_ids_batch,  # FIXME: single job ID
-            sacct_stdout=sacct_stdout,
-            task_subfolder_name=None,
-            parser_overrides=PARSERS,
-        )
+        list_task_info = []
+        for job_id in batch_job_ids:
+            current_list = parse_sacct_info(
+                job_id=job_id,
+                sacct_stdout=sacct_stdout,
+                task_subfolder_name=None,
+                parser_overrides=PARSERS,
+            )
+            list_task_info.extend(current_list)
 
         _verify_single_task_per_job(list_task_info)
         # Aggregate statistics
