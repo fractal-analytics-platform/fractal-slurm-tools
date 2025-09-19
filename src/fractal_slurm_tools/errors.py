@@ -7,19 +7,18 @@ class ErrorType(str, Enum):
     MISSING_VALUE = "Missing Value"
 
 
-class ErrorCounter(dict):
-    def __init__(self):
-        super().__init__({error: 0 for error in ErrorType})
+def default_errors() -> dict[str, int]:
+    return {error: 0 for error in ErrorType}
 
 
 class Errors:
     def __init__(self):
         self._current_user: str | None = None
-        self._errors: dict[str, ErrorCounter] = {}
+        self._errors: dict[str, dict[str, int]] = {}
 
     def set_user(self, *, email: str):
         self._current_user = email
-        self._errors.setdefault(self._current_user, ErrorCounter())
+        self._errors.setdefault(self._current_user, default_errors())
 
     def add_error(self, error_type: ErrorType):
         if error_type not in ErrorType:
