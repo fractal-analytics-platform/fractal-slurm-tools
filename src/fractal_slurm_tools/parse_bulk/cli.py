@@ -80,7 +80,6 @@ def main():
         first_month=args.first_month,
         last_month=args.last_month,
         base_output_folder=args.base_output_folder,
-        verbose=args.verbose,
     )
 
     logging.warning(ERRORS.report(verbose=args.verbose))
