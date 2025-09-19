@@ -65,9 +65,9 @@ def get_job_submit_start_end_times(
         job_End = main_job_line_fields[INDEX_JOB_END]
 
         if job_Start == "None":
-            ERRORS.add_error(ErrorType.JOB_FAILED)
-
+            ERRORS.add_error(ErrorType.JOB_NEVER_STARTED)
             return
+
         if job_End == "Unknown":
             ERRORS.add_error(ErrorType.JOB_ONGOING)
             return
