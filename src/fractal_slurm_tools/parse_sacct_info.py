@@ -52,48 +52,44 @@ def get_job_submit_start_end_times(
     sacct_lines: list[str],
 ) -> JobSubmitStartEnd | None:
     job_id = job_string.split(",")[0]  # FIXME: remove
-    try:
-        main_job_line = next(
+    main_job_line = next(
+        (
             line
             for line in sacct_lines
             if line.split(DELIMITER)[INDEX_JOB_ID] == job_id
-        )
+        ),
+        None,
+    )
+    if main_job_line is None:
+        ERRORS.add_error(ErrorType.JOB_NOT_FOUND)
+        return None
+    main_job_line_fields = main_job_line.split(DELIMITER)
+    job_Submit = main_job_line_fields[INDEX_JOB_SUBMIT]
+    job_Start = main_job_line_fields[INDEX_JOB_START]
+    job_End = main_job_line_fields[INDEX_JOB_END]
 
-        main_job_line_fields = main_job_line.split(DELIMITER)
-        job_Submit = main_job_line_fields[INDEX_JOB_SUBMIT]
-        job_Start = main_job_line_fields[INDEX_JOB_START]
-        job_End = main_job_line_fields[INDEX_JOB_END]
+    if job_Start == "None":
+        ERRORS.add_error(ErrorType.JOB_NEVER_STARTED)
+        return None
 
-        if job_Start == "None":
-            ERRORS.add_error(ErrorType.JOB_NEVER_STARTED)
-            return
+    if job_End == "Unknown":
+        ERRORS.add_error(ErrorType.JOB_ONGOING)
+        return None
 
-        if job_End == "Unknown":
-            ERRORS.add_error(ErrorType.JOB_ONGOING)
-            return
+    job_queue_time = (
+        _isoformat_to_datetime(job_Start) - _isoformat_to_datetime(job_Submit)
+    ).total_seconds()
+    job_runtime = (
+        _isoformat_to_datetime(job_End) - _isoformat_to_datetime(job_Start)
+    ).total_seconds()
 
-        job_queue_time = (
-            _isoformat_to_datetime(job_Start)
-            - _isoformat_to_datetime(job_Submit)
-        ).total_seconds()
-        job_runtime = (
-            _isoformat_to_datetime(job_End) - _isoformat_to_datetime(job_Start)
-        ).total_seconds()
-
-        return dict(
-            job_Submit=job_Submit,
-            job_Start=job_Start,
-            job_End=job_End,
-            job_queue_time=job_queue_time,
-            job_runtime=job_runtime,
-        )
-
-    except StopIteration:
-        # FIXME: transform into return None
-        raise ValueError(
-            f"Could not find the main job line for {job_id=} in"
-            f"\n{sacct_lines}"
-        )
+    return dict(
+        job_Submit=job_Submit,
+        job_Start=job_Start,
+        job_End=job_End,
+        job_queue_time=job_queue_time,
+        job_runtime=job_runtime,
+    )
 
 
 def parse_sacct_info(
