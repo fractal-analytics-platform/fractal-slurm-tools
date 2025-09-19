@@ -122,10 +122,7 @@ def parse_sacct_info(
     # Split `sacct` output into lines
     lines = sacct_stdout.splitlines()
 
-    job_info = get_job_submit_start_end_times(
-        job_string=job_id,
-        sacct_lines=lines,
-    )
+    job_info = get_job_submit_start_end_times(job_id=job_id, sacct_lines=lines)
 
     if job_info is None:
         return []
