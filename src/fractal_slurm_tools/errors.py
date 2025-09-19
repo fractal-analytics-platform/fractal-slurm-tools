@@ -50,17 +50,21 @@ class Errors:
         - 21 Missing Value
               ....
         """
+        if not self._errors:
+            return "No errors took place."
+
         msg = "Some errors took place:\n"
         for err_type in ErrorType:
             total = sum(
                 (self._errors.get((user, err_type), 0) for user in self._users)
             )
-            msg += f"- {total} {err_type.value}\n"
-            if verbose:
-                for user in self._users:
-                    count = self._errors.get((user, err_type), 0)
-                    if count > 0:
-                        msg += f"      * {count} for {user}\n"
+            if total > 0:
+                msg += f"- {total} {err_type.value}\n"
+                if verbose:
+                    for user in self._users:
+                        count = self._errors.get((user, err_type), 0)
+                        if count > 0:
+                            msg += f"      * {count} for {user}\n"
         return msg
 
 
