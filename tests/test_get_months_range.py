@@ -1,6 +1,8 @@
 import pytest
 from devtools import debug
-from fractal_slurm_tools.cli_2.query_user_interval import _get_months_range
+from fractal_slurm_tools.parse_bulk.query_user_interval import (
+    _get_months_range,
+)
 
 
 def test_unit_get_months_range():
