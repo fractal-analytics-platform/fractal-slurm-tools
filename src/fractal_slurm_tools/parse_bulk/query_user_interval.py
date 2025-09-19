@@ -180,6 +180,8 @@ def _run_single_user_single_month(
             starting_ind : starting_ind + SACCT_BATCH_SIZE
         ]
         batch_job_ids = list(map(str, batch_job_ids))
+        print(f"🔥 Processing batch {batch_job_ids=}")
+
         # batch string
         slurm_job_ids_batch = ",".join(batch_job_ids)
         logger.debug(f">> {slurm_job_ids_batch=}")

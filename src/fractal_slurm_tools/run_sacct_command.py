@@ -18,6 +18,7 @@ def run_sacct_command(job_string: str) -> str:
     Returns:
         Standard output of `sacct` command.
     """
+
     cmd = (
         "sacct "
         f"-j {job_string} "
@@ -26,8 +27,7 @@ def run_sacct_command(job_string: str) -> str:
         f'--format "{SACCT_FMT}" '
         f'--delimiter "{DELIMITER}" '
     )
-
-    print("🌞", cmd)
+    print(f"🚀 Running {cmd=}")
 
     res = subprocess.run(  # nosec
         shlex.split(cmd),
@@ -40,8 +40,6 @@ def run_sacct_command(job_string: str) -> str:
         print(f"STDOUT:\n{res.stdout}")
         print(f"STDERR:\n{res.stderr}")
         sys.exit("Exit.")
-
-    print("🌞", res.stdout)
-    raise ValueError("Debugging - remove this line.")
+    print(f"✅ {res.stdout=}")
 
     return res.stdout
