@@ -26,26 +26,26 @@ def test_get_job_submit_start_end_times():
 
     assert ERRORS._errors == {}
     get_job_submit_start_end_times(
-        job_string="9999999",
+        job_id="9999999",
         sacct_lines=LINES_1,
     )
     assert ERRORS._errors == {(user_email, ErrorType.JOB_NOT_FOUND): 1}
 
     job_info = get_job_submit_start_end_times(
-        job_string="22496092",
+        job_id="22496092",
         sacct_lines=LINES_1,
     )
     assert abs(job_info["job_queue_time"] - 5.0) < 1e-10
     assert abs(job_info["job_runtime"] - 4.0) < 1e-10
 
     get_job_submit_start_end_times(
-        job_string="9999999",
+        job_id="9999999",
         sacct_lines=LINES_1,
     )
     assert ERRORS._errors == {(user_email, ErrorType.JOB_NOT_FOUND): 2}
 
     job_info = get_job_submit_start_end_times(
-        job_string="23314079",
+        job_id="23314079",
         sacct_lines=LINES_2,
     )
     assert job_info is None
@@ -55,7 +55,7 @@ def test_get_job_submit_start_end_times():
     }
 
     job_info = get_job_submit_start_end_times(
-        job_string="22305195", sacct_lines=LINES_3
+        job_id="22305195", sacct_lines=LINES_3
     )
     assert job_info is None
     assert ERRORS._errors == {
