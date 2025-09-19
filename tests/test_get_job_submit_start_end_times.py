@@ -1,5 +1,5 @@
-import pytest
 from fractal_slurm_tools.errors import ERRORS
+from fractal_slurm_tools.errors import ErrorType
 from fractal_slurm_tools.parse_sacct_info import get_job_submit_start_end_times
 
 LINES_1 = (
@@ -21,13 +21,15 @@ LINES_3 = (
 
 
 def test_get_job_submit_start_end_times():
-    ERRORS.set_user(email="foo@bar.xy")
+    user_email = "foo@bar.xy"
+    ERRORS.set_user(email=user_email)
 
-    with pytest.raises(ValueError):
-        get_job_submit_start_end_times(
-            job_string="9999999",
-            sacct_lines=LINES_1,
-        )
+    assert ERRORS._errors == {}
+    get_job_submit_start_end_times(
+        job_string="9999999",
+        sacct_lines=LINES_1,
+    )
+    assert ERRORS._errors == {(user_email, ErrorType.JOB_NOT_FOUND): 1}
 
     job_info = get_job_submit_start_end_times(
         job_string="22496092",
@@ -36,19 +38,28 @@ def test_get_job_submit_start_end_times():
     assert abs(job_info["job_queue_time"] - 5.0) < 1e-10
     assert abs(job_info["job_runtime"] - 4.0) < 1e-10
 
-    with pytest.raises(ValueError):
-        get_job_submit_start_end_times(
-            job_string="9999999",
-            sacct_lines=LINES_1,
-        )
+    get_job_submit_start_end_times(
+        job_string="9999999",
+        sacct_lines=LINES_1,
+    )
+    assert ERRORS._errors == {(user_email, ErrorType.JOB_NOT_FOUND): 2}
 
     job_info = get_job_submit_start_end_times(
         job_string="23314079",
         sacct_lines=LINES_2,
     )
     assert job_info is None
+    assert ERRORS._errors == {
+        (user_email, ErrorType.JOB_NOT_FOUND): 2,
+        (user_email, ErrorType.JOB_ONGOING): 1,
+    }
 
     job_info = get_job_submit_start_end_times(
         job_string="22305195", sacct_lines=LINES_3
     )
     assert job_info is None
+    assert ERRORS._errors == {
+        (user_email, ErrorType.JOB_NOT_FOUND): 2,
+        (user_email, ErrorType.JOB_ONGOING): 1,
+        (user_email, ErrorType.JOB_NEVER_STARTED): 1,
+    }
