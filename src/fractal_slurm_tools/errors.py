@@ -28,6 +28,7 @@ class Errors:
         self._current_user = email
 
     def add_error(self, error_type: ErrorType):
+        print("🚨 Adding error", self._current_user, error_type)
         self._errors.setdefault((self._current_user, error_type), 0)
         if error_type not in ErrorType:
             raise ValueError(f"Unknown error type: {error_type}")
@@ -51,6 +52,7 @@ class Errors:
               ....
         """
 
+        print(f"✅ {self._errors}")
         msg = "Some errors took place:\n"
         for err_type in ErrorType:
             total = sum(
