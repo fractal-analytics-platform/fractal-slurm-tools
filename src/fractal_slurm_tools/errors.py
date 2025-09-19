@@ -2,10 +2,10 @@ from enum import Enum
 
 
 class ErrorType(str, Enum):
-    JOB_NOT_FOUND = "Job Not Found"
-    JOB_ONGOING = "Job Ongoing"
-    JOB_NEVER_STARTED = "Job Never Started"
-    MISSING_VALUE = "Missing Value"
+    JOB_NOT_FOUND = "Job not found"
+    JOB_ONGOING = "Job never ended"
+    JOB_NEVER_STARTED = "Job never started"
+    MISSING_VALUE = "Missing value"
 
 
 class Errors:
