@@ -50,7 +50,7 @@ class Errors:
         - 21 Missing Value
               ....
         """
-
+        print("🔥" * 5, self._errors)
         msg = "Some errors took place:\n"
         for err_type in ErrorType:
             total = sum(
