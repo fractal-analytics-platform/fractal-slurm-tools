@@ -48,10 +48,10 @@ class JobSubmitStartEnd(TypedDict):
 
 def get_job_submit_start_end_times(
     *,
-    job_string: str,
+    job_string: str,  # FIXME: make it a single job_id: str
     sacct_lines: list[str],
 ) -> JobSubmitStartEnd | None:
-    job_id = job_string.split(",")[0]
+    job_id = job_string.split(",")[0]  # FIXME: remove
     try:
         main_job_line = next(
             line
@@ -89,6 +89,7 @@ def get_job_submit_start_end_times(
         )
 
     except StopIteration:
+        # FIXME: transform into return None
         raise ValueError(
             f"Could not find the main job line for {job_id=} in"
             f"\n{sacct_lines}"
@@ -143,6 +144,7 @@ def parse_sacct_info(
         # Skip running steps
         if line_items[INDEX_STATE] == "RUNNING":
             continue
+        # FIXME: skip lines where JobID.split('.')[0] != job_id
         # Parse all fields
         try:
             task_info = {

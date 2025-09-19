@@ -173,23 +173,23 @@ def _run_single_user_single_month(
     tot_diskread_GB = 0.0
     tot_diskwrite_GB = 0.0
     tot_num_tasks = 0
+    # FIXME: list_task_info = []
     for starting_ind in range(0, tot_num_jobs, SACCT_BATCH_SIZE):
-        # Prepare batch string
-        slurm_job_ids_batch = ",".join(
-            list(
-                map(
-                    str,
-                    slurm_job_ids[
-                        starting_ind : starting_ind + SACCT_BATCH_SIZE
-                    ],
-                )
-            )
-        )
+        # Prepare comma-separated
+        batch_job_ids = slurm_job_ids[
+            starting_ind : starting_ind + SACCT_BATCH_SIZE
+        ]
+        batch_job_ids = list(map(str, batch_job_ids))
+        # batch string
+        slurm_job_ids_batch = ",".join(batch_job_ids)
         logger.debug(f">> {slurm_job_ids_batch=}")
         # Run `sacct` and parse its output
         sacct_stdout = run_sacct_command(job_string=slurm_job_ids_batch)
+        # FIXME: for job_id in batch_job_ids:
+        # FIXME:    current_list = ...
+        # FIXME:    list_task_info.extend(current_list)
         list_task_info = parse_sacct_info(
-            job_string=slurm_job_ids_batch,
+            job_string=slurm_job_ids_batch,  # FIXME: single job ID
             sacct_stdout=sacct_stdout,
             task_subfolder_name=None,
             parser_overrides=PARSERS,

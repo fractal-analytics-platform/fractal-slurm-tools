@@ -57,3 +57,7 @@ for field in SACCT_FIELDS:
 SACCT_FIELDS = [item.split("%")[0] for item in SACCT_FIELDS_PERCENT]
 SACCT_FMT: str = ",".join(SACCT_FIELDS_PERCENT)
 DELIMITER: str = "|"
+
+
+if __name__ == "__main__":
+    print(f"SACCT_FMT:\n{SACCT_FMT}")
