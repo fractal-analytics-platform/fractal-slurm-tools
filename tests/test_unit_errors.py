@@ -39,5 +39,7 @@ def test_ERRORS():
         (EMAIL, ErrorType.JOB_ONGOING): 1,
     }
 
-    assert f"2 {ErrorType.JOB_NEVER_STARTED.value}" in ERRORS.get_report()
-    assert f"1 {ErrorType.JOB_ONGOING.value}" in ERRORS.get_report()
+    assert (
+        f"{ErrorType.JOB_NEVER_STARTED.value}: 2 times" in ERRORS.get_report()
+    )
+    assert f"{ErrorType.JOB_ONGOING.value}: 1 times" in ERRORS.get_report()

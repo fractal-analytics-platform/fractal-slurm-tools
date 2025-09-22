@@ -57,7 +57,7 @@ class Errors:
                 )
             )
             if total > 0:
-                msg += f"- {total} {err_type.value}\n"
+                msg += f"- {err_type.value}: {total} times\n"
                 if verbose:
                     for user in self._existing_users:
                         count = self._errors.get((user, err_type), 0)
