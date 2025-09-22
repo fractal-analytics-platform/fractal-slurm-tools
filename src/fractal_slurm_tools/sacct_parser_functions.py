@@ -28,6 +28,7 @@ def _dhhmmss_to_seconds(arg: str) -> int:
     Supports both `HH:MM:SS` and `D-HH:MM:SS`.
     """
     if arg.strip() == "":
+        logger.debug(f"_dhhmmss_to_seconds failed for {arg=} (missing value).")
         ERRORS.add_error(ErrorType.MISSING_VALUE)
         return 0
     if "-" in arg:
