@@ -38,9 +38,9 @@ requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
 
 [project.scripts]
-fractal-slurm-tools = "fractal_slurm_tools.cli:main"
-fractal-slurm-tools-user-interval = "fractal_slurm_tools.cli_2:main"
-fractal-aggregate-users-stats = "fractal_slurm_tools.cli_aggregate:main"
+fractal-slurm-parse-single-job = "fractal_slurm_tools.parse_single_job.cli:main"
+fractal-slurm-parse-bulk = "fractal_slurm_tools.parse_bulk.cli:main"
+fractal-slurm-aggregate = "fractal_slurm_tools.aggregate.cli:main"
 
 [tool.bumpver]
 current_version = "0.0.23"

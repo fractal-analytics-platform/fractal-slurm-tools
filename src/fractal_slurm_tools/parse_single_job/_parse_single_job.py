@@ -4,10 +4,11 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from .parse_job_folders import find_job_folder
-from .parse_job_folders import find_slurm_job_ids
-from .parse_job_folders import find_task_subfolders
-from .parse_sacct_info import parse_sacct_info
+from ..parse_job_folders import find_job_folder
+from ..parse_job_folders import find_slurm_job_ids
+from ..parse_job_folders import find_task_subfolders
+from ..parse_sacct_info import parse_sacct_info
+from ..run_sacct_command import run_sacct_command
 
 logger = logging.getLogger(__name__)
 
@@ -29,8 +30,10 @@ def process_fractal_job(
         logging.debug(f"Process task subfolder {task_subfolder.as_posix()}")
         slurm_job_ids = find_slurm_job_ids(task_subfolder)
         for slurm_job_id in slurm_job_ids:
+            sacct_stdout = run_sacct_command(job_string=slurm_job_id)
             slurm_job_output_rows = parse_sacct_info(
                 slurm_job_id,
+                sacct_stdout=sacct_stdout,
                 task_subfolder_name=task_subfolder.name,
             )
             fractal_job_output_rows.extend(slurm_job_output_rows)
@@ -38,7 +41,7 @@ def process_fractal_job(
     return fractal_job_output_rows
 
 
-def cli_entrypoint(
+def _parse_single_job(
     *,
     jobs_base_folder: str,
     fractal_job_id: int,

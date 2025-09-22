@@ -1,26 +1,26 @@
 repos:
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+    rev: v6.0.0
     hooks:
     - id: check-yaml
     - id: end-of-file-fixer
     - id: trailing-whitespace
 -   repo: https://github.com/asottile/reorder_python_imports
-    rev: v3.1.0
+    rev: v3.15.0
     hooks:
     - id: reorder-python-imports
 -   repo: https://github.com/psf/black
-    rev: 22.3.0
+    rev: 23.12.1
     hooks:
     - id: black
       args: [--line-length=79]
 -   repo: https://github.com/PyCQA/flake8
-    rev: 7.1.1
+    rev: 7.3.0
     hooks:
     - id: flake8
       args: ["--exclude", "examples/*", "--ignore=E203,W503"]
 -   repo: https://github.com/PyCQA/bandit
-    rev: '1.7.4'
+    rev: '1.8.6'
     hooks:
     - id: bandit
       args: ["--exclude", "tests/*"]
@@ -31,6 +31,23 @@ repos:
       entry: bash -c 'for file in "$@"; do if grep -n "devtools" "$file"; then echo "$file" && exit 1; fi; done' --
       language: system
       files: src/
+    - id: grep-for-uzh
+      name: Check for uzh in tests
+      entry: bash -c 'for file in "$@"; do if grep -n "uzh" "$file"; then echo "$file" && exit 1; fi; done' --
+      language: system
+      files: tests/
+    - id: grep-for-bvc
+      name: Check for bvc in tests
+      entry: bash -c 'for file in "$@"; do if grep -n "bvc" "$file"; then echo "$file" && exit 1; fi; done' --
+      language: system
+      files: tests/
+    - id: grep-for-biovision
+      name: Check for biovision in tests
+      entry: bash -c 'for file in "$@"; do if grep -n "biovision" "$file"; then echo "$file" && exit 1; fi; done' --
+      language: system
+      files: tests/
+
+
 -   repo: https://github.com/codespell-project/codespell
     rev: v2.4.1
     hooks:

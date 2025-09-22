@@ -1,12 +1,15 @@
-import argparse
+import argparse as ap
 import logging
 import sys
 from pathlib import Path
 
-from .aggregate_user_statistics import aggregate_stats
+from .. import __VERSION__
+from ..errors import ERRORS
+from ._aggregate import _aggregate
 
-def _parse_arguments(sys_argv: list[str] | None = None) -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
+
+def _parse_arguments(sys_argv: list[str] | None = None) -> ap.Namespace:
+    parser = ap.ArgumentParser(
         description="Aggregate per-user JSON stats files into a single CSV.",
         allow_abbrev=False,
     )
@@ -14,7 +17,9 @@ def _parse_arguments(sys_argv: list[str] | None = None) -> argparse.Namespace:
         "--base-input-folder",
         type=str,
         required=True,
-        help="Folder that contains per-user subfolders with *_stats.json files.",
+        help=(
+            "Folder that contains per-user subfolders with *_stats.json files."
+        ),
     )
     parser.add_argument(
         "--base-output-folder",
@@ -34,7 +39,10 @@ def _parse_arguments(sys_argv: list[str] | None = None) -> argparse.Namespace:
     return args
 
 
-def cli_entrypoint(base_input_folder: str, base_output_folder: str):
+def cli_entrypoint(
+    base_input_folder: str,
+    base_output_folder: str,
+):
     base_input = Path(base_input_folder).resolve()
     base_output = Path(base_output_folder).resolve()
 
@@ -43,18 +51,23 @@ def cli_entrypoint(base_input_folder: str, base_output_folder: str):
     base_output.mkdir(parents=True, exist_ok=True)
 
     output_csv_path = base_output / f"{base_input.name}.csv"
-    aggregate_stats(base_input, output_csv_path)
+    _aggregate(base_input, output_csv_path)
 
 
 def main():
     args = _parse_arguments()
 
-    log_level = logging.DEBUG if args.verbose else logging.INFO
-    logging.basicConfig(level=log_level, format="%(asctime)s; %(levelname)s; %(message)s")
+    logging_level = logging.DEBUG if args.verbose else logging.INFO
+    fmt = "%(asctime)s; %(levelname)s; %(message)s"
+    logging.basicConfig(level=logging_level, format=fmt)
 
+    logging.debug(f"fractal-slurm-aggregate version: {__VERSION__}")
     logging.debug(f"{args=}")
 
     cli_entrypoint(
         base_input_folder=args.base_input_folder,
         base_output_folder=args.base_output_folder,
     )
+
+    if ERRORS.tot_errors > 0:
+        logging.warning(ERRORS.get_report(verbose=args.verbose))

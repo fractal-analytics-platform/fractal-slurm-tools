@@ -3,7 +3,9 @@ import logging
 import sys
 from pathlib import Path
 
-from .process_fractal_job import cli_entrypoint
+from .. import __VERSION__
+from ..errors import ERRORS
+from ._parse_single_job import _parse_single_job
 
 
 main_parser = ap.ArgumentParser(
@@ -53,14 +55,18 @@ def _parse_arguments(sys_argv: list[str] | None = None) -> ap.Namespace:
 def main():
     args = _parse_arguments()
 
-    if args.verbose:
-        logging.basicConfig(level=logging.DEBUG)
-    from . import __VERSION__
+    logging_level = logging.DEBUG if args.verbose else logging.INFO
+    fmt = "%(asctime)s; %(levelname)s; %(message)s"
+    logging.basicConfig(level=logging_level, format=fmt)
 
-    logging.debug(f"fractal-slurm-tools version: {__VERSION__}")
+    logging.debug(f"fractal-slurm-parse-single-job version: {__VERSION__}")
+    logging.debug(f"{args=}")
 
-    cli_entrypoint(
+    _parse_single_job(
         fractal_job_id=args.fractal_job_id,
         output_folder=Path(args.output_folder),
         jobs_base_folder=args.jobs_folder,
     )
+
+    if ERRORS.tot_errors > 0:
+        logging.warning(ERRORS.get_report(verbose=args.verbose))

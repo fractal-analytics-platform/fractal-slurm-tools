@@ -9,9 +9,11 @@ from pathlib import Path
 
 import requests
 
-from .parse_sacct_info import parse_sacct_info
-from .parse_sacct_info import SLURMTaskInfo
-from .sacct_parser_functions import _str_to_bytes
+from ..errors import ERRORS
+from ..parse_sacct_info import parse_sacct_info
+from ..parse_sacct_info import SLURMTaskInfo
+from ..run_sacct_command import run_sacct_command
+from ..sacct_parser_functions import _str_to_bytes
 
 logger = logging.getLogger(__name__)
 
@@ -63,33 +65,15 @@ def _get_months_range(
 
 def _verify_single_task_per_job(outputs: list[SLURMTaskInfo]) -> None:
     """
-    Verify the single-task-per-step assumption.
-
-    Since each relevant `srun` line in `sacct` is made by a single
-    task, its maximum and average values must be identical.
-
-    Note: see
-    https://github.com/fractal-analytics-platform/fractal-slurm-tools/issues/11.
+    Verify the single-task-per-step assumption, fail otherwise.
     """
-    # AVE_MAX_LABELS = ("DiskRead", "DiskWrite", "RSS", "VMSize")
     for out in outputs:
         if out["NTasks"] > 1:
             logger.error(json.dumps(out, indent=2))
-            raise ValueError(
+            raise NotImplementedError(
                 "Single-task-per-step assumption violation "
                 f"(NTasks={out['NTasks']})"
             )
-        # for label in AVE_MAX_LABELS:
-        #     if not numpy.isclose(
-        #         out[f"Ave{label}"],
-        #         out[f"Max{label}"],
-        #         rtol=0.1,
-        #     ):
-        #         logger.error(json.dumps(out, indent=2))
-        #         raise ValueError(
-        #             "Single-task-per-step assumption violation "
-        #             f"(Ave{label} differs from Max{label})."
-        #         )
 
 
 def get_slurm_job_ids_user_month(
@@ -107,6 +91,7 @@ def get_slurm_job_ids_user_month(
     resp = requests.get(
         f"{fractal_backend_url}/auth/users/",
         headers=headers,
+        timeout=10,
     )
     if not resp.ok:
         logger.error("Could not get the list of users.")
@@ -139,6 +124,7 @@ def get_slurm_job_ids_user_month(
         f"{fractal_backend_url}/admin/v2/accounting/slurm/",
         headers=headers,
         json=request_body,
+        timeout=10,
     )
     if not resp.ok:
         logger.error("Could not get the IDs of SLURM jobs.")
@@ -157,7 +143,7 @@ def _run_single_user_single_month(
     fractal_backend_url: str,
     base_output_folder: str,
     token: str,
-) -> list[dict[str, int]]:
+) -> None:
     # Get IDs of SLURM jobs
     logger.info(
         f"Find SLURM jobs for {user_email=} (month {year:4d}/{month:02d})."
@@ -187,40 +173,37 @@ def _run_single_user_single_month(
     tot_diskread_GB = 0.0
     tot_diskwrite_GB = 0.0
     tot_num_tasks = 0
-    user_missing_values = {}
+    list_task_info = []
     for starting_ind in range(0, tot_num_jobs, SACCT_BATCH_SIZE):
-        # Prepare batch string
-        slurm_job_ids_batch = ",".join(
-            list(
-                map(
-                    str,
-                    slurm_job_ids[
-                        starting_ind : starting_ind + SACCT_BATCH_SIZE
-                    ],
-                )
-            )
-        )
-        logger.debug(f">> {slurm_job_ids_batch=}")
-        # Run `sacct` and pars its output
-        list_task_info, missing_values = parse_sacct_info(
-            job_string=slurm_job_ids_batch,
-            task_subfolder_name=None,
-            parser_overrides=PARSERS,
-        )
-        user_missing_values = {
-            k: user_missing_values.get(k, 0) + missing_values.get(k, 0)
-            for k in set(user_missing_values) | set(missing_values)
-        }
+        # Prepare comma-separated
+        batch_job_ids = slurm_job_ids[
+            starting_ind : starting_ind + SACCT_BATCH_SIZE
+        ]
+        batch_job_ids = list(map(str, batch_job_ids))
 
-        _verify_single_task_per_job(list_task_info)
+        # batch string
+        slurm_job_ids_batch = ",".join(batch_job_ids)
+        logger.debug(f">> {slurm_job_ids_batch=}")
+        # Run `sacct` and parse its output
+        sacct_stdout = run_sacct_command(job_string=slurm_job_ids_batch)
+        for job_id in batch_job_ids:
+            current_list_task_info = parse_sacct_info(
+                job_id=job_id,
+                sacct_stdout=sacct_stdout,
+                task_subfolder_name=None,
+                parser_overrides=PARSERS,
+            )
+            _verify_single_task_per_job(current_list_task_info)
+            list_task_info.extend(current_list_task_info)
+
         # Aggregate statistics
         num_tasks = len(list_task_info)
         tot_num_tasks += num_tasks
         logger.debug(f">> {slurm_job_ids_batch=} has {num_tasks=}.")
-        for out in list_task_info:
-            cputime_hours = out["CPUTimeRaw"] / 3600
-            diskread_GB = out["AveDiskRead"] / 1e9
-            diskwrite_GB = out["AveDiskWrite"] / 1e9
+        for task_info in list_task_info:
+            cputime_hours = task_info["CPUTimeRaw"] / 3600
+            diskread_GB = task_info["AveDiskRead"] / 1e9
+            diskwrite_GB = task_info["AveDiskWrite"] / 1e9
             tot_cputime_hours += cputime_hours
             tot_diskread_GB += diskread_GB
             tot_diskwrite_GB += diskwrite_GB
@@ -242,10 +225,10 @@ def _run_single_user_single_month(
     with (outdir / f"{year:4d}_{month:02d}_stats.json").open("w") as f:
         json.dump(stats, f, indent=2)
 
-    return user_missing_values
+    return
 
 
-def cli_entrypoint(
+def _parse_bulk(
     fractal_backend_url: str,
     emails: str,
     first_month: str,
@@ -261,15 +244,16 @@ def cli_entrypoint(
             user_emails = f.read().splitlines()
     else:
         user_emails = emails.split(",")
+    user_emails = [e.strip() for e in user_emails if e.strip() != ""]
 
     months_range = _get_months_range(
         first_month=first_month, last_month=last_month
     )
 
-    users_missing_values = {}
     for user_email in user_emails:
+        ERRORS.set_user(email=user_email)
         for month, year in months_range:
-            user_missing_values = _run_single_user_single_month(
+            _run_single_user_single_month(
                 user_email=user_email,
                 year=year,
                 month=month,
@@ -277,22 +261,3 @@ def cli_entrypoint(
                 base_output_folder=base_output_folder,
                 token=token,
             )
-
-            if user_missing_values != {}:
-                users_missing_values.setdefault(user_email, {})
-                users_missing_values[user_email] = {
-                    k: users_missing_values[user_email].get(k, 0)
-                    + user_missing_values.get(k, 0)
-                    for k in set(users_missing_values[user_email])
-                    | set(user_missing_values)
-                }
-
-    if os.getenv("SHOW_MISSING_VALUES") is not None:
-        for user_email in users_missing_values:
-            for job_id, missing_values_count in users_missing_values[
-                user_email
-            ].items():
-                logger.warning(
-                    f"User {user_email}: "
-                    f"{missing_values_count} missing values in Job {job_id}."
-                )

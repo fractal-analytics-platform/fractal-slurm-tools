@@ -2,7 +2,9 @@ import argparse as ap
 import logging
 import sys
 
-from .query_user_interval import cli_entrypoint
+from .. import __VERSION__
+from ..errors import ERRORS
+from ._parse_bulk import _parse_bulk
 
 
 main_parser = ap.ArgumentParser(
@@ -65,20 +67,20 @@ def _parse_arguments(sys_argv: list[str] | None = None) -> ap.Namespace:
 def main():
     args = _parse_arguments()
 
+    logging_level = logging.DEBUG if args.verbose else logging.INFO
     fmt = "%(asctime)s; %(levelname)s; %(message)s"
-    if args.verbose:
-        logging.basicConfig(level=logging.DEBUG, format=fmt)
-    else:
-        logging.basicConfig(level=logging.INFO, format=fmt)
-    from . import __VERSION__
+    logging.basicConfig(level=logging_level, format=fmt)
 
-    logging.debug(f"fractal-slurm-tools-user-interval version: {__VERSION__}")
+    logging.debug(f"fractal-slurm-parse-bulk version: {__VERSION__}")
     logging.debug(f"{args=}")
 
-    cli_entrypoint(
+    _parse_bulk(
         fractal_backend_url=args.fractal_backend_url,
         emails=args.emails,
         first_month=args.first_month,
         last_month=args.last_month,
         base_output_folder=args.base_output_folder,
     )
+
+    if ERRORS.tot_errors > 0:
+        logging.warning(ERRORS.get_report(verbose=args.verbose))

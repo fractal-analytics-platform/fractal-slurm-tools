@@ -1,10 +1,11 @@
 import pytest
 from devtools import debug
-from fractal_slurm_tools.query_user_interval import _get_months_range
+from fractal_slurm_tools.parse_bulk._parse_bulk import (
+    _get_months_range,
+)
 
 
 def test_unit_get_months_range():
-
     # Fail 1: invalid MM-YYYY
     with pytest.raises(ValueError) as e:
         _get_months_range("01-2025", "abc")
