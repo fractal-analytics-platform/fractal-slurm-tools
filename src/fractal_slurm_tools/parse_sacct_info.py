@@ -51,6 +51,12 @@ def get_job_submit_start_end_times(
     job_id: str,
     sacct_lines: list[str],
 ) -> JobSubmitStartEnd | None:
+    if not isinstance(job_id, str):
+        raise ValueError(
+            "`get_job_submit_start_end_times` argument "
+            f"`{job_id=}` is not a string."
+        )
+
     main_job_line = next(
         (
             line
