@@ -29,6 +29,9 @@ def test_ERRORS():
     ERRORS.add_error(ErrorType.JOB_NEVER_STARTED)
     assert ERRORS._existing_users == {EMAIL}
 
+    with pytest.raises(ValueError, match="Unknown error type"):
+        ERRORS.add_error("invalid")
+
     assert ERRORS._errors == {
         (EMAIL, ErrorType.JOB_NEVER_STARTED): 2,
         (EMAIL, ErrorType.JOB_ONGOING): 1,

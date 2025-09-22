@@ -28,9 +28,9 @@ class Errors:
             raise ValueError(
                 "Cannot call `ERRORS.add_error` without `_current_user`."
             )
-        self._errors.setdefault((self._current_user, error_type), 0)
         if error_type not in ErrorType:
             raise ValueError(f"Unknown error type: {error_type}")
+        self._errors.setdefault((self._current_user, error_type), 0)
         self._errors[(self._current_user, error_type)] += 1
 
     @property
