@@ -5,7 +5,7 @@ from pathlib import Path
 
 from .. import __VERSION__
 from ..errors import ERRORS
-from .process_fractal_job import cli_entrypoint
+from ._parse_single_job import _parse_single_job
 
 
 main_parser = ap.ArgumentParser(
@@ -62,7 +62,7 @@ def main():
     logging.debug(f"fractal-slurm-parse-single-job version: {__VERSION__}")
     logging.debug(f"{args=}")
 
-    cli_entrypoint(
+    _parse_single_job(
         fractal_job_id=args.fractal_job_id,
         output_folder=Path(args.output_folder),
         jobs_base_folder=args.jobs_folder,

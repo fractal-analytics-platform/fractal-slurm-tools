@@ -228,7 +228,7 @@ def _run_single_user_single_month(
     return
 
 
-def cli_entrypoint(
+def _parse_bulk(
     fractal_backend_url: str,
     emails: str,
     first_month: str,

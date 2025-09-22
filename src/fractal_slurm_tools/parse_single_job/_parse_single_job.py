@@ -41,7 +41,7 @@ def process_fractal_job(
     return fractal_job_output_rows
 
 
-def cli_entrypoint(
+def _parse_single_job(
     *,
     jobs_base_folder: str,
     fractal_job_id: int,

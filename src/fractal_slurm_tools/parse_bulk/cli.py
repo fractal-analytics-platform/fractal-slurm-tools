@@ -4,7 +4,7 @@ import sys
 
 from .. import __VERSION__
 from ..errors import ERRORS
-from .query_user_interval import cli_entrypoint
+from ._parse_bulk import _parse_bulk
 
 
 main_parser = ap.ArgumentParser(
@@ -74,7 +74,7 @@ def main():
     logging.debug(f"fractal-slurm-parse-bulk version: {__VERSION__}")
     logging.debug(f"{args=}")
 
-    cli_entrypoint(
+    _parse_bulk(
         fractal_backend_url=args.fractal_backend_url,
         emails=args.emails,
         first_month=args.first_month,

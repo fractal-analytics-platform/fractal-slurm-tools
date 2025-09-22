@@ -1,6 +1,6 @@
 import pytest
 from devtools import debug
-from fractal_slurm_tools.parse_bulk.query_user_interval import (
+from fractal_slurm_tools.parse_bulk._parse_bulk import (
     _get_months_range,
 )
 

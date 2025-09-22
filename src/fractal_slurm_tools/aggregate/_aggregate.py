@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 
-def aggregate_stats(base_folder: Path, output_csv: Path):
+def _aggregate(base_folder: Path, output_csv: Path):
     # Prepare data list
     records = []
 

@@ -5,7 +5,7 @@ from pathlib import Path
 
 from .. import __VERSION__
 from ..errors import ERRORS
-from .aggregate_user_statistics import aggregate_stats
+from ._aggregate import _aggregate
 
 
 def _parse_arguments(sys_argv: list[str] | None = None) -> ap.Namespace:
@@ -51,7 +51,7 @@ def cli_entrypoint(
     base_output.mkdir(parents=True, exist_ok=True)
 
     output_csv_path = base_output / f"{base_input.name}.csv"
-    aggregate_stats(base_input, output_csv_path)
+    _aggregate(base_input, output_csv_path)
 
 
 def main():
