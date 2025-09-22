@@ -28,7 +28,7 @@ class Errors:
             raise ValueError(
                 "Cannot call `ERRORS.add_error` without `_current_user`."
             )
-        if error_type not in ErrorType:
+        if error_type not in list(ErrorType):
             raise ValueError(f"Unknown error type: {error_type}")
         self._errors.setdefault((self._current_user, error_type), 0)
         self._errors[(self._current_user, error_type)] += 1
