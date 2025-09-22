@@ -16,6 +16,7 @@ def test_ERRORS_cleanup_2():
 def test_ERRORS():
     assert ERRORS._errors == {}
     assert "No errors" in ERRORS.get_report()
+    assert ERRORS.tot_errors == 0
 
     with pytest.raises(ValueError, match="without `_current_user`"):
         ERRORS.add_error(ErrorType.JOB_NEVER_STARTED)
@@ -28,6 +29,7 @@ def test_ERRORS():
     ERRORS.add_error(ErrorType.JOB_ONGOING)
     ERRORS.add_error(ErrorType.JOB_NEVER_STARTED)
     assert ERRORS._existing_users == {EMAIL}
+    assert ERRORS.tot_errors == 3
 
     with pytest.raises(ValueError, match="Unknown error type"):
         ERRORS.add_error("invalid")

@@ -20,6 +20,10 @@ class Errors:
         self._current_user = None
         self._errors = {}
 
+    @property
+    def _existing_users(self) -> set[str]:
+        return set(key[0] for key in self._errors)
+
     def set_user(self, *, email: str):
         self._current_user = email
 
@@ -34,8 +38,8 @@ class Errors:
         self._errors[(self._current_user, error_type)] += 1
 
     @property
-    def _existing_users(self) -> set[str]:
-        return set(key[0] for key in self._errors)
+    def tot_errors(self) -> int:
+        return sum(self._errors.values())
 
     def get_report(self, verbose: bool = False) -> str:
         """

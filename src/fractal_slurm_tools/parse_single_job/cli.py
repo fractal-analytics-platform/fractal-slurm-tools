@@ -68,4 +68,5 @@ def main():
         jobs_base_folder=args.jobs_folder,
     )
 
-    logging.warning(ERRORS.get_report(verbose=args.verbose))
+    if ERRORS.tot_errors > 0:
+        logging.warning(ERRORS.get_report(verbose=args.verbose))
