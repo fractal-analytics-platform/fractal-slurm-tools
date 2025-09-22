@@ -41,6 +41,15 @@ class Errors:
     def tot_errors(self) -> int:
         return sum(self._errors.values())
 
+    def tot_errors_per_type(self, error_type: ErrorType) -> int:
+        return sum(
+            [
+                value
+                for key, value in self._errors.items()
+                if key[1] == error_type
+            ]
+        )
+
     def get_report(self, verbose: bool = False) -> str:
         """
         Produce a report of errors.
@@ -50,12 +59,7 @@ class Errors:
 
         msg = "Some errors took place:\n"
         for err_type in ErrorType:
-            total = sum(
-                (
-                    self._errors.get((user, err_type), 0)
-                    for user in self._existing_users
-                )
-            )
+            total = self.tot_errors_per_type(error_type=err_type)
             if total > 0:
                 msg += f"- {err_type.value}: {total} times\n"
                 if verbose:
