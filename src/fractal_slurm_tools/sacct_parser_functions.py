@@ -15,6 +15,9 @@ def _identity(arg: str) -> str:
 
 def _str_to_float_to_int(arg: str) -> int:
     if arg.strip() == "":
+        logger.debug(
+            f"_str_to_float_to_int failed for {arg=} (missing value)."
+        )
         ERRORS.add_error(ErrorType.MISSING_VALUE)
         return 0
     return int(float(arg))
@@ -42,6 +45,7 @@ def _str_to_datetime(arg: str) -> str:
 
 def _str_to_bytes(arg: str) -> int:
     if arg.strip() == "":
+        logger.debug(f"_str_to_bytes failed for {arg=} (missing value).")
         ERRORS.add_error(ErrorType.MISSING_VALUE)
         return 0
     return humanfriendly.parse_size(arg)

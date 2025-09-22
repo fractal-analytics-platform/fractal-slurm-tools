@@ -61,6 +61,7 @@ def get_job_submit_start_end_times(
     )
     if main_job_line is None:
         ERRORS.add_error(ErrorType.JOB_NOT_FOUND)
+        logger.debug(f"Could not find main sacct line for {job_id=}.")
         return None
     main_job_line_fields = main_job_line.split(DELIMITER)
     job_Submit = main_job_line_fields[INDEX_JOB_SUBMIT]
@@ -68,10 +69,12 @@ def get_job_submit_start_end_times(
     job_End = main_job_line_fields[INDEX_JOB_END]
 
     if job_Start == "None":
+        logger.debug(f"{job_id=} has {job_Start=}.")
         ERRORS.add_error(ErrorType.JOB_NEVER_STARTED)
         return None
 
     if job_End == "Unknown":
+        logger.debug(f"{job_id=} has {job_End=}.")
         ERRORS.add_error(ErrorType.JOB_ONGOING)
         return None
 
