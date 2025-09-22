@@ -187,23 +187,23 @@ def _run_single_user_single_month(
         # Run `sacct` and parse its output
         sacct_stdout = run_sacct_command(job_string=slurm_job_ids_batch)
         for job_id in batch_job_ids:
-            current_list = parse_sacct_info(
+            current_list_task_info = parse_sacct_info(
                 job_id=job_id,
                 sacct_stdout=sacct_stdout,
                 task_subfolder_name=None,
                 parser_overrides=PARSERS,
             )
-            list_task_info.extend(current_list)
+            _verify_single_task_per_job(current_list_task_info)
+            list_task_info.extend(current_list_task_info)
 
-        _verify_single_task_per_job(list_task_info)
         # Aggregate statistics
         num_tasks = len(list_task_info)
         tot_num_tasks += num_tasks
         logger.debug(f">> {slurm_job_ids_batch=} has {num_tasks=}.")
-        for out in list_task_info:
-            cputime_hours = out["CPUTimeRaw"] / 3600
-            diskread_GB = out["AveDiskRead"] / 1e9
-            diskwrite_GB = out["AveDiskWrite"] / 1e9
+        for task_info in list_task_info:
+            cputime_hours = task_info["CPUTimeRaw"] / 3600
+            diskread_GB = task_info["AveDiskRead"] / 1e9
+            diskwrite_GB = task_info["AveDiskWrite"] / 1e9
             tot_cputime_hours += cputime_hours
             tot_diskread_GB += diskread_GB
             tot_diskwrite_GB += diskwrite_GB
