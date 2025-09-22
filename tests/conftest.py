@@ -4,6 +4,8 @@ from fractal_slurm_tools.errors import ERRORS
 
 @pytest.fixture(scope="function", autouse=True)
 def ERRORS_cleanup():
-    # FIXME: add explanation
+    """
+    Reset `ERRORS` after each test, to keep tests stateless.
+    """
     yield
     ERRORS._reset_state()
