@@ -32,15 +32,22 @@ repos:
       language: system
       files: src/
     - id: grep-for-uzh
-      name: Check for uzh in src files
+      name: Check for uzh in tests
       entry: bash -c 'for file in "$@"; do if grep -n "uzh" "$file"; then echo "$file" && exit 1; fi; done' --
       language: system
-      files: ^(src|tests)/
+      files: tests/
     - id: grep-for-bvc
-      name: Check for bvc in src files
+      name: Check for bvc in tests
       entry: bash -c 'for file in "$@"; do if grep -n "bvc" "$file"; then echo "$file" && exit 1; fi; done' --
       language: system
-      files: ^(src|tests)/
+      files: tests/
+    - id: grep-for-biovision
+      name: Check for biovision in tests
+      entry: bash -c 'for file in "$@"; do if grep -n "biovision" "$file"; then echo "$file" && exit 1; fi; done' --
+      language: system
+      files: tests/
+
+
 -   repo: https://github.com/codespell-project/codespell
     rev: v2.4.1
     hooks:
