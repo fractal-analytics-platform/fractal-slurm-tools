@@ -101,12 +101,13 @@ def parse_sacct_info(
     parser_overrides: dict[str, Callable] | None = None,
 ) -> list[SLURMTaskInfo]:
     """
-    Run `sacct` and parse its output
+    Parse `sacct` output for a single SLURM job
 
     Args:
-        job_string:
-            Either a single SLURM-job ID or a comma-separated list, which is
-            then provided to `sacct` option `-j`.
+        job_id: A single SLURM-job ID.
+        sacct_stdout:
+            The output of `sacct -j {job_ids_string} [...]`, where
+            `job_id_string` includes `job_id` and possibly other job IDs.
         task_subfolder_name:
             Name of task subfolder, which is included in the output.
         parser_overrides:
@@ -126,7 +127,6 @@ def parse_sacct_info(
     lines = sacct_stdout.splitlines()
 
     job_info = get_job_submit_start_end_times(job_id=job_id, sacct_lines=lines)
-
     if job_info is None:
         return []
 
@@ -139,14 +139,16 @@ def parse_sacct_info(
         # Skip running steps
         if line_items[INDEX_STATE] == "RUNNING":
             continue
-        # FIXME: skip lines where JobID.split('.')[0] != job_id
+        # Skip lines which are not like `JobID=1234.0` (because they
+        # correspond to a different job)
+        if line_items[INDEX_JOB_ID].split(".")[0] != job_id:
+            continue
         # Parse all fields
         try:
             task_info = {
                 SACCT_FIELDS[ind]: actual_parsers[SACCT_FIELDS[ind]](item)
                 for ind, item in enumerate(line_items)
             }
-
         except Exception as e:
             logger.error(f"Could not parse {line=}")
             for ind, item in enumerate(line_items):
