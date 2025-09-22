@@ -1,0 +1,38 @@
+import pytest
+from fractal_slurm_tools.errors import ERRORS
+from fractal_slurm_tools.errors import ErrorType
+
+
+def test_ERRORS_cleanup_1():
+    assert ERRORS._current_user is None
+    ERRORS.set_user(email="asd")
+    assert ERRORS._current_user == "asd"
+
+
+def test_ERRORS_cleanup_2():
+    assert ERRORS._current_user is None
+
+
+def test_ERRORS():
+    assert ERRORS._errors == {}
+    assert "No errors" in ERRORS.get_report()
+
+    with pytest.raises(ValueError, match="without `_current_user`"):
+        ERRORS.add_error(ErrorType.JOB_NEVER_STARTED)
+    assert ERRORS._existing_users == set()
+    EMAIL = "user@example.org"
+    ERRORS.set_user(email=EMAIL)
+    assert ERRORS._existing_users == set()
+
+    ERRORS.add_error(ErrorType.JOB_NEVER_STARTED)
+    ERRORS.add_error(ErrorType.JOB_ONGOING)
+    ERRORS.add_error(ErrorType.JOB_NEVER_STARTED)
+    assert ERRORS._existing_users == {EMAIL}
+
+    assert ERRORS._errors == {
+        (EMAIL, ErrorType.JOB_NEVER_STARTED): 2,
+        (EMAIL, ErrorType.JOB_ONGOING): 1,
+    }
+
+    assert f"2 {ErrorType.JOB_NEVER_STARTED.value}" in ERRORS.get_report()
+    assert f"1 {ErrorType.JOB_ONGOING.value}" in ERRORS.get_report()

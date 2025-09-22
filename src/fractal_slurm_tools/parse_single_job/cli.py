@@ -68,4 +68,4 @@ def main():
         jobs_base_folder=args.jobs_folder,
     )
 
-    logging.warning(ERRORS.report(verbose=args.verbose))
+    logging.warning(ERRORS.get_report(verbose=args.verbose))

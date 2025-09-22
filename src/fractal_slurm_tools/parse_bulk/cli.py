@@ -82,4 +82,4 @@ def main():
         base_output_folder=args.base_output_folder,
     )
 
-    logging.warning(ERRORS.report(verbose=args.verbose))
+    logging.warning(ERRORS.get_report(verbose=args.verbose))

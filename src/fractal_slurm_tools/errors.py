@@ -20,35 +20,26 @@ class Errors:
         self._current_user = None
         self._errors = {}
 
-    @property
-    def _users(self) -> set[str]:
-        return set(key[0] for key in self._errors)
-
     def set_user(self, *, email: str):
         self._current_user = email
 
     def add_error(self, error_type: ErrorType):
+        if self._current_user is None:
+            raise ValueError(
+                "Cannot call `ERRORS.add_error` without `_current_user`."
+            )
         self._errors.setdefault((self._current_user, error_type), 0)
         if error_type not in ErrorType:
             raise ValueError(f"Unknown error type: {error_type}")
         self._errors[(self._current_user, error_type)] += 1
 
-    def report(self, verbose: bool = False) -> str:
-        """
-        Some errors took place:
-        - 19 Job Ongoing
-        - 98 Job Failed
-        - 21 Missing Value
+    @property
+    def _existing_users(self) -> set[str]:
+        return set(key[0] for key in self._errors)
 
-        # VERBOSE
-        Some errors took place:
-        - 19 Job Ongoing
-              * 10 for foo@fractal.xy
-              * 9 for bar@fractal.xy
-        - 98 Job Failed
-              ...
-        - 21 Missing Value
-              ....
+    def get_report(self, verbose: bool = False) -> str:
+        """
+        Produce a report of errors.
         """
         if not self._errors:
             return "No errors took place."
@@ -56,12 +47,15 @@ class Errors:
         msg = "Some errors took place:\n"
         for err_type in ErrorType:
             total = sum(
-                (self._errors.get((user, err_type), 0) for user in self._users)
+                (
+                    self._errors.get((user, err_type), 0)
+                    for user in self._existing_users
+                )
             )
             if total > 0:
                 msg += f"- {total} {err_type.value}\n"
                 if verbose:
-                    for user in self._users:
+                    for user in self._existing_users:
                         count = self._errors.get((user, err_type), 0)
                         if count > 0:
                             msg += f"      * {count} for {user}\n"

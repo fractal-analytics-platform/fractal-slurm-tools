@@ -1,3 +1,3 @@
 # 0.1.0
 
-* Change CLI entrypoints (\#24).
+* First version tracked in CHANGELOG (\#24).
