@@ -8,7 +8,11 @@ from ._parse_bulk import _parse_bulk
 
 
 main_parser = ap.ArgumentParser(
-    description="`fractal-slurm-tools-user-interval` command-line interface",
+    description=(
+        "Parse `sacct` information for multiple Fractal jobs. "
+        "[NOTE: Setting the environment variable `USE_LEGACY_FIELDS=1` "
+        "provides compatibility with legacy SLURM (e.g. v15.08.7)]"
+    ),
     allow_abbrev=False,
 )
 

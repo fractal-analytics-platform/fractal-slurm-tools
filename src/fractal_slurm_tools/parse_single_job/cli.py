@@ -9,7 +9,11 @@ from ._parse_single_job import _parse_single_job
 
 
 main_parser = ap.ArgumentParser(
-    description="`fractal-slurm-tools` command-line interface",
+    description=(
+        "Parse `sacct` information for a single Fractal job."
+        "[NOTE: Setting the environment variable `USE_LEGACY_FIELDS=1` "
+        "provides compatibility with legacy SLURM (e.g. v15.08.7)]"
+    ),
     allow_abbrev=False,
 )
 
