@@ -9,7 +9,7 @@ You can run a version of this tool from PyPI or GitHub, either via
 [uvx](https://docs.astral.sh/uv/guides/tools).
 
 Examples (the CLI entrypoint <entrypoint> must be one of `fractal-slurm-aggregate` `fractal-slurm-parse-bulk` or `fractal-slurm-parse-single-job`):
-``console
+```console
 # Latest PyPI release
 $ pipx run --spec fractal-slurm-tools <entrypoint>
 $ uvx --from fractal-slurm-tools <entrypoint>
