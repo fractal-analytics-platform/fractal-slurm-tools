@@ -8,27 +8,27 @@ You can run a version of this tool from PyPI or GitHub, either via
 [pipx](https://pipx.pypa.io/stable/examples/#pipx-run-examples) or
 [uvx](https://docs.astral.sh/uv/guides/tools).
 
-Examples:
-```console
+Examples (the CLI entrypoint <entrypoint> must be one of `fractal-slurm-aggregate` `fractal-slurm-parse-bulk` or `fractal-slurm-parse-single-job`):
+``console
 # Latest PyPI release
-$ pipx run fractal-slurm-tools
-$ uvx fractal-slurm-tools
+$ pipx run --spec fractal-slurm-tools <entrypoint>
+$ uvx --from fractal-slurm-tools <entrypoint>
 
 # Specific PyPI release
-$ pipx run fractal-slurm-tools==0.0.3
-$ uvx fractal-slurm-tools==0.0.3
+$ pipx run --spec fractal-slurm-tools==0.1.0 <entrypoint>
+$ uvx --from fractal-slurm-tools==0.1.0 <entrypoint>
 
 # Latest git commit on the default branch
-$ pipx run --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git fractal-slurm-tools
-$ uvx --from git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git fractal-slurm-tools
+$ pipx run --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git <entrypoint>
+$ uvx --from git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git <entrypoint>
 
 # Specific git commit
-$ pipx run --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@3faeefd0eac0f53c6c73d2e3179b10ff2a111793 fractal-slurm-tools
-$ uvx --from git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@3faeefd0eac0f53c6c73d2e3179b10ff2a111793 fractal-slurm-tools
+$ pipx run --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@3faeefd0eac0f53c6c73d2e3179b10ff2a111793 <entrypoint>
+$ uvx --from git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@3faeefd0eac0f53c6c73d2e3179b10ff2a111793 <entrypoint>
 
 # Specific git branch
-$ pipx run --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@main fractal-slurm-tools
-$ uvx --from git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@main fractal-slurm-tools
+$ pipx run --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@main <entrypoint>
+$ uvx --from git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@main <entrypoint>
 ```
 
 # A useful `sacct` command
