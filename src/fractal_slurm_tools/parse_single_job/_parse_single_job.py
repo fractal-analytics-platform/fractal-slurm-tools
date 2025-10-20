@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from ..errors import ERRORS
 from ..parse_job_folders import find_job_folder
 from ..parse_job_folders import find_slurm_job_ids
 from ..parse_job_folders import find_task_subfolders
@@ -48,6 +49,8 @@ def _parse_single_job(
     output_folder: Path,
 ):
     import pandas as pd
+
+    ERRORS.set_user(email="placeholder@example.org")
 
     # Preliminary steps
     if not Path(jobs_base_folder).exists():
