@@ -1,3 +1,7 @@
+# 0.1.1
+
+* Set placeholder user for single-job parsing.
+
 # 0.1.0
 
 This is the first version tracked in CHANGELOG. Here are some notable changes with respect to 0.0.23:
