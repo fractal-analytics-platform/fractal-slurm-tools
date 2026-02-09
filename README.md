@@ -8,12 +8,12 @@
 | src/fractal\_slurm\_tools/errors.py                    |       45 |        4 |       16 |        1 |     85% |     66-69 |
 | src/fractal\_slurm\_tools/parse\_bulk/\_parse\_bulk.py |      112 |       79 |       24 |        0 |     29% |87-136, 148-228, 238-256 |
 | src/fractal\_slurm\_tools/parse\_job\_folders.py       |       24 |       24 |        4 |        0 |      0% |      1-50 |
-| src/fractal\_slurm\_tools/parse\_sacct\_info.py        |       79 |        4 |       22 |        4 |     92% |147, 151, 166, 173 |
+| src/fractal\_slurm\_tools/parse\_sacct\_info.py        |       77 |        4 |       22 |        4 |     92% |143, 147, 162, 169 |
 | src/fractal\_slurm\_tools/run\_sacct\_command.py       |       14 |        8 |        2 |        0 |     38% |     22-42 |
 | src/fractal\_slurm\_tools/sacct\_fields.py             |       19 |        4 |       10 |        2 |     79% | 43-45, 63 |
 | src/fractal\_slurm\_tools/sacct\_parser\_functions.py  |       37 |        1 |        8 |        1 |     96% |        35 |
 | src/fractal\_slurm\_tools/sacct\_parsers.py            |       16 |        0 |        8 |        0 |    100% |           |
-| **TOTAL**                                              |  **347** |  **124** |   **94** |    **8** | **64%** |           |
+| **TOTAL**                                              |  **345** |  **124** |   **94** |    **8** | **64%** |           |
 
 
 ## Setup coverage badge
