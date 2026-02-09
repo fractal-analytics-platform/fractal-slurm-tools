@@ -1,5 +1,4 @@
 import logging
-import os
 from copy import deepcopy
 from typing import Any
 from typing import Callable
@@ -27,14 +26,11 @@ INDEX_JOB_END = SACCT_FIELDS.index("End")
 INDEX_REQ_TRES = SACCT_FIELDS.index("ReqTRES")
 INDEX_PARTITION = SACCT_FIELDS.index("Partition")
 INDEX_QOS = SACCT_FIELDS.index("QOS")
-INDEX_WORK_DIR = (
-    SACCT_FIELDS.index("WorkDir") if os.getenv("USE_LEGACY_FIELDS") else None
-)
+
 SKIPPED_INDICES_FOR_MISSING_VALUES = {
     INDEX_REQ_TRES,
     INDEX_PARTITION,
     INDEX_QOS,
-    INDEX_WORK_DIR,
 }
 
 

@@ -1,3 +1,9 @@
+# 0.3.0
+
+* Support Python 3.14.
+* Fix usage of `USE_LEGACY_FIELDS`.
+
+
 # 0.2.0
 
 * Fix `USE_LEGACY_SLURM_FIELDS/USE_LEGACY_FIELDS` inconsistent usage.
