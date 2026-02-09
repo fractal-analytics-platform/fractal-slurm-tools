@@ -1,3 +1,7 @@
+# 0.2.0
+
+* Fix `USE_LEGACY_SLURM_FIELDS/USE_LEGACY_FIELDS` inconsistent usage.
+
 # 0.1.1
 
 * Set placeholder user for single-job parsing.
