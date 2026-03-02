@@ -11,7 +11,7 @@ jobs:
   tests:
     name: "Python ${{ matrix.python-version }}"
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 10
 
     strategy:
       matrix:
@@ -19,23 +19,25 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
-          cache: "pip"
 
-      - name: Install dependencies
-        run: pip install -e .[dev]
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.10.7"
+          enable-cache: true
+
+      - run: uv sync --locked --all-extras
 
       - name: Test with pytest
         env:
           COVERAGE_FILE: coverage-data-${{ matrix.python-version }}
-        run: coverage run -m pytest
+        run: uv --frozen --no-sync coverage run -m pytest
 
       - name: Upload coverage data
         uses: actions/upload-artifact@v4
@@ -48,18 +50,20 @@ jobs:
     runs-on: ubuntu-24.04
     needs: tests
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
-          cache: "pip"
+          python-version: "3.12"
 
-      - name: Install dependencies
-        run: pip install -e .[dev]
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: "0.10.7"
+          enable-cache: true
 
-      - name: Download data
-        uses: actions/download-artifact@v4
+      - run: uv sync --locked --all-extras
+
+      - uses: actions/download-artifact@v4
         with:
           pattern: coverage-data-*
           merge-multiple: true
@@ -70,7 +74,7 @@ jobs:
         # We added this step to replace the variable `MERGE_COVERAGE_FILES: true`
         # in the next step, which had started to raise errors
         # (https://github.com/fractal-analytics-platform/fractal-server/pull/1725).
-        run: coverage combine coverage-data-*
+        run: uv run --frozen --no-sync coverage combine coverage-data-*
 
       - name: Add coverage comment to Pull Requests
         id: coverage_comment

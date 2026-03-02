@@ -38,19 +38,26 @@ sacct --format='JobID%18,JobName%18,State,ReqMem,MaxRSS,AveRSS,Elapsed,NCPUS,CPU
 
 # Development
 
+
+### `uv`
+
+We use [uv](https://docs.astral.sh/uv/) to manage the development environment and the dependencies - see https://docs.astral.sh/uv/getting-started/installation/ for methods to install it. From the root folder, you can get started through
+```bash
+# Create a new virtual environment in `.venv`
+uv venv
+
+# Install both the required dependencies and the optional dev/docs dependencies
+uv sync --frozen --group dev
+
+# Run a command from within this environment without updating the `uv.lock` file
+uv run --frozen fractal-slurm-parse-single-job
+```
+
+### Make a release
+
 ```console
-$ python -m venv venv
-$ source venv/bin/activate
-$ python -m pip install -e .[dev]
-[...]
-$ pre-commit install
-pre-commit installed at .git/hooks/pre-commit
-
-# Run mypi
-$ python -m mypy ./src
-
 # Make a release
-$ bumpver update --patch --dry
+uv run --frozen bumpver update --patch --dry
 ```
 
 
