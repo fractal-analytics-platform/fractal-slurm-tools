@@ -32,7 +32,7 @@ jobs:
           version: "0.10.7"
           enable-cache: true
 
-      - run: uv sync --locked --all-extras
+      - run: uv sync --frozen --all-extras
 
       - name: Test with pytest
         env:
@@ -64,7 +64,7 @@ jobs:
           version: "0.10.7"
           enable-cache: true
 
-      - run: uv sync --locked --all-extras
+      - run: uv sync --frozen --all-extras
 
       - uses: actions/download-artifact@v4
         with:

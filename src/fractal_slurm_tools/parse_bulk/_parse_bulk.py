@@ -17,7 +17,7 @@ from ..sacct_parser_functions import _str_to_bytes
 
 logger = logging.getLogger(__name__)
 
-SACCT_BATCH_SIZE = 20
+SACCT_BATCH_SIZE = int(os.getenv("SACCT_BATCH_SIZE", 20))
 
 # Override default parsers with non-human-readable ones.
 PARSERS = {
@@ -173,18 +173,17 @@ def _run_single_user_single_month(
     tot_diskread_GB = 0.0
     tot_diskwrite_GB = 0.0
     tot_num_tasks = 0
-    list_task_info = []
     for starting_ind in range(0, tot_num_jobs, SACCT_BATCH_SIZE):
-        # Prepare comma-separated
+        # Prepare list of SLURM-job IDs, and comma-separated string
         batch_job_ids = slurm_job_ids[
             starting_ind : starting_ind + SACCT_BATCH_SIZE
         ]
         batch_job_ids = list(map(str, batch_job_ids))
-
-        # batch string
         slurm_job_ids_batch = ",".join(batch_job_ids)
         logger.debug(f">> {slurm_job_ids_batch=}")
+
         # Run `sacct` and parse its output
+        list_task_info_per_batch = []
         sacct_stdout = run_sacct_command(job_string=slurm_job_ids_batch)
         for job_id in batch_job_ids:
             current_list_task_info = parse_sacct_info(
@@ -194,13 +193,13 @@ def _run_single_user_single_month(
                 parser_overrides=PARSERS,
             )
             _verify_single_task_per_job(current_list_task_info)
-            list_task_info.extend(current_list_task_info)
+            list_task_info_per_batch.extend(current_list_task_info)
 
         # Aggregate statistics
-        num_tasks = len(list_task_info)
+        num_tasks = len(list_task_info_per_batch)
         tot_num_tasks += num_tasks
         logger.debug(f">> {slurm_job_ids_batch=} has {num_tasks=}.")
-        for task_info in list_task_info:
+        for task_info in list_task_info_per_batch:
             cputime_hours = task_info["CPUTimeRaw"] / 3600
             diskread_GB = task_info["AveDiskRead"] / 1e9
             diskwrite_GB = task_info["AveDiskWrite"] / 1e9

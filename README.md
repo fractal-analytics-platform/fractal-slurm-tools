@@ -15,8 +15,8 @@ $ pipx run --spec fractal-slurm-tools <entrypoint>
 $ uvx --from fractal-slurm-tools <entrypoint>
 
 # Specific PyPI release
-$ pipx run --spec fractal-slurm-tools==0.1.0 <entrypoint>
-$ uvx --from fractal-slurm-tools==0.1.0 <entrypoint>
+$ pipx run --spec fractal-slurm-tools==0.4.0 <entrypoint>
+$ uvx --from fractal-slurm-tools==0.4.0 <entrypoint>
 
 # Latest git commit on the default branch
 $ pipx run --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git <entrypoint>
@@ -29,6 +29,19 @@ $ uvx --from git+https://github.com/fractal-analytics-platform/fractal-slurm-too
 # Specific git branch
 $ pipx run --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@main <entrypoint>
 $ uvx --from git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git@main <entrypoint>
+```
+
+# Environment variables
+
+```bash
+# Enable compatibility with legacy SLURM (e.g. v15.08.7)
+USE_LEGACY_FIELDS=1
+
+# Modify batch size
+SACCT_BATCH_SIZE=50
+
+# Token to connect to the Fractal backend
+FRACTAL_TOKEN=...
 ```
 
 # A useful `sacct` command
