@@ -48,6 +48,7 @@ jobs:
   coverage:
     name: Coverage
     runs-on: ubuntu-24.04
+    if: ${{ github.ref != 'refs/heads/main' }}
     needs: tests
     steps:
       - uses: actions/checkout@v6
