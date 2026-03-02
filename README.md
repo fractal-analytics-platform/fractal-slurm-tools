@@ -15,8 +15,8 @@ $ pipx run --spec fractal-slurm-tools <entrypoint>
 $ uvx --from fractal-slurm-tools <entrypoint>
 
 # Specific PyPI release
-$ pipx run --spec fractal-slurm-tools==0.3.1 <entrypoint>
-$ uvx --from fractal-slurm-tools==0.3.1 <entrypoint>
+$ pipx run --spec fractal-slurm-tools==0.4.0 <entrypoint>
+$ uvx --from fractal-slurm-tools==0.4.0 <entrypoint>
 
 # Latest git commit on the default branch
 $ pipx run --spec git+https://github.com/fractal-analytics-platform/fractal-slurm-tools.git <entrypoint>
