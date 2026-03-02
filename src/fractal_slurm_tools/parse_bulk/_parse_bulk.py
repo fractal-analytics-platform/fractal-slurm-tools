@@ -17,7 +17,7 @@ from ..sacct_parser_functions import _str_to_bytes
 
 logger = logging.getLogger(__name__)
 
-SACCT_BATCH_SIZE = 1
+SACCT_BATCH_SIZE = 20
 
 # Override default parsers with non-human-readable ones.
 PARSERS = {
