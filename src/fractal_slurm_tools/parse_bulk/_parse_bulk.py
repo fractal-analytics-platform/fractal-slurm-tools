@@ -174,17 +174,16 @@ def _run_single_user_single_month(
     tot_diskwrite_GB = 0.0
     tot_num_tasks = 0
     for starting_ind in range(0, tot_num_jobs, SACCT_BATCH_SIZE):
-        list_task_info_per_batch = []
-        # Prepare comma-separated
+        # Prepare list of SLURM-job IDs, and comma-separated string
         batch_job_ids = slurm_job_ids[
             starting_ind : starting_ind + SACCT_BATCH_SIZE
         ]
         batch_job_ids = list(map(str, batch_job_ids))
-
-        # batch string
         slurm_job_ids_batch = ",".join(batch_job_ids)
         logger.debug(f">> {slurm_job_ids_batch=}")
+
         # Run `sacct` and parse its output
+        list_task_info_per_batch = []
         sacct_stdout = run_sacct_command(job_string=slurm_job_ids_batch)
         for job_id in batch_job_ids:
             current_list_task_info = parse_sacct_info(
