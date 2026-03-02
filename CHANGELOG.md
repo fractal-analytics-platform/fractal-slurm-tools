@@ -1,4 +1,15 @@
+# 0.4.0
+
+* Fix bug in `_run_single_user_single_month`, affecting the `fractal-slurm-parse-bulk` command.
+* Expose `SACCT_BATCH_SIZE` as an environment variable (with default set to 20).
+* Adopt `uv` for development.
+
+
+
+
 # 0.3.0
+
+> WARNING: `fractal-slurm-parse-bulk` in this version has a bug, please use 0.4.0.
 
 * Support Python 3.14.
 * Fix usage of `USE_LEGACY_FIELDS`.
@@ -6,13 +17,20 @@
 
 # 0.2.0
 
+> WARNING: `fractal-slurm-parse-bulk` in this version has a bug, please use 0.4.0.
+
+
 * Fix `USE_LEGACY_SLURM_FIELDS/USE_LEGACY_FIELDS` inconsistent usage.
 
 # 0.1.1
 
+> WARNING: `fractal-slurm-parse-bulk` in this version has a bug, please use 0.4.0.
+
 * Set placeholder user for single-job parsing.
 
 # 0.1.0
+
+> WARNING: `fractal-slurm-parse-bulk` in this version has a bug, please use 0.4.0.
 
 This is the first version tracked in CHANGELOG. Here are some notable changes with respect to 0.0.23:
 * Rename CLI entrypoints into
