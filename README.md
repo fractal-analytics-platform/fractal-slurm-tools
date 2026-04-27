@@ -60,7 +60,7 @@ We use [uv](https://docs.astral.sh/uv/) to manage the development environment an
 uv venv
 
 # Install both the required dependencies and the optional dev/docs dependencies
-uv sync --frozen --group dev
+uv sync --frozen --extra dev
 
 # Run a command from within this environment without updating the `uv.lock` file
 uv run --frozen fractal-slurm-parse-single-job
