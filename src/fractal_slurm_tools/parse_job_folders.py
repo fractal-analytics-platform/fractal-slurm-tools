@@ -10,12 +10,30 @@ def find_job_folder(
     jobs_base_folder: Path,
     fractal_job_id: int,
 ) -> Path:
-    fractal_job_folders = list(
+    """
+    Find the job-folder of a given job, within the base jobs folders
+
+    Note that fractal-server 2.22.6 introduced a change in the job-folders
+    structure, from `jobs_base_folder/single_job_folder` to
+    `jobs_base_folder/yyyy-mm/single_job_folder`.
+    """
+
+    fractal_job_folders_pre_2_22_6 = list(
         item
         for item in jobs_base_folder.glob(
             f"proj_v2_*_job_{fractal_job_id:07d}_*"
         )
         if item.is_dir()
+    )
+    fractal_job_folders_post_2_22_6 = list(
+        item
+        for item in jobs_base_folder.glob(
+            f"*/proj_v2_*_job_{fractal_job_id:07d}_*"
+        )
+        if item.is_dir()
+    )
+    fractal_job_folders = (
+        fractal_job_folders_pre_2_22_6 + fractal_job_folders_post_2_22_6
     )
     if len(fractal_job_folders) > 1:
         sys.exit(f"ERROR: Found more than one {fractal_job_folders=}.")
