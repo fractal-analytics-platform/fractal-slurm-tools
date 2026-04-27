@@ -1,11 +1,12 @@
+# 0.5.0
+
+* Support both legacy and `fractal-server>=2.22.6` jobs-folder layouts.
+
 # 0.4.0
 
 * Fix bug in `_run_single_user_single_month`, affecting the `fractal-slurm-parse-bulk` command.
 * Expose `SACCT_BATCH_SIZE` as an environment variable (with default set to 20).
 * Adopt `uv` for development.
-
-
-
 
 # 0.3.0
 
@@ -14,11 +15,9 @@
 * Support Python 3.14.
 * Fix usage of `USE_LEGACY_FIELDS`.
 
-
 # 0.2.0
 
 > WARNING: `fractal-slurm-parse-bulk` in this version has a bug, please use 0.4.0.
-
 
 * Fix `USE_LEGACY_SLURM_FIELDS/USE_LEGACY_FIELDS` inconsistent usage.
 
