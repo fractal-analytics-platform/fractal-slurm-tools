@@ -83,6 +83,7 @@ def get_slurm_job_ids_user_month(
     token: str,
     year: int,
     month: int,
+    resource_id: int | None,
 ) -> list[int]:
     headers = dict(Authorization=f"Bearer {token}")
     fractal_backend_url = fractal_backend_url.rstrip("/")
@@ -119,6 +120,8 @@ def get_slurm_job_ids_user_month(
         timestamp_min=timestamp_min,
         timestamp_max=timestamp_max,
     )
+    if resource_id is not None:
+        request_body["resource_id"] = resource_id
     logger.debug(f"{request_body=}")
     resp = requests.post(
         f"{fractal_backend_url}/admin/v2/accounting/slurm/",
@@ -143,6 +146,7 @@ def _run_single_user_single_month(
     fractal_backend_url: str,
     base_output_folder: str,
     token: str,
+    resource_id: int | None,
 ) -> None:
     # Get IDs of SLURM jobs
     logger.info(
@@ -154,6 +158,7 @@ def _run_single_user_single_month(
         year=year,
         month=month,
         token=token,
+        resource_id=resource_id,
     )
     logger.info(
         f"Found {len(slurm_job_ids)} SLURM jobs "
@@ -233,6 +238,7 @@ def _parse_bulk(
     first_month: str,
     last_month: str,
     base_output_folder: str,
+    resource_id: int | None,
 ) -> None:
     token = os.getenv("FRACTAL_TOKEN", None)
     if token is None:
@@ -259,4 +265,5 @@ def _parse_bulk(
                 fractal_backend_url=fractal_backend_url,
                 base_output_folder=base_output_folder,
                 token=token,
+                resource_id=resource_id,
             )

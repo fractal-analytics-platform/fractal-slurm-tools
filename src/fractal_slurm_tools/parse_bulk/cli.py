@@ -54,6 +54,13 @@ main_parser.add_argument(
     action="store_true",
 )
 
+main_parser.add_argument(
+    "--resource-id",
+    type=int,
+    required=False,
+    help="If set, select SLURM-accounting records for this Fractal resource.",
+)
+
 
 def _parse_arguments(sys_argv: list[str] | None = None) -> ap.Namespace:
     """
@@ -84,6 +91,7 @@ def main():
         first_month=args.first_month,
         last_month=args.last_month,
         base_output_folder=args.base_output_folder,
+        resource_id=args.resource_id,
     )
 
     if ERRORS.tot_errors > 0:
