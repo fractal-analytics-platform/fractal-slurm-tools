@@ -58,7 +58,10 @@ main_parser.add_argument(
     "--resource-id",
     type=int,
     required=False,
-    help="If set, select SLURM-accounting records for this Fractal resource.",
+    help=(
+        "If set, select SLURM-accounting records for this Fractal resource "
+        "(requires fractal-server > 2.22.13)."
+    ),
 )
 
 
