@@ -2,7 +2,6 @@
 
 * Introduce `--resource-id` argument for `fractal-slurm-parse-bulk`.
 
-
 # 0.5.0
 
 * Support both legacy and `fractal-server>=2.22.6` jobs-folder layouts.
