@@ -119,9 +119,9 @@ def get_slurm_job_ids_user_month(
         user_id=user_id,
         timestamp_min=timestamp_min,
         timestamp_max=timestamp_max,
+        resource_id=resource_id,
     )
-    if resource_id is not None:
-        request_body["resource_id"] = resource_id
+    print(f"{request_body=}")
     logger.debug(f"{request_body=}")
     resp = requests.post(
         f"{fractal_backend_url}/admin/v2/accounting/slurm/",
