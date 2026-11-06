@@ -1,3 +1,8 @@
+# Unreleased
+
+* Deprecated Python 3.10.
+* Upgrade uv lock.
+
 # 0.6.0
 
 * Introduce `--resource-id` argument for `fractal-slurm-parse-bulk`.
